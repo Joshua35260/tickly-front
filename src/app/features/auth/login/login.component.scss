@@ -1,0 +1,92 @@
+.login {
+  background: linear-gradient(to bottom, #FFF 0%, #FFF 50%, #F9F9F9 50%, #F9F9F9 100%);
+  height: 100vh;
+  width: 100%;
+  background-size: cover;
+}
+
+.login-card {
+  position: absolute;
+  border: 2px solid #FFF;
+  border-radius: 10px;
+  background-color: #F9F9F9;
+  padding: 10px 0px 20px 10px;
+  box-shadow: 2px 1px 8px rgb(0 0 0 / 13%);
+  right: 2%;
+  top: 40%;
+  min-width: 480px !important;
+}
+
+.p-button-lg_square {
+  width: 60px;
+  height: 50px;
+  margin: 0 20px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  line-height: 0;
+
+  span {
+    font-weight: 700;
+  }
+
+  i {
+    display: inline-block;
+    width: auto;
+    margin-right: 10px;
+    font-size: 32px;
+  }
+}
+
+.input-password {
+  display: flex;
+}
+
+.back-c {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover * {
+    color: blue;
+    transition: all 0.5s ease-in-out;
+  }
+
+  i {
+    font-size: 18px;
+    color: var(--primary-text-color);
+    text-align: center;
+    display: inline-block;
+
+    &:hover {
+      color: var(--highlight-text-color);
+    }
+  }
+
+}
+
+.p-button-lg_square {
+  font-size: 1.5em;
+}
+
+.login-input {
+  display: flex;
+}
+
+app-input {
+  width: 100%;
+}
+
+label {
+  margin-top: -6px;
+}
+
+.lost_password {
+  font-size: 26px;
+}
