@@ -54,7 +54,7 @@ export class LoginComponent {
   backtoLogin() {
     this.loginFilled.set(false);
   }
-  
+
   onSignin() {
     this.authService
       .signIn(this.loginForm.value)

@@ -15,13 +15,13 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { Subscription } from 'rxjs';
 import { AutoFocusModule } from 'primeng/autofocus';
+import { FloatLabelModule } from 'primeng/floatlabel';
 @Component({
   selector: 'app-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, InputTextModule, ReactiveFormsModule, AutoFocusModule],
+  imports: [CommonModule, InputTextModule, ReactiveFormsModule, AutoFocusModule, FloatLabelModule],
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.css'],
 })
@@ -36,7 +36,6 @@ export class InputComponent implements ControlValueAccessor {
   // give classes to elements if needed for more customization
   classSpan = input<string>('');
   classIcon = input<string>('');
-  iconSide = input<'left' | 'right'>('left');
   classInput = model<string>('');
   classLabel = input<string>('');
   classSmall = input<string>('');

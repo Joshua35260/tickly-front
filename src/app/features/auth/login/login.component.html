@@ -12,20 +12,20 @@
             <a class="back">{{loginForm.get('login').value}}</a></div>
         }
     </div>
-
+ 
     <form [formGroup]="loginForm" (ngSubmit)="onSignin()">
 
       @if (!loginFilled()) {
-        <span class="form-elem p-float-label login-input">
-          <app-input formControlName="login" label="Nom d'utilisateur" required (keydown.Tab)="onSubmitUsername()"
+        <div class="flex items-center justify-center">
+          <app-input class="login-input" formControlName="login" label="Nom d'utilisateur" required (keydown.Tab)="onSubmitUsername()"
             (keyup.enter)="onSubmitUsername()"></app-input>
       
           <button pButton type="button" (click)="onSubmitUsername()" class="p-button-lg_square" icon="pi pi-chevron-right"></button>
-        </span>
+        </div>
       }
 
       @else {
-        <span *ngIf="loginFilled()" class="form-elem p-float-label input-password">
+        <span *ngIf="loginFilled()" class="input-password">
           <app-input type="password" formControlName="password" label="Mot de passe" required [autofocus]="true"></app-input>
           <button pButton type="submit" class="p-button-lg_square" icon="pi pi-lock-open"></button>
             <!-- <a href="" class="lost_password">J'ai perdu mon mot de passe</a> -->
