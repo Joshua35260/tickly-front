@@ -1,17 +1,54 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { User } from '../../../core/models/user.class';
+import { UserService } from '../../../core/services/user.service';
+import { InputComponent } from '../../../shared/common/input/input.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css'],
+  styleUrls: ['./register.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [
+    InputComponent,
+    ReactiveFormsModule,
+    ButtonModule
+  ],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
+  registerForm: FormGroup;
 
-  constructor() { }
+  switchView = output<void>();
 
-  ngOnInit() {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private destroyRef: DestroyRef
+  ) {
+    this.registerForm = new FormGroup({
+      firstname: new FormControl('', [Validators.required]),
+      lastname: new FormControl('', [Validators.required]),
+      login: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    });
   }
 
+  onSubmit() {
+    if (this.registerForm.valid) {
+      const registrationData = this.registerForm.value;
+
+      this.userService
+        .registerUser(registrationData)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => this.switchView.emit(),
+          error: (error) => console.error('Registration failed', error)
+        });
+    }
+  }
 }

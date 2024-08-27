@@ -1,3 +1,17 @@
-<p>
-  register works!
-</p>
+<div class="card">
+  <h1 class="title">Inscription</h1>
+  <h2 class="subtitle">Créez votre compte</h2>
+
+  <form class="card-body grid grid-cols-1 gap-medium" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <app-input formControlName="firstname" label="Prénom *"></app-input>
+    <app-input formControlName="lastname" label="Nom *"></app-input>
+    <app-input formControlName="login" label="Login *"></app-input>
+    <app-input formControlName="password" type="password" label="Mot de passe *"></app-input>
+    
+    <button pButton type="submit">S'inscrire</button>
+  </form>
+
+  <div class="card-footer flex justify-center">
+    <a (click)="switchView.emit()">Déjà inscrit ? Connectez-vous ici !</a>
+  </div>
+</div>

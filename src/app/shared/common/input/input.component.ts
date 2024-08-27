@@ -23,7 +23,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
   standalone: true,
   imports: [CommonModule, InputTextModule, ReactiveFormsModule, AutoFocusModule, FloatLabelModule],
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.css'],
+  styleUrls: ['./input.component.scss'],
 })
 export class InputComponent implements ControlValueAccessor {
   valueChange = output<string>();

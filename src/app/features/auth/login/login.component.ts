@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  output,
   signal,
 } from '@angular/core';
 import {
@@ -16,6 +17,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputComponent } from '../../../shared/common/input/input.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +31,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     ButtonModule,
     InputComponent,
     ReactiveFormsModule,
+    CheckboxModule,
   ],
 })
 export class LoginComponent {
@@ -36,6 +39,7 @@ export class LoginComponent {
   loginFilled = signal<boolean>(false);
   formSubmitted: boolean;
 
+switchView = output<void>();
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -44,6 +48,7 @@ export class LoginComponent {
     this.loginForm = new FormGroup({
       login: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
+      remember: new FormControl(false),
     });
   }
 
@@ -54,7 +59,7 @@ export class LoginComponent {
   backtoLogin() {
     this.loginFilled.set(false);
   }
-
+ 
   onSignin() {
     this.authService
       .signIn(this.loginForm.value)

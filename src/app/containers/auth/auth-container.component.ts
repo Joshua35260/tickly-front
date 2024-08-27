@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { LoginComponent } from '../../features/auth/login/login.component';
+import { AuthComponent } from '../../features/auth/auth/auth.component';
 
 @Component({
   selector: 'app-auth-container',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './auth-container.component.html',
-  imports: [LoginComponent],
+  imports: [AuthComponent],
 })
 export class LoginContainerComponent {}

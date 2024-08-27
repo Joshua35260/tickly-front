@@ -1,0 +1,8 @@
+<div class="auth-container">
+  @if(!switchView()) {
+    <app-login (switchView)="switchView.set(!switchView())"></app-login>
+  } @else {
+    <app-register (switchView)="switchView.set(!switchView())"></app-register>
+  }
+
+</div>
