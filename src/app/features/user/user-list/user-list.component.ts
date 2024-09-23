@@ -20,6 +20,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [CommonModule, UserRowComponent],
 })
 export class UserListComponent implements OnInit {
+  
+  
   users = signal<User[]>([]);
   constructor(
     private userService: UserService,

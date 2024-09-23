@@ -1,0 +1,18 @@
+<header class="page-header">
+
+@if (headerTexts$ | async; as headerTexts) {
+    <div class="header-title">
+      {{headerTexts.title || 'Tableau de bord'}}
+      <small>{{headerTexts.description}}</small>
+    </div>
+}
+
+<div [ngClass]="menuVisible() ? 'header-avatar header-avatar-menu-open' : 'header-avatar'" (click)="menu.toggle($event)">
+  <div class="avatar">
+    <app-avatar [fullname]="userConnected()?.firstname + ' ' + userConnected()?.lastname"
+    [size]=64></app-avatar>
+  </div>
+</div>
+<p-menu #menu [model]="items" [popup]="true" (onHide)="menuVisible.set(false)" (onShow)="menuVisible.set(true)" styleClass="p-menu-avatar" appendTo="body"></p-menu>
+
+</header>

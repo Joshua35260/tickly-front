@@ -1,0 +1,42 @@
+
+.page-header {
+
+    .header-title{
+    font-size: 50px;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 24px;
+    line-height: 1.25;
+    padding-left: 10px;
+    
+    small{
+      display: block;
+      font-size: 17px;
+      font-weight: 300;
+    }
+  }
+
+  .header-avatar {
+    position: absolute;
+    top:0;
+    right: 0;
+    cursor: pointer;
+    background-color: transparent;
+  }
+  
+  .header-avatar-menu-open {
+    background-color: white;
+    border-radius: 50% 50% 0 0;
+    z-index: 99;
+    opacity: 1;
+    transition: background-color 0.2s ease-out;
+  }
+
+  .avatar {
+    overflow: hidden;
+    border-radius: 5px 0 0 5px;
+  }
+
+}
+
+

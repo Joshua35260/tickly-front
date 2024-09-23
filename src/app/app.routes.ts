@@ -16,13 +16,22 @@ export const routes: Routes = [
     path: '',
     canActivate: [AuthGuard],
     component: HomeContainerComponent,
+    data: {
+      header: {
+        title: 'Outil de planification',
+        description: 'Planifier les interventions',
+      },
+    },
   },
   {
     path: 'users',
     canActivate: [AuthGuard],
     component: UserContainerComponent,
     data: {
-
+      header: {
+        title: 'Gestion des utilisateurs',
+        description: 'Gérer les utilisateurs de la plateforme',
+      },
     },
   },
 

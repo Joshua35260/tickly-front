@@ -1,9 +1,17 @@
 import { DestroyRef, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { User } from '../models/user.class';
-import { BehaviorSubject, catchError, Observable, of, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  filter,
+  Observable,
+  of,
+  switchMap,
+  take,
+} from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { Auth } from '../models/auth.class';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -30,11 +38,51 @@ export class AuthService {
     private destroyRef: DestroyRef
   ) {
     this.checkToken().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntilDestroyed(this.destroyRef),
+  ).subscribe(() => {
+      if (!this.user$.value) {
+          this.fetchUserFromToken();
+      }
+  });;
   }
 
   get user(): Observable<User> {
     return this.user$.asObservable();
   }
+  fetchUserFromToken() {
+    const tokenFromLocalStorage = localStorage.getItem(
+      AuthService.LIKORN_TOKEN
+    );
+    if (tokenFromLocalStorage) {
+      const decodedToken: any = jwtDecode(tokenFromLocalStorage);
+      const userId = decodedToken.userId;
+      if (!this.user$.value) {
+        this.fetchUser(userId);
+      }
+    }
+  }
+
+  fetchUser(userId: number) {
+    if (this.user$.value) {
+        return;
+    }
+
+    this.http.get<User>(`${this.apiUrl}/user/${userId}`).pipe(
+        switchMap(user => {
+            this.user$.next(user);
+            console.log('User from API:', user);
+            return of(true);
+        }),
+        catchError(err => {
+            console.error('Failed to fetch user details:', err);
+            this.user$.next(null);
+            return of(false);
+        })
+    ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+}
+
 
   signIn(details: SigninDetails): Observable<Auth> {
     console.log('details', details);
@@ -46,8 +94,8 @@ export class AuthService {
       .pipe(
         switchMap((response) => {
           if (response) {
-            const { user, token } = response; // Déstructurer l'utilisateur et le token
-            this.user$.next(user); // Mettre à jour l'utilisateur
+            const { user, token } = response;
+            this.user$.next(user);
             localStorage.setItem(AuthService.USER_LOGIN, details.login);
             localStorage.setItem(AuthService.LIKORN_TOKEN, token); // Stocker le token dans le localStorage en + du cookie
             return of(response);
@@ -62,14 +110,15 @@ export class AuthService {
   }
 
   checkToken(): Observable<boolean> {
-    const tokenFromLocalStorage = localStorage.getItem(AuthService.LIKORN_TOKEN);
+    const tokenFromLocalStorage = localStorage.getItem(
+      AuthService.LIKORN_TOKEN
+    );
     if (tokenFromLocalStorage) {
       try {
         const decodedToken: any = jwtDecode(tokenFromLocalStorage);
         const expiresAt = decodedToken.exp * 1000;
 
         if (expiresAt > Date.now()) {
-          this.user$.next(decodedToken.user); // Mettre à jour l'utilisateur à partir de localStorage
           return of(true); // L'utilisateur est authentifié
         } else {
           console.warn('LocalStorage token has expired');
@@ -79,12 +128,8 @@ export class AuthService {
       }
     }
 
-    this.user$.next(null); // L'utilisateur n'est pas authentifié
-    return of(false);
-  }
-
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`http://localhost:3000/api/user`);
+    this.user$.next(null);
+    return of(false); // L'utilisateur n'est pas authentifié
   }
 
   getLogin(): string {

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { PrimaryNavbarComponent } from './shared/primary-navbar/primary-navbar.component';
 import { filter } from 'rxjs';
-
+import { PageHeaderComponent } from './shared/common/page-header/page-header.component';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +10,19 @@ import { filter } from 'rxjs';
   styleUrl: './app.component.scss',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, PrimaryNavbarComponent],
+  imports: [RouterOutlet,
+    PrimaryNavbarComponent,
+    PageHeaderComponent,
+  
+  ],
  
 })
 export class AppComponent {
   title = 'Tickly';
   showNavbar = true;
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+  ) {
     // Ecouter les événements de navigation pour ajuster l'affichage de la navbar
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
