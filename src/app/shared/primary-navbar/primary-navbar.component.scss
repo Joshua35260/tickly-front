@@ -1,0 +1,80 @@
+.primary-navbar {
+  --mask-height: 95px;
+  background: linear-gradient(180deg, #EFF1F5 0%, #E4E5E9 77.45%);
+  &:before {
+    width: 75px;
+    background-color: #1E1E1E;
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    -webkit-mask: var(--nav-mask) right no-repeat, linear-gradient(#fff 0 0);
+    mask: var(--nav-mask) right no-repeat, linear-gradient(#fff 0 0);
+    mask-size: auto var(--mask-height);
+    /* we need this extra layer for mask-composite */
+    -webkit-mask-size: auto var(--mask-height);
+    -webkit-mask-position-y: var(--ngVar_maskY);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    transition: -webkit-mask-position-y ease 0.3s;
+    transform-style: preserve-3d;
+    transform: translate3d(0px, 0px, 0px);
+  }
+
+
+  .logo {
+    // position: absolute;
+    // bottom: 0;
+    // z-index: 10;
+    // margin: 10px auto;
+    // background: var(--logo-mini);
+    // display: block;
+    // height: 120px;
+    // width: 60px;
+    // left: 8px;
+  }
+
+
+  ul {
+    padding: 0;
+    margin-top: 90px;
+
+    li {
+      display: block;
+      position: relative;
+      width: 100%;
+      a {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        height: 70px;
+        cursor: pointer;
+
+        &.disabled {
+          pointer-events: none;
+          cursor: default;
+        }
+      }
+
+      i:before {
+        font-size: 35px;
+      }
+
+      .with-sub.active {
+        color: white;
+      }
+
+      .active {
+        color: var(--primary-light-color);
+      }
+    }
+
+  }
+
+
+}

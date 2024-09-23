@@ -1,13 +1,7 @@
 import { DestroyRef, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { User } from '../models/user.class';
-import {
-  BehaviorSubject,
-  catchError,
-  Observable,
-  of,
-  switchMap,
-} from 'rxjs';
+import { BehaviorSubject, catchError, Observable, of, switchMap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
@@ -24,9 +18,8 @@ interface SigninDetails {
 export class AuthService {
   private apiUrl = environment.apiUrl;
 
-  private static readonly USER_LOGIN = 'likorn-login';
-  private static readonly LIKORN_TOKEN = 'likorn-token';
-  private static readonly LIKORN_TOKEN_EXPIRES = 'likorn-token-expires';
+  private static readonly USER_LOGIN = 'Tickly-login';
+  private static readonly LIKORN_TOKEN = 'Tickly';
 
   private user$: BehaviorSubject<User | null> =
     new BehaviorSubject<User | null>(null);
@@ -36,7 +29,7 @@ export class AuthService {
     private router: Router,
     private destroyRef: DestroyRef
   ) {
-    this.checkCookie().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.checkToken().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   get user(): Observable<User> {
@@ -68,30 +61,21 @@ export class AuthService {
       );
   }
 
-  checkCookie(): Observable<boolean> {
-    const cookieName = AuthService.LIKORN_TOKEN;
-    const cookies = document.cookie.split(';');
-    let cookieValue = '';
-
-    for (let cookie of cookies) {
-      cookie = cookie.trim();
-      if (cookie.startsWith(cookieName + '=')) {
-        cookieValue = cookie.substring(cookieName.length + 1);
-        break;
-      }
-    }
-
-    if (cookieValue) {
+  checkToken(): Observable<boolean> {
+    const tokenFromLocalStorage = localStorage.getItem(AuthService.LIKORN_TOKEN);
+    if (tokenFromLocalStorage) {
       try {
-        const decodedToken: any = jwtDecode(cookieValue);
+        const decodedToken: any = jwtDecode(tokenFromLocalStorage);
         const expiresAt = decodedToken.exp * 1000;
 
         if (expiresAt > Date.now()) {
-          this.user$.next(decodedToken.user);
+          this.user$.next(decodedToken.user); // Mettre à jour l'utilisateur à partir de localStorage
           return of(true); // L'utilisateur est authentifié
+        } else {
+          console.warn('LocalStorage token has expired');
         }
       } catch (error) {
-        console.error('Token decoding error:', error);
+        console.error('LocalStorage token decoding error:', error);
       }
     }
 

@@ -1,0 +1,12 @@
+<div 
+  class="avatar" 
+  [style.background-color]="!!avatarUrl() ? '' : color" 
+  [style.height.px]="height() ? height() : size()" 
+  [style.width.px]="width() ? width() : size()">
+  
+  @if (avatarUrl$ | async; as avatarUrl) {
+    <img  [src]="fileDownloadUrl + avatarUrl" (error)="handleAvatarError()" alt="Avatar">
+  } @else {
+    <span [style.fontSize.px]="calculateFontSize()">{{initials}}</span>
+  }
+</div>

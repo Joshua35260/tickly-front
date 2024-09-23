@@ -7,6 +7,8 @@ import { User } from '../../../core/models/user.class';
 import { UserService } from '../../../core/services/user.service';
 import { InputComponent } from '../../../shared/common/input/input.component';
 import { ButtonModule } from 'primeng/button';
+import { PasswordModule } from 'primeng/password';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +19,9 @@ import { ButtonModule } from 'primeng/button';
   imports: [
     InputComponent,
     ReactiveFormsModule,
-    ButtonModule
+    ButtonModule,
+    PasswordModule,
+    FloatLabelModule,
   ],
 })
 export class RegisterComponent {

@@ -31,7 +31,6 @@ import { CheckboxModule } from 'primeng/checkbox';
     ButtonModule,
     InputComponent,
     ReactiveFormsModule,
-    CheckboxModule,
   ],
 })
 export class LoginComponent {
@@ -48,7 +47,6 @@ switchView = output<void>();
     this.loginForm = new FormGroup({
       login: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
-      remember: new FormControl(false),
     });
   }
 

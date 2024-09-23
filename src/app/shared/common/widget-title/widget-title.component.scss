@@ -1,0 +1,54 @@
+
+@import "@assets/primeng/theme/theme.scss";
+
+.title-c {
+  display: flex;
+  gap: 6px;
+  line-height: 1.15;
+  margin-bottom: 15px;
+  
+  .icon,i {
+    color: $primaryColor;
+    font-size: 28px;
+    min-width: 30px;
+    @include md {
+      font-size: 24px;
+      min-width: 26px;
+    }
+    @include sm {
+      font-size: 22px;
+      min-width: 24px;
+    }
+  }
+
+  .subtitle {
+    font-size: 16px;
+    @include md {
+      font-size: 14px;
+    }
+    @include sm {
+      font-size: 13px;
+    }
+    font-weight: 300;
+    ::ng-deep {
+      b {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .title {
+    font-size: 25px;
+    @include md {
+      font-size: 22px;
+    }
+    @include sm {
+      font-size: 19px;
+    }
+    font-weight: 300;
+
+    b {
+      font-weight: 600;
+    }
+  }
+}

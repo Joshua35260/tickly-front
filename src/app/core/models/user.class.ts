@@ -1,3 +1,4 @@
+import { Address } from "./address.class";
 import { Email } from "./email.class";
 import { Phone } from "./phone.class";
 import { Role } from "./role.class";
@@ -11,4 +12,12 @@ export class User {
   roles: Role[];
   emails: Email[];
   phones: Phone[];
+  
+  addresses: Address[];
+  avatarUrl?: string;
+  archive?: boolean;
+
+  get fullName(): string {
+    return `${this.firstname} ${this.lastname}`;
+  }
 }

@@ -1,0 +1,7 @@
+<div class="widget-title title-c">
+  <i *ngIf="!!icon()" class="{{ icon() }}"></i>
+  <div class="titles">
+    <div class="title" *ngIf="!!title()" [innerHtml]="title() | boldFirstWord"></div>
+    <small class="subtitle" *ngIf="!!subtitle()" [innerHtml]="subtitle()"></small>
+  </div>
+</div>

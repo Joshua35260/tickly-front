@@ -1,0 +1,52 @@
+<!--! don't forget to use the _card.scss file for the css !-->
+
+<div class ="card'">
+
+  <div class="card-top" (click)="openContact.emit(contact().id)">
+    <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'">
+
+
+      <app-avatar
+          class="avatar"
+          [avatarUrl]="contact().avatarUrl"
+          [fullname]="contact().fullName"
+          size="35">
+        </app-avatar>
+    </div>
+
+    @if (withMenu()) {
+    <i class="icon-menu pi pi-ellipsis-v" (click)="menu.toggle($event); onMenuOpen()">
+      <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body"></p-menu>
+    </i>
+    }
+
+      <div class="card-main-info flex flex-col">
+        <div class="card-top-title">
+          {{contact().firstname }} {{contact().lastname}}
+          <small #small *ngIf="contact().roles?.length > 0">
+            <span>({{contact().roles.join(', ')}})</span>
+          </small>
+        </div>
+
+        <div class="card-contact">
+          <div class="card-small-icon" *ngIf="contact().phones && contact().phones.length > 0"><i
+              class="icon-phone"></i>
+            {{contact().phones?.[0].phone}}</div>
+          <div class="card-small-icon" *ngIf="contact().emails && contact().emails.length > 0"><i class="icon-mail"></i>
+            {{contact().emails?.[0].email}}</div>
+        </div>
+      </div>
+<!--     
+      @if(contact().archive) {
+      <div class="archive-info">
+        Archivé<i class="icon-archive"></i>
+      </div>
+      } -->
+    </div>
+  </div>
+
+
+  
+
+
+</div>

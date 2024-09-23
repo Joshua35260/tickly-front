@@ -6,8 +6,10 @@
     <app-input formControlName="firstname" label="Prénom *"></app-input>
     <app-input formControlName="lastname" label="Nom *"></app-input>
     <app-input formControlName="login" label="Login *"></app-input>
-    <app-input formControlName="password" type="password" label="Mot de passe *"></app-input>
-    
+    <p-floatLabel>
+      <p-password formControlName="password" type="password"></p-password>
+      <label>Mot de passe *</label>
+    </p-floatLabel>
     <button pButton type="submit">S'inscrire</button>
   </form>
 

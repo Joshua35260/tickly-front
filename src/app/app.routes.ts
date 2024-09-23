@@ -2,30 +2,31 @@ import { Routes } from '@angular/router';
 import { HomeContainerComponent } from './containers/home/home-container/home-container.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { LoginContainerComponent } from './containers/auth/auth-container.component';
+import { UserContainerComponent } from './containers/user/user-container/user-container.component';
 
 export const routes: Routes = [
   {
     path: 'auth',
+    data: {
+      withNavbar: false,
+    },
     component: LoginContainerComponent,
   },
   {
     path: '',
     canActivate: [AuthGuard],
     component: HomeContainerComponent,
-    children: [
+  },
+  {
+    path: 'users',
+    canActivate: [AuthGuard],
+    component: UserContainerComponent,
+    data: {
 
-      // {
-      //   path: 'contacts',
-      //   loadChildren: () => import('./contacts/contacts-routing.container.module').then(m => m.ContactsRoutingContainerModule),
-      //   data: {
-      //     showSecondaryNavBar: true
-      //   }
-      // },
+    },
+  },
 
-      // Autres routes modales et panneaux
-      // ...ModalsRouting,
-      // ...PanelsRouting
-    ],
-    // canActivateChild: [AuthGuard]
-  }
+  // Autres routes modales et panneaux
+  // ...ModalsRouting,
+  // ...PanelsRouting
 ];

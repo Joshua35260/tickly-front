@@ -1,0 +1,12 @@
+<nav [style.--ngVar_maskY]="maskY" class="primary-navbar">
+  <a href="/" class="logo"></a>
+  <ul>
+
+    <li><a [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><i class="pi pi-home" pTooltip="Tableau de bord" tooltipPosition="right" showDelay="1000" hideDelay="300"></i></a></li>
+    <li><a [routerLink]="['/tickets']" routerLinkActive="active"><i class="pi pi-tags" pTooltip="Carnet d'adresses" tooltipPosition="right" showDelay="1000" hideDelay="300"></i></a></li>
+    <li><a [routerLink]="['/users']" routerLinkActive="active"><i class="pi pi-users" pTooltip="Carnet d'adresses" tooltipPosition="right" showDelay="1000" hideDelay="300"></i></a></li>
+    <li><a [routerLink]="['/structures']" routerLinkActive="active"><i class="pi pi-globe" pTooltip="Carnet d'adresses" tooltipPosition="right" showDelay="1000" hideDelay="300"></i></a></li>
+
+  </ul>
+
+</nav>

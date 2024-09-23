@@ -19,16 +19,18 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | boolean {
-    return this.authService.checkCookie().pipe(
+    return this.authService.checkToken().pipe(
       map((isAuthenticated: boolean) => {
+        console.log('isAuthenticated:', isAuthenticated); // Ajouter cette ligne pour déboguer
         if (!isAuthenticated) {
-          this.router.navigate(['/auth']); // Rediriger vers la page d'authentification
-          return false; // Empêcher l'accès à la route
+          this.router.navigate(['/auth']);
+          return false;
         }
-        return true; // Autoriser l'accès à la route
+        return true;
       })
     );
   }
+  
   
     
 

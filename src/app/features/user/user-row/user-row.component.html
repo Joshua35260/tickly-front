@@ -1,0 +1,42 @@
+<!--! don't forget to use the _card.scss file for the css !-->
+
+<div class="card">
+
+  <div class="card-top only" (click)="openUser.emit(user().id)">
+    <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'">
+
+
+      <app-avatar class="avatar" [fullname]="user().firstname + user().lastname" [size]="60">
+      </app-avatar>
+
+      @if (withMenu()) {
+      <i class="icon-menu pi pi-ellipsis-v" (click)="menu.toggle($event); onMenuOpen()">
+        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body"></p-menu>
+      </i>
+      }
+
+      <div class="card-main-info flex flex-col">
+        <div class="card-top-title">
+          {{user().firstname }} {{user().lastname}}
+          <small #small *ngIf="user().roles?.length > 0">
+            <span>{{getRoleNames()}}</span>
+          </small>
+        </div>
+
+        <div class="card-contact">
+          <div class="card-small-icon" *ngIf="user().phones && user().phones.length > 0"><i class="icon-phone"></i>
+            {{user().phones?.[0].phone}}</div>
+          <div class="card-small-icon" *ngIf="user().emails && user().emails.length > 0"><i class="icon-mail"></i>
+            {{user().emails?.[0].email}}</div>
+        </div>
+      </div>
+
+      @if(user().archive) {
+      <div class="archive-info">
+        Archivé<i class="icon-archive"></i>
+      </div>
+      }
+
+    </div>
+  </div>
+</div>

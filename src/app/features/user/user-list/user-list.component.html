@@ -1,0 +1,9 @@
+<div class="user-list">
+@if (!!users()) {
+  <div class="scroll-list">
+    @for  (user of users(); track user.id) {
+      <app-user-row [user]="user"></app-user-row>
+    }
+  </div>
+}
+</div>

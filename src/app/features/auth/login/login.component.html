@@ -2,13 +2,10 @@
     <h1 class="title">Bienvenue</h1>
     <h2 class="subtitle">Entrez vos identifiants</h2>
 
-    <form class="card-body grid grid-cols-1 gap-medium" [formGroup]="loginForm" (ngSubmit)="onSignin()" novalidate>
+    <form class="card-body grid grid-cols-1 gap-large" [formGroup]="loginForm" (ngSubmit)="onSignin()" novalidate>
           <app-input formControlName="login" label="Nom d'utilisateur"></app-input>
-          <app-input formControlName="password" label="Mot de passe"></app-input>
-          <div class="flex align-center gap-small">
-          <p-checkbox formControlName="remember" value="New York" inputId="remember" />
-          <label for="remember">Se souvenir de moi</label>
-          </div>
+          <app-input formControlName="password" type="password" label="Mot de passe"></app-input>
+
           <button pButton type="submit">Se connecter</button>
           <a class="forgot-password">Mot de passe oublié ?</a>
     </form>
