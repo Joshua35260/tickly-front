@@ -64,7 +64,6 @@ export class PageHeaderComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((user) => {
         if (user) {
-          console.log('user from pageheader', user);
           this.userConnected.set(user);
         }
       });

@@ -50,6 +50,9 @@
 }
 
 .p-float-label > label {
+    top: -0.35rem;
+    font-style: italic;
+    font-size: 0.75rem;
     left: nth($inputPadding, 2);
     color: $inputPlaceholderTextColor;
     transition-duration: $transitionDuration;

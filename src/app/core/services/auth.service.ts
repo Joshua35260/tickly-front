@@ -72,7 +72,6 @@ export class AuthService {
     this.http.get<User>(`${this.apiUrl}/user/${userId}`).pipe(
         switchMap(user => {
             this.user$.next(user);
-            console.log('User from API:', user);
             return of(true);
         }),
         catchError(err => {
@@ -85,7 +84,6 @@ export class AuthService {
 
 
   signIn(details: SigninDetails): Observable<Auth> {
-    console.log('details', details);
 
     const options = { withCredentials: true };
 
@@ -119,9 +117,10 @@ export class AuthService {
         const expiresAt = decodedToken.exp * 1000;
 
         if (expiresAt > Date.now()) {
+ 
           return of(true); // L'utilisateur est authentifié
         } else {
-          console.warn('LocalStorage token has expired');
+          console.warn('Token expired:', new Date(expiresAt), 'Current time:', new Date());
         }
       } catch (error) {
         console.error('LocalStorage token decoding error:', error);

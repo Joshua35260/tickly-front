@@ -64,7 +64,6 @@ switchView = output<void>();
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((auth) => {
         if (auth) {
-          console.log('auth in component', auth);
           this.router.navigate(['/']);
         } else {
           console.error('Sign-in failed');
