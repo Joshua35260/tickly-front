@@ -2,9 +2,27 @@
 	box-sizing: border-box;
 }
 
-.p-component {
+html {
+    font-size: 1rem;
+    height: 100%;
+}
+
+body {
     font-family: var(--font-family);
-    font-feature-settings: var(--font-feature-settings, normal);
+    background: var(--surface-ground);
+    color: var(--text-color);
+    padding: 0;
+    margin: 0;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    &.disable-user-select * {
+        user-select: none;
+    }
+}
+
+.p-component {
+    font-family: $fontFamily;
     font-size: $fontSize;
     font-weight: $fontWeight;
 }
@@ -12,6 +30,8 @@
 .p-component-overlay {
     background-color: $maskBg;
     transition-duration: $transitionDuration;
+    backdrop-filter: blur(8px);
+    
 }
 
 .p-disabled, .p-component:disabled {
@@ -36,12 +56,11 @@
 }
 
 .p-link {
-    font-family: var(--font-family);
-    font-feature-settings: var(--font-feature-settings, normal);
     font-size: $fontSize;
+    font-family: $fontFamily;
     border-radius: $borderRadius;
 
-    &:focus-visible {
+    &:focus {
         @include focused();
     }
 }
@@ -73,3 +92,9 @@
         }
     }
 }
+
+.historical-card-container {
+    display: block;
+    height: calc(100% - 70px);
+  }
+  

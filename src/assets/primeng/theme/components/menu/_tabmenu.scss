@@ -29,7 +29,7 @@
                     margin-right: $inlineSpacing;
                 }
 
-                &:not(.p-disabled):focus-visible {
+                &:not(.p-disabled):focus {
                     @include focused-inset();
                 }
             }

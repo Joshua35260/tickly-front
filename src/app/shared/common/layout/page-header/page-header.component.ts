@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   DestroyRef,
   signal,
@@ -13,7 +14,7 @@ import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { AvatarComponent } from '../avatar/avatar.component';
+import { AvatarComponent } from '../../avatar/avatar.component';
 
 @Component({
   selector: 'app-page-header',
@@ -51,13 +52,19 @@ export class PageHeaderComponent {
     private destroyRef: DestroyRef,
     private route: ActivatedRoute,
     protected router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {
     this.headerTexts$ = this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
       switchMap(() => this.route.firstChild?.data || []),
       takeUntilDestroyed(this.destroyRef),
-      map((data: any) => data?.header)
+      map((data: any) => {
+        console.log('data :', data);
+
+        this.cdr.detectChanges();  // Forcer la détection des changements
+        return data?.header;
+      })
     );
 
     this.authService.user
@@ -67,6 +74,7 @@ export class PageHeaderComponent {
           this.userConnected.set(user);
         }
       });
+      
   }
 
   // Rediriger vers le profil de l'utilisateur

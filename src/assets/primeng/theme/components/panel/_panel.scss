@@ -1,4 +1,5 @@
 .p-panel {
+  
     .p-panel-header {
         border: $panelHeaderBorder;
         padding: $panelHeaderPadding;
@@ -27,12 +28,9 @@
         border: $panelContentBorder;
         background: $panelContentBg;
         color: $panelContentTextColor;
+        border-bottom-right-radius: $borderRadius;
+        border-bottom-left-radius: $borderRadius;
         border-top: 0 none;
-
-        &:last-child {
-            border-bottom-right-radius: $borderRadius;
-            border-bottom-left-radius: $borderRadius;
-        }
     }
 
     .p-panel-footer {
@@ -40,8 +38,6 @@
         border: $panelFooterBorder;
         background: $panelFooterBg;
         color: $panelFooterTextColor;
-        border-bottom-right-radius: $borderRadius;
-        border-bottom-left-radius: $borderRadius;
         border-top: 0 none;
     }
 

@@ -5,17 +5,9 @@
     border: $menuBorder;
     border-radius: $borderRadius;
     width: $menuWidth;
-    
-    .p-slidemenu-root-list {
-        outline: 0 none;
-    }
 
-    .p-submenu-list {
-        outline: 0 none;
-    }
-
-    .p-menuitem {
-        @include menuitem();
+    .p-menuitem-link {
+        @include menuitem-link();
     }
 
     &.p-slidemenu-overlay {
@@ -31,7 +23,23 @@
         box-shadow: $overlayMenuShadow;
     }
 
-    .p-menuitem-separator {
+    .p-slidemenu {
+        &.p-slidemenu-active {
+            > .p-slidemenu-link {
+                background: $menuitemActiveBg;
+
+                .p-slidemenu-text {
+                    color: $menuitemTextActiveColor;
+                }
+
+                .p-slidemenu-icon, .p-slidemenu-icon {
+                    color: $menuitemIconActiveColor;
+                }
+            }
+        }
+    }
+
+    .p-slidemenu-separator {
         border-top: $divider;
         margin: $menuSeparatorMargin;
     }
@@ -48,9 +56,6 @@
     .p-slidemenu-backward {
         padding: $menuitemPadding;
 	    color: $menuitemTextColor;
-        &:not(.p-disabled):focus {
-            @include focused-inset();
-        }
     }
 
     .p-menuitem-badge {

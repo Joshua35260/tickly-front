@@ -1,10 +1,27 @@
-p-calendar.ng-dirty.ng-invalid > .p-calendar > .p-inputtext {
-    @include invalid-input();
+p-calendar{
+    .p-calendar:after{
+        display: block;
+        font-family: icomoon;
+        content:"\e903";
+        position: absolute;
+        right: 10px;
+        top: calc(50% - 14px);
+        font-size: 20px;
+    }    
+    &.ng-dirty.ng-invalid > .p-calendar > .p-inputtext {
+        @include invalid-input();
+    }
 }
 
-.p-calendar:not(.p-calendar-disabled).p-focus > .p-inputtext {
-    @include focused-input();
+.p-calendar-clear-icon {
+  right: 0; 
+  top: 53%; 
+  margin-right: 25px; 
 }
+
+.p-calendar {
+    width: 100%;
+  }
 
 .p-datepicker {
     padding: $calendarPadding;
@@ -113,6 +130,14 @@ p-calendar.ng-dirty.ng-invalid > .p-calendar > .p-inputtext {
 
         .p-button {
             width: auto;
+            margin: auto;
+            &:hover {
+                color: white;
+            }
+        }
+        
+        .hide {
+            display: none;
         }
     }
 
@@ -249,7 +274,7 @@ p-calendar.p-calendar-clearable {
     }
 }
 
-p-calendar.p-calendar-clearable .p-calendar-w-btn {
+p-calendar.p-calendar-clearable.p-calendar-w-btn {
     .p-calendar-clear-icon {
         color: $inputIconColor;
         right: $buttonIconOnlyWidth + nth($inputPadding, 2);
@@ -265,3 +290,8 @@ p-calendar.p-calendar-clearable .p-calendar-w-btn {
         }
     }
 }
+
+.text-week {
+    text-overflow:none!important;
+    text-wrap: wrap!important;
+  }

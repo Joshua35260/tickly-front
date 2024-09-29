@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   input,
   model,
+  OnInit,
   Optional,
   output,
   Self,
@@ -25,7 +27,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
 })
-export class InputComponent implements ControlValueAccessor {
+export class InputComponent implements ControlValueAccessor, AfterViewInit{
   valueChange = output<string>();
   label = input<string>();
   formControlName = input<string>();
@@ -56,7 +58,11 @@ export class InputComponent implements ControlValueAccessor {
   constructor(@Optional() @Self() public ngControl: NgControl) {
     if (ngControl) {
       ngControl.valueAccessor = this;
+   
     }
+  }
+  ngAfterViewInit(): void {
+    this.updateClass();
   }
   // Method for updating the class
   updateClass(): void {
@@ -78,5 +84,6 @@ export class InputComponent implements ControlValueAccessor {
     } else {
       this.classInput.set('empty');
     }
+
   }
 }

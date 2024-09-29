@@ -4,13 +4,13 @@
     border-radius: $borderRadius;
     padding: $breadcrumbPadding;
 
-    .p-breadcrumb-list {
+    ul {
         li {
             .p-menuitem-link {
                 transition: $listItemTransition;
                 border-radius: $borderRadius;
 
-                &:focus-visible {
+                &:focus {
                     @include focused();
                 }
 
@@ -23,7 +23,7 @@
                 }
             }
 
-            &.p-menuitem-separator {
+            &.p-breadcrumb-chevron {
                 margin: 0 $inlineSpacing 0 $inlineSpacing;
                 color: $breadcrumbSeparatorColor;
             }

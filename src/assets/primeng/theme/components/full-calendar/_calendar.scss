@@ -1,0 +1,73 @@
+.fc.fc-calendar.fc-theme-standard {
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #FD5842 #F8ECEA;
+  }
+
+  table.fc-scrollgrid {
+    border: none;
+  }
+  .fc-header-toolbar {
+    margin-bottom: 0;
+  }
+  .fc-view-harness {
+    .fc-view {
+      background: none;
+    }
+
+    th {
+      background: none;
+      border: none;
+      a {
+        text-decoration: none;
+        font-weight: normal;
+      }
+    }
+
+    .fc-col-header, .fc-daygrid-body, .fc-daygrid-body table {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    td[role=presentation] {
+      border: none;
+    }
+
+    .fc-daygrid-body {
+      border: 1px solid #CBCBCB;
+      border-radius: 10px;
+      background-color: #fff;
+      .fc-event {
+        padding: 0;
+        border-radius: 5px;
+        margin-top: 2px;
+        display: flex;
+        align-items: center;
+        height: fit-content!important;
+      }
+      .fc-scrollgrid-sync-table {
+        tr {
+          td.fc-day:last-child {
+            border-right: none;
+          }
+          a {
+            font-size: 12px;
+            text-decoration: none;
+            &.fc-daygrid-block-event {
+              * {
+                color: white;
+              }
+              .fc-event-time {
+                display: none;
+              }
+            }
+          }
+          .fc-event-time {
+            min-width: unset;
+          }
+        }
+      }
+    }
+  }
+}
+

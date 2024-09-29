@@ -10,14 +10,13 @@
         color: $textColor;
         border-radius: $borderRadius;
         transition: $formElementTransition;
-        outline-color: transparent;
 
         .p-checkbox-icon {
             transition-duration: $transitionDuration;
             color: $checkboxIconActiveColor;
             font-size: $checkboxIconFontSize;
         }
-
+        
         .p-icon {
             width: $checkboxIconFontSize;
             height: $checkboxIconFontSize;
@@ -39,32 +38,10 @@
                 @include focused-input();
             }
 
-            &.p-highlight:hover {
+            &.p-highlight:hover {    
                 border-color: $checkboxActiveHoverBorderColor;
                 background: $checkboxActiveHoverBg;
                 color: $checkboxIconActiveHoverColor;
-            }
-        }
-    }
-
-    &.p-variant-filled {
-        .p-checkbox-box {
-            background-color: $inputFilledBg;
-
-            &.p-highlight {
-                background: $checkboxActiveBg;
-            }
-        }
-
-        &:not(.p-checkbox-disabled) {
-            .p-checkbox-box {
-                &:hover {
-                    background-color: $inputFilledHoverBg;
-                }
-
-                &.p-highlight:hover {
-                    background: $checkboxActiveHoverBg;
-                }
             }
         }
     }
@@ -83,12 +60,14 @@ p-checkbox.ng-dirty.ng-invalid > .p-checkbox > .p-checkbox-box {
                 background: $checkboxActiveBg;
             }
         }
+
         &:not(.p-checkbox-disabled) {
             .p-checkbox-box {
                 &:hover {
                     background-color: $inputFilledHoverBg;
                 }
-                &.p-highlight:hover {
+        
+                &.p-highlight:hover {    
                     background: $checkboxActiveHoverBg;
                 }
             }
@@ -103,13 +82,10 @@ p-checkbox.ng-dirty.ng-invalid > .p-checkbox > .p-checkbox-box {
 @if ($highlightBg == $checkboxActiveBg) {
     .p-highlight {
         .p-checkbox {
+          
             .p-checkbox-box {
                 border-color: $checkboxIconActiveColor;
             }
         }
     }
-}
-
-p-tristatecheckbox.ng-dirty.ng-invalid > .p-checkbox > .p-checkbox-box {
-    @include invalid-input();
-}
+} 

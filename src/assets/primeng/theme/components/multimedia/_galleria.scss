@@ -141,12 +141,6 @@
                 color: $galleriaThumbnailNavigatorHoverColor;
             }
         }
-
-        .p-galleria-thumbnail-item-content {
-            &:focus-visible {
-                @include focused();
-            }
-        }
     }
 }
 

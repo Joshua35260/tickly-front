@@ -5,16 +5,35 @@
     border: $horizontalMenuBorder;
     border-radius: $borderRadius;
 
-    .p-menubar-root-list {
-        outline: 0 none;
-
-        > .p-menuitem {
-            @include horizontal-rootmenuitem();
-        }
+    .p-menuitem-link {
+        @include menuitem-link();
     }
 
-    .p-menuitem {
-        @include menuitem();
+    .p-menubar-root-list {
+        > .p-menuitem {
+            > .p-menuitem-link {
+                @include horizontal-rootmenuitem-link();
+            }
+
+            &.p-menuitem-active {
+                > .p-menuitem-link,
+                > .p-menuitem-link:not(.p-disabled):hover {
+                    background: $horizontalMenuRootMenuitemActiveBg;
+            
+                    .p-menuitem-text {
+                        color: $horizontalMenuRootMenuitemTextActiveColor;
+                    }
+            
+                    .p-menuitem-icon {
+                        color: $horizontalMenuRootMenuitemIconActiveColor;
+                    }
+                    
+                    .p-submenu-icon {
+                        color: $horizontalMenuRootMenuitemIconActiveColor;
+                    }
+                }
+            }
+        }
     }
 
     .p-submenu-list {
@@ -23,9 +42,8 @@
         border: $overlayMenuBorder;
         box-shadow: $overlayMenuShadow;
         width: $menuWidth;
-        border-radius: $borderRadius;
 
-        .p-menuitem-separator {
+        .p-menu-separator {
             border-top: $divider;
             margin: $menuSeparatorMargin;
         }
@@ -33,6 +51,39 @@
         .p-submenu-icon {
             font-size: $menuitemSubmenuIconFontSize;
         }
+
+        .p-icon {
+            width: $menuitemSubmenuIconFontSize;
+            height: $menuitemSubmenuIconFontSize;
+        }
+
+        .p-menuitem {
+            margin: $verticalMenuitemMargin;
+    
+            &:last-child {
+                margin: 0;
+            }
+        }
+    }
+
+    .p-menuitem {
+        &.p-menuitem-active {
+            > .p-menuitem-link {
+                background: $menuitemActiveBg;
+
+                .p-menuitem-text {
+                    color: $menuitemTextActiveColor;
+                }
+
+                .p-menuitem-icon, .p-submenu-icon {
+                    color: $menuitemIconActiveColor;
+                }
+            }
+        }
+    }
+
+    .p-menuitem-badge {
+        @include menuitem-badge();
     }
 }
 
@@ -67,7 +118,7 @@
             box-shadow: $overlayMenuShadow;
             width: 100%;
     
-            .p-menuitem-separator {
+            .p-menu-separator {
                 border-top: $divider;
                 margin: $menuSeparatorMargin;
             }
@@ -76,26 +127,23 @@
                 font-size: $menuitemSubmenuIconFontSize;
             }
 
-            .p-menuitem {
+            > .p-menuitem {
                 width: 100%;
                 position: static;
 
-                .p-menuitem-content {
-                    .p-menuitem-link {
-                        .p-submenu-icon {
-                            margin-left: auto;
-                            transition: transform $transitionDuration;
-                        }
+                > .p-menuitem-link {
+                    @include menuitem-link();
+
+                    > .p-submenu-icon {
+                        margin-left: auto;
+                        transition: transform $transitionDuration;
                     }
                 }
 
-
                 &.p-menuitem-active {
-                    > .p-menuitem-content {
-                        > .p-menuitem-link {
-                            > .p-submenu-icon {
-                                transform: rotate(-180deg);
-                            }
+                    > .p-menuitem-link {
+                        > .p-submenu-icon {
+                            transform: rotate(-180deg);
                         }
                     }
                 }
@@ -113,11 +161,9 @@
                 }
 
                 .p-menuitem-active {
-                    > .p-menuitem-content {
-                        > .p-menuitem-link {
-                            > .p-submenu-icon {
-                                transform: rotate(-90deg);
-                            }
+                    > .p-menuitem-link {
+                        > .p-submenu-icon {
+                            transform: rotate(-90deg);
                         }
                     }
                 }

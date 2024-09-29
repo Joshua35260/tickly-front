@@ -1,0 +1,11 @@
+<p-dialog appendTo="body" #dialog [showHeader]="false" [visible]="visible()" (visibleChange)="closeDialog.emit()"
+  [modal]="true" [dismissableMask]="true" [styleClass]="'form-dialog no-header ' + size()">
+  <i class="icon-close" (click)="dialog.close($event)"></i>
+
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+
+</p-dialog>
+
+<ng-template #content>
+  <ng-content></ng-content>
+</ng-template>

@@ -39,5 +39,30 @@ export class UserService {
       })
     );
   }
+  getUser(userId: number): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/user/${userId}`).pipe(
+      catchError((error) => {
+        console.error('Error fetching user', error);
+        return throwError(() => new Error('Error fetching user'));
+      })
+    );
+  }
+
+  updateUser(user: Partial<User>): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/user/${user.id}`, user).pipe(
+      catchError((error) => {
+        console.error('Error updating user', error);
+        return throwError(() => new Error('Error updating user'));
+      })
+    );
+  }
   
+  deleteUser(userId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/user/${userId}`).pipe(
+      catchError((error) => {
+        console.error('Error deleting user', error);
+        return throwError(() => new Error('Error deleting user'));
+      })
+    );
+  }
 }

@@ -1,15 +1,75 @@
+@import "@assets/knacss/mixin.scss";
+
+.wide > .p-sidebar.p-sidebar-right {
+    width: 70%;
+    max-width: 1920px;
+    @include lg {
+      width: 100%;
+    }
+    @include md {
+      width: 100%;
+    }
+    @include sm {
+      width: 100%;
+    }
+  }
+
+  // color of close icon when backward button is displayed
+  .with-backward > .p-sidebar .p-sidebar-header .p-sidebar-close,
+  .p-sidebar-icon {
+    color: var(--primary-color);
+  }
+
 .p-sidebar {
-    background: $overlayContentBg;
-    color: $panelContentTextColor;
-    border: $overlayContentBorder;
-    box-shadow: $overlayContainerShadow;
+
+    &.p-sidebar-right{
+      width: 50%;
+      @media (max-width: 992px) {
+        width: 100%;
+      }
+    }
 
     .p-sidebar-header {
-        padding: $panelHeaderPadding;
-
+        display: block;
+        position: absolute;
+        top: 0;
+        width: 60px;
+        left: 0;
+        z-index: 10;
+       
         .p-sidebar-close,
         .p-sidebar-icon {
             @include action-icon();
+            color: var(--primary-color);
+            margin: 10px auto 8px auto;
+            background-color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            box-shadow: 3px 3px 3px rgba(0,0,0,0.16);
+            @include md {
+                width: 35px;
+                height: 35px;
+                margin: 15px auto 15px 8px;
+            }
+            @include sm {
+                width: 28px;
+                height:28px;
+                margin: 15px auto 15px 6px;
+            }
+            .p-icon{
+                width: 25px;
+                height: 25px;
+                @include md {
+                  width: 23.5px;
+                  height: 23.5px;
+              }
+                @include sm {
+                  width: 20px;
+                  height: 20px;
+                }
+            }
+
         }
 
         & + .p-sidebar-content {
@@ -18,10 +78,32 @@
     }
 
     .p-sidebar-content {
-        padding: $panelContentPadding;
+        padding: 0;
     }
 
     .p-sidebar-footer {
-        padding: $panelHeaderPadding;
+        display: none;
     }
+
+    .panel-title{
+        font-size: 25px;
+        font-weight: 300;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 25px;
+        [class^="icon-"]{
+            display:inline-block;
+            position: absolute;
+            font-size: 25px;
+            top: 4px;
+            left: 0;
+            color: var(--primary-color);
+          }    
+        .first-word{font-weight: 600;}
+        small{
+            display: block;
+            font-size:16px;
+        }
+    }    
+
 }

@@ -8,6 +8,7 @@
         background: $inputSwitchSliderOffBg;
         transition: $formElementTransition;
         border-radius: $inputSwitchBorderRadius;
+        box-shadow: inset 0 3px 6px rgba(0,0,0,0.45);
 
         &:before {
             background: $inputSwitchHandleOffBg;
@@ -17,6 +18,7 @@
             margin-top: math.div(-1 * $inputSwitchHandleHeight, 2);
             border-radius: $inputSwitchHandleBorderRadius;
             transition-duration: $transitionDuration;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.38);
         }
     }
 
@@ -29,6 +31,7 @@
     &.p-focus {
         .p-inputswitch-slider {
             @include focused();
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.45);
         }
     }
 
@@ -41,6 +44,8 @@
     &.p-inputswitch-checked {
         .p-inputswitch-slider {
             background: $inputSwitchSliderOnBg;
+            box-shadow: 0px 1px 9px color-mix(in srgb, $primaryColor 100%, transparent), inset 0 3px 6px rgba(0,0,0,0.45);
+            
 
             &:before {
                 background: $inputSwitchHandleOnBg;
@@ -53,8 +58,24 @@
             }
         }
     }
+
 }
 
-p-inputswitch.ng-dirty.ng-invalid > .p-inputswitch > .p-inputswitch-slider {
-    @include invalid-input();
+label + p-inputswitch{
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+p-inputswitch {
+    display: inline-block;
+    vertical-align: middle;
+
+    + label{
+        margin-left: 10px;
+        cursor: pointer;
+    }    
+
+    &.ng-dirty.ng-invalid > .p-inputswitch {
+        @include invalid-input();
+    }
 }

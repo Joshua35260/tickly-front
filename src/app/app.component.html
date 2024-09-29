@@ -1,14 +1,31 @@
-<div class="main-layout" [class.no-navbar]="!showNavbar">
+<div class="main-layout" [class.no-navbar]="!showNavbar()">
 
-  @if (showNavbar) {
-  <div class="main-nav">
-    <app-primary-navbar></app-primary-navbar>
-  </div>
-}
+  @if (showNavbar()) {
+  <app-primary-navbar></app-primary-navbar>
+  }
 
-<div class="main-content">
-    <app-page-header></app-page-header>
-    <router-outlet />
+  <div class="main-content">
+    @if(showHeader()) {
+      <app-page-header></app-page-header>
+    }
+    <div class="content">
+      <router-outlet />
+    </div>
   </div>
 
 </div>
+
+<app-form-dialog [visible]="modalAuxiliaryRoute()" [size]="modalSize() || 'xxlarge'" (closeDialog)="closeDialog()">
+  <router-outlet name="modal"></router-outlet>
+</app-form-dialog>
+
+<!-- showCloseIcon is false beacause we use our button instead of the default close icon of prime ng -->
+
+<p-sidebar [visible]="panelService.isPanelVisible()" (onHide)="closePanel()" [class.wide]="classWidePanel()"
+  position="right" showCloseIcon="false" [class.with-backward]="panelService.canGoBack() ? true : true"
+  transitionOptions="300ms cubic-bezier(0, 0, 0.2, 1)">
+  <router-outlet name="panel"></router-outlet>
+</p-sidebar>
+
+<p-toast [life]="4000" position="bottom-right"></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>

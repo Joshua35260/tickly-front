@@ -26,6 +26,23 @@
         }
     }
 
+    .focus {
+        .p-dropdown {
+            margin-left: $inlineSpacing;
+            margin-right: $inlineSpacing;
+            height: $paginatorElementHeight;
+            box-shadow: none;
+
+            .p-dropdown-label {
+                padding-right: 0;
+                margin: auto;
+                display: flex;
+                justify-content: center;
+                box-shadow: none;
+            }
+        }
+    }
+
     .p-paginator-first {
         border-top-left-radius: $paginatorElementBorderRadius;
         border-bottom-left-radius: $paginatorElementBorderRadius;
@@ -37,12 +54,21 @@
     }
 
     .p-dropdown {
-        margin-left: $inlineSpacing;
+        margin-left: 0;
         margin-right: $inlineSpacing;
         height: $paginatorElementHeight;
+        max-width: 70px;
+        * {
+            font-size: 14px;
+        }
 
         .p-dropdown-label {
             padding-right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            box-shadow: none;
+            margin-right: -8px;
         }
     }
 
@@ -62,7 +88,8 @@
         min-width: $paginatorElementWidth;
         height: $paginatorElementHeight;
         margin: $paginatorElementMargin;
-        padding: 0 $inlineSpacing;
+        font-size: 13px;
+
     }
 
     .p-paginator-pages {
@@ -75,11 +102,13 @@
             margin: $paginatorElementMargin;
             transition: $listItemTransition;
             border-radius: $paginatorElementBorderRadius;
+            font-size: 13px;
 
             &.p-highlight {
                 background: $highlightBg;
                 border-color: $highlightBg;
-                color: $highlightTextColor;
+                color: white;
+                box-shadow: none;
             }
 
             &:not(.p-highlight):hover {

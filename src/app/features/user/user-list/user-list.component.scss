@@ -1,18 +1,19 @@
 .user-list {
   height: 100%;
   overflow-x: hidden;
-  overflow-y: scroll;
 }
 .list-and-map {
   display: grid;
   grid-template-columns: 1fr 1fr;
   height: 100%;
-
 }
 app-user-row {
   width: 100%;
 }
-
+.scroll-list {
+  height: 100%;
+  overflow-y: auto;
+}
 #map {
   height: 100%;
   border-radius: 10px;

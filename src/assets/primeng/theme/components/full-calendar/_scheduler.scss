@@ -1,0 +1,333 @@
+.fc.view-week.fc-theme-standard {
+  /*!!! Styles specific to view-week !!!!!*/
+
+  td[data-date$="08:00:00"] {
+    border-left: 2px dashed rgba(0, 0, 0, 0.2);
+  }
+
+  th[data-date$="08:00:00"] {
+    // separator for the next day (start at 08:00)
+    border-left: 2px dashed rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .fc-day {
+    border-left: 2px dashed rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+/*!!! Styles specific to view-month !!!!!*/
+.fc.view-month.fc-theme-standard {
+
+  .fc-timeline-header {
+
+    .fc-timeline-slot {
+
+      a {
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+/*!!! Styles for all views !!!!!*/
+.fc.fc-likorn.fc-theme-standard {
+  --grid-even-color: #f2f2f2;
+  --grid-odd-color: white;
+
+  td[data-date$="08:00:00"] {
+    // separator for the next day (start at 08:00)
+    border-left: 2px dashed rgba(0, 0, 0, 0.2);
+  }
+
+  .fc-day-sun {
+    border-right: 2px dashed rgba(0, 0, 0, 0.2) !important;
+  }
+
+
+  th[data-date$="08:00:00"] {
+    // separator for the next day (start at 08:00)
+    border-left: 2px dashed rgba(0, 0, 0, 0.2) !important;
+  }
+
+  .fc-day-separator {
+    border-right: 2px dashed rgba(0, 0, 0, 0.2);
+    height: 100%;
+  }
+
+  .fc-highlight {
+    background-color: transparent;
+  }
+
+  table {
+    margin-bottom: 0;
+  }
+
+  .fc-timeline-header-row {
+    border-top: 1px dashed #CDCDCD !important;
+  }
+
+  .fc-scroller {
+    background-color: white;
+  }
+
+  .fc-view-harness th {
+    background: none;
+  }
+
+  .fc-timeline-header {
+    background-color: white;
+
+    .fc-datagrid-cell-frame {
+      background-color: white;
+    }
+  }
+
+  .fc-timeline-slot {
+    background-color: white;
+
+    a {
+      font-weight: 400;
+      text-decoration: none;
+      font-size: 14px;
+    }
+  }
+
+  .fc-view {
+    background: none;
+    overflow: auto;
+
+    .fc-scrollgrid {
+      border: none;
+
+    }
+
+    .fc-resource-timeline-divider {
+      background: none;
+    }
+
+    .fc-timeline-slot-frame {
+      justify-content: center;
+      line-height: 1;
+    }
+  }
+
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+  }
+
+
+
+  td:first-child {
+
+    .fc-scroller-harness {
+
+      tr {
+        border-bottom: 2px solid #f9f9f9 !important;
+
+        td {
+          background-color: var(--grid-even-color);
+        }
+
+        &:first-child {
+          td {
+            background-color: #ebebeb;
+          }
+        }
+      }
+    }
+
+  }
+
+
+  td,
+  th {
+    border: none;
+  }
+
+
+
+  &.odd-even-2 .fc-view-harness {
+    .fc-timeline-slots {
+
+      td.fc-timeline-slot:nth-child(4n-3),
+      td.fc-timeline-slot:nth-child(4n-2) {
+        background-color: var(--grid-odd-color);
+      }
+
+      td.fc-timeline-slot:nth-child(4n-4),
+      td.fc-timeline-slot:nth-child(4n-1) {
+        background-color: var(--grid-even-color);
+      }
+    }
+  }
+
+  &.odd-even .fc-view-harness {
+    .fc-timeline-slots {
+      td.fc-timeline-slot:nth-child(2n-1) {
+        background-color: var(--grid-odd-color);
+      }
+
+      td.fc-timeline-slot:nth-child(2n) {
+        background-color: var(--grid-even-color);
+      }
+    }
+  }
+
+  .fc-license-message {
+    display: none;
+  }
+
+  .fc-timeline-bg+.fc-scrollgrid-sync-table {
+    position: relative;
+    z-index: 1;
+
+    tr {
+      border-bottom: 2px solid #f9f9f9 !important;
+    }
+  }
+
+  &.with-early-booking {
+    .fc-timeline-bg+.fc-scrollgrid-sync-table {
+      tr:first-child {
+        background-color: rgba(224, 224, 224, 0.4);
+      }
+    }
+    
+  }
+
+  //Here this is the icon who replace the small icon when an event is started or ended and overflowed in the timeline view
+
+  .fc-timeline-event:not(.fc-event-end)::after,
+  .fc-timeline-event:not(.fc-event-start)::before {
+    // replace the small icon with a big one
+    border: none;
+    width: 28px;
+    display: flex;
+    align-items: center;
+    color: white;
+  }
+
+  /* Styles pour les événements en overflow */
+  .fc-timeline-event:not(.fc-event-end)::after {
+    content: '\e97d';
+    opacity: 1;
+    font-family: 'icomoon';
+    font-size: 20px;
+    margin-left: -2px;
+    color: white;
+  }
+
+  .fc-timeline-event:not(.fc-event-start)::before {
+    content: '\e97d';
+    opacity: 1;
+    font-family: 'icomoon';
+    font-size: 20px;
+    margin-left: -10px;
+    padding-left: 6px;
+  }
+
+
+  .fc-timeline-event-harness {
+    min-height: 38px !important;
+  }
+
+  .fc-event-main {
+    position: unset;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+
+    &>div {
+      width: 100%;
+    }
+
+    .avatar {
+      width: 25px;
+      height: 25px;
+      min-width: 25px;
+      min-height: 25px;
+      font-size: 12px;
+      line-height: 24px;
+    }
+
+    .text {
+      display: flex;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+      line-height: 1.25;
+      align-items: center;
+    }
+    
+    .hour-time {
+      flex-shrink: 0;
+    }
+    
+    .event-site-and-name {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      overflow: hidden;
+    }
+    
+    .segment-number,
+    .event-site {
+      flex-shrink: 0;
+    }
+    
+    .event-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  .segment-number {
+    margin-right: 2px;
+  }
+    .icon-menu {
+      position: absolute;
+      top: 12px;
+      right: 5px;
+    }
+
+    .icon-locked {
+      font-size: 16px;
+      align-self: center;
+      margin-right: 4px;
+    }
+  }
+
+ 
+}
+
+.locked  {
+  --hatch-color: rgba(0, 0, 0, 0.1);
+  --hatch-orientation: -45deg;
+  --hatch-size: 35px;
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(var(--hatch-orientation), var(--hatch-color) 12.5%, transparent 12.5%, transparent 37.5%, var(--hatch-color) 37.5%, var(--hatch-color) 62.5%, transparent 62.5%, transparent 87.5%, var(--hatch-color) 87.5%);
+  background-size: var(--hatch-size) var(--hatch-size);
+  background-position: 50px 50px;
+  }
+
+.fc-timeline-slot-cushion.fc-scrollgrid-sync-inner.fc-sticky {
+  // target the date of scheduler
+}
+.fc-event {
+  margin-top: 2px;
+  margin-bottom: 0;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  border-radius: 5px;
+  padding: 0 5px;
+  height: 38px !important;
+
+}

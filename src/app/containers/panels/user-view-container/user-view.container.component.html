@@ -1,0 +1,9 @@
+<app-sidebar [dataMenu]="dataMenu" (activePanelChange)="onPanelSelected($event)" [activePanel]="section" label="Utilisateur" icon="icon-idcard">
+  <app-user-view
+    #itemViewComponent
+    [userId]="userId"
+    [sectionDisplayed]="section"
+    (edit)="onEditUser($event)"
+    (deleted)="onUserDeleted()"
+  ></app-user-view>
+</app-sidebar>

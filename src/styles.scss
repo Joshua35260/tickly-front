@@ -1,272 +1,382 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import 'normalize.css/normalize.css';
 @import "primeng/resources/primeng.css";
-@import "./assets/primeng/theme/theme.scss";
 @import "primeicons/primeicons.css";
+@import "./assets/primeng/theme/_variables.scss";
+@import './assets/primeng/theme/_fonts';
+@import './assets/primeng/theme/_components';
+@import './assets/primeng/theme/_mixins';
 @import "./assets/knacss/knacss.scss";
-@import "./assets/primeng/theme/variables";
+@import './assets/knacss/mixin.scss';
 
-form .p-inputtext{
+/* Règles globales pour le label lorsque l'input est non vide */
+
+input:-webkit-autofill + label {
+  top: 1rem; /* Positionner le label au-dessus */
+  font-size: 0.85rem; /* Réduire la taille du label */
+  color: #666; /* Changer la couleur si besoin */
+  transition: 0.3s ease;
+}
+
+.scroll-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 3px 10px 10px 10px;
   width: 100%;
+}
+
+.disable-user-select { // used for scrollbar overlay component when mouse is moving scrollbar
+  user-select: none; 
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+
+* {
+  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
 }
 
 a {
-    color: $primaryColor;
-    cursor: pointer;
-    &:hover {
-        color: $primaryDarkColor;
-        transition: 0.5s ease-in-out;
-    }
-}
-h1,h2,h3,h4,h5,h6{
-  margin: 0;
+  cursor: pointer;
 }
 
-.widget {
-  background-color: #F9F9F9;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
+.markerPane {
+  z-index: -1;
 }
 
-
-
-
-
-
-
-.card {
-  position: relative;
-  z-index: 4;
-  line-height: 1.3;
-  width: 100%;
-  box-shadow: var(--box-shadow-card);
-  border-radius: 5px;
-  background-color: white;
+.input-switch {
+  width: fit-content;
   display: flex;
-  flex-direction: column;
-  &:hover {
+  
+  label {
+    line-height: 1;
     cursor: pointer;
-    transition: ease-in-out 0.2s;
-    background-color: var(--gray-10);
-    
-    .card-bottom {
-      background-color: var(--gray-100);
-      transition: ease-in-out 0.2s;
-    }
+    user-select: none;
   }
-
-  .icon-menu {
-    position: absolute;
-    top: 42%;
-    right: 0px;
-    text-align: center;
-    z-index: 10;
-    width: 36px;
+  label.active {
+    color: $primaryColor;
   }
-
-
-  // TOP CARD
-
-  .card-top {
-    --avatar-height-top: 60;
-    --avatar-width-top: 60;
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    gap: 10px;
-    @include sm {
-      gap: 5px;
-    }
-    height: 60px;
-    border-radius: 5px 5px 0 0;
-    .card-content {
-      width: 100%;
-      margin: auto 0;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 10px;
-      @include sm {
-        gap: 5px;
-        padding-right: 2px;
-      }
-      padding-right: 10px;
-      .avatar {order:1;}
-      .card-main-info  {order: 2;flex-shrink: 0;}
-      .card-icon {order:2; line-height: 0;}
-      .card-top-title {order: 2;}
-      .card-contact {order: 3; display: flex; gap: 20px;flex-wrap: nowrap; text-wrap: nowrap;}
-      .card-top-text {order: 3; line-height: 1.1;}
-      .card-address,.adresses {order: 3;}
-      .archive-info {order: 4;flex-shrink: 0;}
-      .attach-info {order: 4;}
-      .card-icones {order: 4; margin-left: auto; text-align: right;}
-      .card-trigram {order: 4; margin-left: auto; text-align: right;}
-    }
-
-    .card-content.with-menu {
-      padding-right: 30px;
-    }
-
-    .addresses {
-      line-height: 1.15;
-    }
-    
-    .card-top-title {
-      display: flex;
-      gap: 5px;
-      font-size: 17px;
-      font-weight: 600;
-
-      @include md {
-        font-size: 15px;
-      }
-
-      @include sm {
-        font-size: 14px;
-      }
-
-      small {
-        flex: 1;
-        display: inline-block;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        font-size: 15px;
-        font-style: italic;
-        font-weight: 400;
-
-        @include md {
-          font-size: 13px;
-        }
-
-        @include sm {
-          font-size: 12px;
-        }
-      }
-
-      .alert-icon {
-        line-height: 0;
-        align-self: center;
-      }
-
-    }
-
-  }
-
-  .card-top.only {
-    border-radius: 5px;
-  }
-
-  //card with bottom, bottom section
-  .card-bottom {
-    --avatar-height-bottom: 41;
-    --avatar-width-bottom: 60;
-    height: 41px;
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    gap: 8px;
-    background-color: var(--gray-10);
-    border-radius: 0 0 5px 5px;
-    // border-top: 1px dashed var(--surface-100);
-    font-size: 15px;
-
-    @include md {
-      font-size: 14px;
-    }
-
-    @include sm {
-      font-size: 13px;
-    }
-    
-    .card-content {
-    width: 100%;
-    margin: auto 0;
-    display: flex;
-    white-space: nowrap;
-    align-items: center;
-    justify-content: flex-start;
-    overflow: hidden;
-    gap: 10px;
-    @include sm {
-      gap: 5px;
-    }
-    .avatar {order: 1;}
-    .card-icon {order: 2; line-height: 0;}
-    .card-bottom-title,.name {order: 3;flex-wrap: wrap;}
-    .archive-info {order: 4;}
-  }
-  .card-content-2 {
-    position: relative;
-    width: 100%;
-    margin: auto 0;
-    display: flex;
-    align-items: center;
-    text-align: end;
-    justify-content: flex-end;
-    gap: 10px;
-
-    @include sm {
-      gap: 5px;
-    }
-    .flex-col { order: 1;}
-    .card-bottom-title { order: 2; display: flex; gap: 5px; white-space: nowrap; overflow: hidden};
-      .name, .city {
-        display: inline-block;
-        text-align: right;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        flex-shrink: 1; 
-      }
-      .separator {
-        margin: auto;
-      }
-    
-    
-    .card-icon { order: 4;flex-shrink: 0;}
-    app-flag {order:3; flex-shrink: 0;}
-  }
-
-
-.card-content-2::before {
-  content: "";
-  display: block;
-  position: absolute;
-  left: -5px;
-  width: 2px;
-  height: 30px;
-  border-left: 2px dashed var(--surface-100);
+}
+//colors of alerts
+.icon-bell.icon-bell-level-3 {
+  color: black;
+}
+.icon-bell.icon-bell-level-2 {
+  color: var(--danger);
+}
+.icon-bell.icon-bell-level-1 {
+  color: var(--shade-900);
 }
 
-
-
-  .card-bottom-title-small {
-    font-size: 13px;
-    color: var(--primary-color);
-  }
-
-}
-
-app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}}
-.card-small-icon {
-  vertical-align: middle;
-  white-space: nowrap;
-  font-size: 15px;
-  display: inline;
+.color-link {
+  text-decoration: none;
+  color: $primaryColor;
+  font-size: 14px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
 
   @include md {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   @include sm {
     font-size: 13px;
   }
 
+  span {
+    text-decoration: underline;
+  }
 
+  a,
+  i {
+    color: $primaryColor;
+  }
 
-  [class^="icon-"] {
+  i {
+    @include md {
+      font-size: 17px;
+    }
+
+    @include sm {
+      font-size: 17px;
+    }
+    font-size: 22px;
+    text-decoration: none;
+  }
+
+  &:hover {
+    text-decoration: none;
+
+    span {
+      text-decoration: underline;
+    }
+
+    *,
+    i {
+      text-decoration: none;
+      color: $primaryTextColor;
+      transition: all 0.5s ease-in-out;
+
+    }
+  }
+}
+
+.color-link-underline {
+  color: var(--primary-color);
+  &:hover {
+    color: var(--primary-text-color);
+    transition: 0.25s ease-in-out;
+  }
+}
+// colors of bell icon in warning-row etc
+.warning-level-1 {
+  color: var(--yellow-color)
+}
+
+.warning-level-2 {
+  color: var(--danger);
+}
+
+.warning-level-3 {
+  color: black;
+}
+//
+
+.blue-link {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+
+  a,
+  i {
+    color: $secondaryButtonBg;
+  }
+
+  i {
+    position: absolute;
+    left: 5px;
     font-size: 20px;
-    vertical-align: text-bottom;
+    text-decoration: none;
+  }
+
+  &:hover {
+    * {
+      color: $primaryTextColor;
+      transition: all 0.5s ease-in-out;
+    }
+  }
+}
+
+.height-auto {
+  height: fit-content;
+}
+
+
+.height-100 {
+  height: 100%;
+}
+
+.height-50 {
+  height: 50%;
+}
+
+i.disabled {
+  pointer-events: none;
+  opacity: 0.2;
+  filter: (grayscale(100%));
+}
+
+// Remove min-height of filedset inherit from class widget
+.grid {
+  fieldset {
+    height: fit-content;
+    .widget {
+      display: grid;
+    }
+  }
+}
+
+fieldset.grid {
+  display: grid;
+}
+
+fieldset {
+  height: fit-content;
+}
+
+fieldset.widget {
+ min-height: fit-content;
+}
+
+.autocomplete-with-address {
+  font-weight: 600;
+  font-size: 15px;
+  span {
+    font-weight: 400;
+    font-size: 14px;
+    font-style: italic;
+  }
+}
+app-scrollbar-overlay  {
+  --scrollbar-size: 7px;
+}
+// widget small title with icon
+
+.small-title  {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  line-height: 1;
+  gap: 6px;
+  font-size: 19px;
+  margin-bottom: 14px;
+  @include md {
+    font-size: 17px;
+  }
+  @include sm {
+    font-size: 16px;
+  }
+  i, span {
+    color: $primaryColor;
+    grid-column: 1;
+    width: 19px;
+    @include md {
+      width: 16px;
+    }
+    @include sm {
+      width: 15px;
+    }
+  }
+
+  small, .subtitle {
+    font-size: 13px;
+    @include sm {
+      font-size: 12px;
+    }
+    font-style: italic;
+    grid-column: 2;
+
+    & i,
+    & span {
+      color: $primaryColor;
+      font-weight: 600;
+    }
+  }
+}
+// widget small title more div inside
+.small-title-c {
+  display: grid;
+  grid-template-columns: auto;
+  align-items: center;
+  line-height: 1;
+  gap: 6px;
+  font-size: 19px;
+  margin-bottom: 14px;
+
+  @include md {
+    font-size: 17px;
+  }
+
+  @include sm {
+    font-size: 16px;
+  }
+  .small-title {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .small-title-link {
+    font-size: 14px;
+    @include md {
+      font-size: 13px;
+    }
+    @include sm {
+      font-size: 12px;
+    }
+    font-weight: 300;
+    display: flex;
+    gap: 4px;
+    a {
+      color: $primaryColor;
+      &:hover {
+        color: $primaryTextColor;
+        transition: 0.25s ease-in-out;
+      }
+    }
+  }
+
+  i {
+    color: $primaryColor;
+    grid-column: 1fr;
+    width: 19px;
+
+    @include md {
+      width: 16px;
+    }
+
+    @include sm {
+      width: 15px;
+    }
+  }
+
+  small,
+  .subtitle {
+    font-size: 13px;
+
+    @include sm {
+      font-size: 12px;
+    }
+
+    font-style: italic;
+    grid-column: 2;
+
+    & i,
+    & span {
+      color: $primaryColor;
+      font-weight: 600;
+    }
+  }
+}
+.small-title-link {
+  font-size: 14px;
+  @include md {
+    font-size: 37px;
+  }
+  @include sm {
+    font-size: 12px;
+  }
+  font-weight: 300;
+  display: flex;
+  gap: 4px;
+  a {
+    color: $primaryColor;
+    &:hover {
+      color: $primaryTextColor;
+      transition: 0.25s ease-in-out;
+    }
+  }
+}
+
+
+/*********/
+/* Forms */
+/*********/
+
+
+fieldset {
+  border: 0;
+
+  .title {
+    font-size: 19px;
 
     @include md {
       font-size: 17px;
@@ -276,297 +386,290 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
       font-size: 16px;
     }
 
+    font-weight: 400;
   }
-}
-
-.card-icon.size-33 {
-  font-size: 33px;
-}
-.card-icon.size-25 {
-  font-size: 25px;
-}
-
-.card-icon {
-  vertical-align: middle;
-  white-space: nowrap;
-  text-overflow: unset;
-  font-size: 28px;
-  color: var(--primary-color);
-
-  @include md {
-    font-size: 22px;
-  }
-
-  @include sm {
-    font-size: 20px;
-  }
-}
-
-.card-icon,
-.avatar,
-.card-warning {
-  flex-shrink: 0;
-}
-
-.avatar {
-  position: relative;
 
   i {
-    position: absolute;
-    top: 0px;
-    right: -10px;
-    background: white;
-    font-size: 20px;
-    color: var(--primary-color);
+    color: $primaryColor;
   }
 }
 
-.card-medium-icon {
-  font-size: 20px;
-  color: var(--primary-color);
-
-  @include md {
-    font-size: 17px;
-  }
-
-  @include sm {
-    font-size: 16px;
-  }
-}
-
-.date-or-currency {
-  font-weight: 600;
-}
-
-.flex.flex-col {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-contact {
+/***********/
+/* buttons */
+/***********/
+.actions {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.card-address {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 5px;
-  line-height: 1.2;
-}
-.address {
-  line-height: 1.2;
-}
-
-.card-subtitle {
-  color: #9A9A9A;
-  font-weight: 400;
-  font-size: 15px;
-  @include md {
-    font-size: 13px;
-  }
-  @include sm {
-    font-size: 12px;
-  }
-}  
-
-.coordinate-icon {
-  position: relative;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 33px;
-  height: 60px;
-  width: 60px;
-  background-color: var(--yellow-color);
-  color: var(--shade-000);
-}
-
-a {
-  color: var(--primary-text-color);
-  text-decoration: none;
-  &:hover {
-    text-decoration: none;
-  }
-}
-
-.date {
-  display: flex;
-  flex-direction: column;
-  white-space: nowrap;
-  font-weight: 600;
-  font-size: 14px;
-  margin: auto 0;
-  text-align: center;
-  color: var(--primary-color);
-
-  @include md {
-    font-size: 13px;
-  }
+  align-items: center;
 
   @include sm {
-    font-size: 12px;
+    justify-content: space-between;
   }
-}
 
-.italic {
-  font-style: italic;
-}
-
-
-
-  .archive-info {
-    margin-left: auto;
-    font-weight: 600;
-    font-size: 14px;
-
-    @include md {
-      font-size: 13px;
-    }
+  .p-button {
+    margin: 10px 30px;
 
     @include sm {
-      font-size: 12px;
+      margin: 10px 15px;
     }
+  }
 
-    font-style: italic;
-    display: flex;
-    gap: 6px;
+  a,
+  form {
+    display: inline-block;
+    margin: 10px 30px;
+
+    @include sm {
+      margin: 10px 15px;
+    }
+  }
+}
+
+// accordion action in widgets at bottom
+.accordion-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+
+  button {
+    height: 38px;
+    width: 38px;
+    border-radius: 5px;
 
     i {
-      font-size: 18px;
-
-      @include md {
-        font-size: 16px;
-      }
-
-      @include sm {
-        font-size: 15px;
-      }
+      font-size: 22px;
+      text-align: center;
+      margin-left: -10px;
     }
   }
 
+  a {
+    color: $primaryColor;
 
-//UTILS//
-.with-padding-left {
-  padding-left: 10px;
-}
-
-.comment-author {
-  font-size: 17px;
-  line-height: 1.2;
-  @include md {
-    font-size: 16px;
+    &:hover {
+      color: $primaryTextColor;
+      transition: all 0.5s ease-in-out;
+    }
   }
-  @include sm {
-    font-size: 15px;
+
+  .accordion-link-icon {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover i {
+      color: $primaryTextColor;
+      transition: all 0.5s ease-in-out;
+    }
+
+    i {
+      color: $primaryColor;
+
+    }
   }
 }
-
-.comment-date {
+.action-add {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary-color);
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
   font-size: 15px;
-  font-style: italic;
-  line-height: 1.2;
+  gap: 12px;
+  @media (min-width:1400px) and (max-width: 1919px) {
+    font-size: 14px;
+  }
+
+  @include lg {
+    font-size: 14px;
+  }
+
   @include md {
     font-size: 14px;
   }
+
+  @include sm {
+    font-size: 13px;
+  }
+
+  margin-bottom: 0px;
+  margin-top: -5px;
+
+  &:after {
+    content: "";
+    display: block;
+    height: 80px;
+    width: 80px;
+    margin-left: -15px;
+    margin-right: -15px;
+    background: var(--button-add) no-repeat;
+    background-size: 100%;
+
+    @media (min-width:1400px) and (max-width: 1919px) {
+      height: 70px;
+      width: 70px;
+      margin-right: -15px;
+      margin-left: -20px;
+    }
+
+    @include lg {
+      height: 54px;
+      width: 54px;
+      margin-right: -15px;
+      margin-left: -14px;
+    }
+
+    @include md {
+      height: 54px;
+      width: 54px;
+      margin-right: -10px;
+      margin-left: -20px;
+    }
+    @include sm {
+      height: 54px;
+      width: 54px;
+      margin-right: -10px;
+      margin-left: -20px;
+    }
+    
+  }
+
+  &:hover {
+    text-decoration: underline;
+    transition: 0.5s ease-in-out;
+  }
+}
+
+.cancel {
+  cursor: pointer;
+  font-size: 16px;
+
+  @include md {
+    font-size: 14px;
+  }
+
   @include sm {
     font-size: 13px;
   }
 }
 
-.comment {
-  font-size: 16px;
-  line-height: 1.25;
-  white-space: pre-wrap;
+/*********/
+/* TABLE */
+/*********/
+table {
+  table-layout: auto;
+}
+
+/*********************/
+/* Prime flex CUSTOM */
+/*********************/
+.form-elem {
+  margin: 6px 0;
+  display: inline-block;
+  width: 100%;
+
+  textarea {
+    width: 100%;
+  }
+
+  input {
+    &[type="text"] {
+      width: 100%;
+    }
+
+    &[type="number"] {
+      width: 100%;
+    }
+
+    &[type="password"] {
+      width: 100%;
+    }
+  }
+
+  textarea,
+  .p-dropdown,
+  .p-calendar {
+
+    textarea {
+      width: 100%;
+    }
+
+    .p-dropdown {
+      width: 100%;
+    }
+
+    small {
+      font-size: 13px;
+      position: absolute;
+      left: 0;
+      bottom: -18px;
+    }
+
+    &.p-input-icon-left small {
+      left: nth($inputPadding, 2) * 2 + $primeIconFontSize;
+    }
+
+  }
+}
+app-input {
+  width: 100%;
+}
+// input with icon at left
+.input-icon-left {
+
+  i {
+    width: 20px;
+    font-size: 30px;
+    @include md {
+      font-size: 22px;
+    }
+    @include sm {
+      font-size: 22px;
+    }
+    color: $primaryColor;
+  }
+}
+
+//p-menu with ng-template //////  WRONG FILE !!!
+.p-menu-template {
+  padding: 0px;
+
+  li {
+    padding: 10px 20px;
+    cursor: pointer;
+
+    i,
+    span {
+      margin-right: 6px;
+    }
+
+    a {
+      text-decoration: none;
+      color: $textColor;
+    }
+
+    &:hover {
+      background-color: $shade200;
+    }
+  }
+}
+
+/**********/
+/* icones */
+/**********/
+.icon-menu {
+  cursor: pointer;
+  font-size: 14px;
+
   @include md {
-    font-size: 15px;
+    font-size: 13px;
   }
+
   @include sm {
-    font-size: 14px;
+    font-size: 12px;
   }
-}
-
-} //! end of selector card
-
-// ARCHIVE STYLE
-.card.archive {
-  opacity: 0.5;
-  filter: grayscale(100%);
-
-  .title,
-  .card-bottom-title,
-  .card-top-title,
-  .card-top-text,
-  .card-contact,
-  .card-address {
-    text-decoration: line-through;
-  }
-
-  .card-bottom {
-    display: flex;
-
-    .card-bottom-title {
-      text-decoration: line-through;
-    }
-
-  }
-} 
-
-
-// SUB CARD //
-.card.sub-card .card-top .card-content {
-  .sub-card-icon { order: 0; }
-  .card-top-title { order: 2; }
-  .main-content { order: 2; }
-  .address { order: 3; }
-  .card-address { order: 4; }
-  .card-icon { order: 2; }
-  .avatar { order: 1; }
-}
-
-.card.sub-card {
-  width: calc(100% - 65px);
-  margin-top: 10px;
-  margin-left: auto;
-  margin-right: 1%;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  &:before {
-    content: '';
-    z-index: 2;
-    position: absolute;
-    left: -25px;
-    top: -35px;
-    width: 23px;
-    height: calc(100% + 10px);
-    border-left: 1px dashed var(--primary-color);
-    border-bottom: 1px dashed var(--primary-color);
-  }
-
-    
-    .sub-card-icon {
-      vertical-align: middle;
-      white-space: nowrap;
-      text-overflow: unset;
-      font-size: 28px;
-      color: var(--primary-color);
-    
-      @include md {
-        font-size: 22px;
-      }
-    
-      @include sm {
-        font-size: 20px;
-      }
-    }
-}
-
-.new-comment-avatar {
-  z-index: 2;
-  position: absolute;
-  top: 10px;
-  left: 2px;
 }

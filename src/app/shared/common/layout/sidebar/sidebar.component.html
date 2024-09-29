@@ -1,0 +1,44 @@
+<div class="sidebar">
+
+  <div class="panel">
+    <div [ngClass]="panelService.canGoBack() ? 'panel-top-menu with-backyard' : 'panel-top-menu'">
+      <a (click)="closePanel()">
+        <i class="icon-close" (click)="closePanel()"></i>
+      </a>
+      <a class="back-link" (click)="panelService.goBack()" *ngIf="panelService.canGoBack()">
+        <i class="icon-back" (click)="panelService.goBack()"></i>
+      </a>
+    </div>
+
+    <nav #navbar class="navbar" [style.--ngVar_maskY]="maskY" [ngClass]="filteredDataMenu?.length > 1 ? 'mask' : ''">
+      @if (filteredDataMenu?.length > 0) {
+      <ul>
+        @for(item of dataMenu(); track item.panel;) {
+        <li #li *ngIf="!item.hide" [class.active]="item.panel === activePanel()" (click)="onSelectItem(item.panel);">
+          <a>
+            <i 
+              class="{{item.icon}}" 
+              [pTooltip]="rightPanelLabel[item.panel]" 
+              tooltipPosition="top" 
+              showDelay="1000"
+              hideDelay="300">
+            </i>
+          </a>
+        </li>
+        }
+      </ul>
+      }
+    </nav>
+
+    <footer>
+      <i class="{{icon()}}"></i>
+      <span>{{label()}}</span>
+    </footer>
+
+  </div>
+
+  <div class="content">
+    <ng-content></ng-content>
+  </div>
+
+</div>

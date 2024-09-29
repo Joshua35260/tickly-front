@@ -3,7 +3,7 @@
   <div class="list-and-map">
     <div class="scroll-list">
       @for  (user of users(); track user.id) {
-        <app-user-row [user]="user"></app-user-row>
+        <app-user-row [user]="user" (click)="displayUserView.emit(user.id)"></app-user-row>
       }
     </div>
     <div id="map" leaflet [leafletOptions]="mapOptions" [leafletLayers]="itemsMarkers"></div>

@@ -5,10 +5,11 @@ import {
   Component,
   DestroyRef,
   OnInit,
+  output,
   signal,
 } from '@angular/core';
 import { User } from '@app/core/models/user.class';
-import { UserRowComponent } from '../user-row/user-row.component';
+import { UserRowComponent } from '../components/user-row/user-row.component';
 import { UserService } from '@app/core/services/user.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tileLayer, latLng, Map, FeatureGroup } from 'leaflet';
@@ -27,7 +28,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
   ],
 })
 export class UserListComponent implements OnInit, AfterViewInit {
-  
+  displayUserView = output<number>();
   
   users = signal<User[]>([]);
 

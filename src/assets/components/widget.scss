@@ -1,0 +1,30 @@
+@import "@assets/knacss/mixin.scss";
+
+.widget {
+  background: var(--widget-color);
+  margin: 0;
+  border-radius: 8px;
+  position: relative;
+  padding: 15px 20px;
+  min-height: 300px;
+  color: var(--primary-text-color);
+
+  &.height-auto {
+    min-height: fit-content;
+  }
+
+  @include lg {
+    padding: 10px 15px;
+    font-size: 15px;
+  }
+
+  @include md {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  @include sm {
+    padding: 10px;
+    font-size: 13px;
+  }
+}

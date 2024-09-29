@@ -1,167 +1,501 @@
-.p-dropdown {
-    background: $inputBg;
-    border: $inputBorder;
-    transition: $formElementTransition;
-    border-radius: $borderRadius;
+@import "@assets/knacss/mixin.scss";
+// ***************** //
+// custom p-dropdown with icon //
+// **************** //
 
-    &:not(.p-disabled):hover {
-        border-color: $inputHoverBorderColor;
+.dropdown-with-icon .p-dropdown {
+  padding: 0.4rem 0 0.2rem 0.5rem;
+  box-shadow: inset 0px 0px 0px 1px $primaryColor;
+  border-radius: 5px;
+
+  &:not(.p-disabled):hover {
+    box-shadow: inset 0px 0px 0px 1px $primaryColor;
+  }
+
+  &:not(.p-disabled).p-focus {
+    box-shadow: inset 0px 0px 0px 1px $primaryColor
+  }
+
+  i {
+    font-size: 18px;
+    margin-right: 4px;
+  }
+
+  .p-inputtext {
+    color: $primaryColor;
+    position: relative;
+    padding-right: 20px;
+
+    &:after {
+      color: $primaryColor;
+      font-family: 'icomoon';
+      content: "\e97e";
+      font-size: 16px;
+      position: absolute;
+      right: 0.5rem;
     }
 
-    &:not(.p-disabled).p-focus {
-        @include focused-input();
+    .p-inputtext:before {
+      color: $primaryColor;
+      font-family: 'icomoon';
+      content: "\e97e";
+      font-size: 16px;
+      margin: auto 0px auto 0.5rem;
+    }
+  }
+
+  .p-dropdown-label.p-placeholder {
+    color: $primaryColor;
+  }
+
+  .p-dropdown-trigger {
+    display: none;
+  }
+
+  .p-dropdown:enabled:focus {
+    box-shadow: none;
+    
+  }
+}
+
+// ***************** //
+// custom p-dropdown FILL with icon // // REFACTOR ME INTO SOMETHING ELSE, A COMPONENT MAYBE
+// **************** //
+// blue dropdown
+.dropdown-with-icon-fill .p-dropdown,
+.p-dropdown.no-select {
+  padding: 0.4rem 0 0.2rem 0.5rem;
+  // box-shadow: inset 0px 0px 0px 1px $primaryColor;
+  background-color: $secondaryButtonBg;
+  box-shadow: none;
+  border-radius: 5px;
+  
+  &.p-inputwrapper-focus {
+    border-radius: 5px 5px 0 0;
+  }
+
+  &:not(.p-disabled):hover {
+    // box-shadow: inset 0px 0px 0px 1px $primaryColor;
+    box-shadow: none;
+    //border-radius: 5px 5px 0 0;
+  }
+
+  &:not(.p-disabled).p-focus {
+    // box-shadow: inset 0px 0px 0px 1px $primaryColor;
+    box-shadow: none;
+    //border-radius: 5px 5px 0 0;
+  }
+
+  i {
+    font-size: 18px;
+    margin-right: 6px;
+
+  }
+
+  .p-dropdown-label.p-placeholder {
+    color: white
+  }
+
+  .p-dropdown-panel {
+    box-shadow: none;
+
+    .p-dropdown-items .p-dropdown-item {
+      color: white;
+      padding: 3px;
+
+      &:not(.p-highlight):not(.p-disabled):hover {
+        background: $secondaryButtonHoverBg;
+        color: white
+      }
+    }
+  }
+
+  .p-inputtext {
+    color: white;
+
+    &:before {
+      color: white;
+      font-family: 'icomoon';
+      content: "\e987";
+      font-size: 16px;
+      margin: 0 10px 0 10px;
+
     }
 
-    &.p-dropdown-clearable {
-        .p-dropdown-label {
-            padding-right: nth($inputPadding, 2) + $primeIconFontSize;
-        }
-    }
+    &:after {
+      color: white;
+      font-family: 'icomoon';
+      content: "\e97e";
+      font-size: 16px;
+      margin: auto 10px;
 
+    }
+  }
+
+  .p-dropdown-trigger {
+    display: none;
+  }
+
+  .p-dropdown:enabled:focus {
+    box-shadow: none;
+    color: white;
+  }
+
+  .p-dropdown-items {
+    padding: 0;
+    background-color: $secondaryButtonBg;
+    margin: 0;
+
+    &:hover {
+      background-color: $secondaryButtonBg;
+    }
+  }
+
+  .p-dropdown-items-wrapper {
+    overflow: hidden !important;
+    background-color: $secondaryButtonBg;
+    border-radius: 0 0 5px 5px;
+  }
+
+  .p-overlay {
+    min-width: unset !important; // WHY THE HELL EVERYONE NEED TO PUT THINGS INTO style= , Needed for extreme programming fix
+    right: 0;
+  }
+
+}
+
+// ***************** //
+// custom dropdown-sorting-list //
+// **************** //
+
+.dropdown-sorting-list .p-dropdown {
+  border-radius: 0 0 10px 10px;
+  padding: 0.5rem 0 0.5rem 0.5rem;
+  box-shadow: none;
+  background-color: #3F3F3F;
+  @include md {
+    padding: 0.2rem 0 0.2rem 0.2rem;
+  }
+  @include sm {
+    padding: 0.2rem 0 0.2rem 0.2rem;
+  }
+  .p-dropdown-label {
+    color: var(--surface-0);
+  }
+
+  &:not(.p-disabled):hover {
+    box-shadow: none;
+  }
+
+  &:not(.p-disabled).p-focus {
+    box-shadow: none;
+  }
+
+  i {
+    color: var(--surface-0);
+    font-size: 22px;
+    @include md {
+      font-size: 18px;
+    }
+    @include sm {
+      font-size: 18px;
+      position: relative;
+      bottom: 0;
+    }
+    margin: 0px 8px -4px 4px;
+  }
+
+  .icon-down {
+    font-size: 14px;
+    @include md {
+      font-size: 13px;
+    }
+    @include sm {
+      font-size: 13px;
+    }
+  }
+
+  &.p-dropdown-clearable {
     .p-dropdown-label {
-        background: transparent;
-        border: 0 none;
+      color: var(--surface-0);
+    }
+  }
 
-        &.p-placeholder {
-            color: $inputPlaceholderTextColor;
-        }
-
-        &:focus,
-        &:enabled:focus {
-            outline: 0 none;
-            box-shadow: none;
-        }
+  .p-dropdown-label {
+    background: transparent;
+    border: 0 none;
+    @include md {
+      font-size: 15px;
+    }
+    @include sm {
+      font-size: 15px;
+    }
+    &.p-placeholder {
+      color: var(--surface-0);
     }
 
-    .p-dropdown-trigger {
-        background: transparent;
-        color: $inputIconColor;
-        width: $inputGroupAddOnMinWidth;
-        border-top-right-radius: $borderRadius;
-        border-bottom-right-radius: $borderRadius;
+  }
+
+  .p-dropdown-trigger {
+    color: var(--surface-0);
+  }
+
+  .p-dropdown-clear-icon {
+    color: var(--surface-0);
+  }
+
+  .p-dropdown:enabled:focus {
+    color: var(--primary-color);
+    box-shadow: none;
+  }
+}
+
+
+// ***************** //
+// order p-dropdown //
+// **************** //
+.p-float-label .dropdown-icon-sort  .p-dropdown .p-inputtext {
+  padding: 0.6rem;
+  height: 44px;
+  @include md {
+    height: 35px;
+    padding-right: 0;
+  }
+  @include sm {
+    height: 35px;
+    padding-right: 0;
+  }
+}
+
+.p-float-label .dropdown-icon-sort .p-dropdown {
+.selected-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  span {
+    font-size: $inputTextFontSize;
+    @include md {
+      font-size: 14px;
+    }
+    @include sm {
+      font-size: 14px;
+    }
+  }
+  i {
+    font-size: 22px;
+
+    @include md {
+      font-size: 18px;
+    }
+    @include sm {
+      font-size: 18px;
+    }
+  
+  }
+}
+.p-dropdown-trigger {
+  width: $inputGroupAddOnMinWidth;
+  font-size: 14px;
+}
+
+.p-dropdown-trigger {
+    font-size: 14px;
+    width: $inputGroupAddOnMinWidth;
+    @include md {
+      font-size: 12px;
+      width: 24px;
+      margin-bottom: -6px;
+    }
+    @include sm {
+      font-size: 12px;
+      width: 24px;
+      margin-bottom: -6px;
+    }
+  }
+
+}
+// ***************** //
+// theme p-dropdown //
+
+.p-dropdown-label { 
+  outline: none;
+}
+.p-dropdown {
+  width: 100%;
+  font-family: $fontFamily;
+  font-size: $inputTextFontSize;
+  color: $inputTextColor;
+  background: $inputBg;
+  border: 0;
+  transition: $formElementTransition;
+  appearance: none;
+  border-radius: $inputRadius;
+  box-shadow: var(--box-shadow-input);
+  font-size: 15px;
+  @include md {
+    font-size: 14px;
+    padding: 0;
+
+  }
+  @include sm {
+    font-size: 14px;
+    padding: 0;
+  }
+  :focus,.p-focus {
+    box-shadow: none;
+  }
+
+  &:not(.p-disabled):hover {
+    border-color: $inputHoverBorderColor;
+    border: 0;
+  }
+
+  &:not(.p-disabled).p-focus {
+    @include focused-input();
+  }
+
+  &.p-dropdown-clearable {
+    .p-dropdown-label {
+      padding-right: nth($inputPadding, 2) + $primeIconFontSize;
+    }
+  }
+
+  .p-dropdown-label {
+    background: transparent;
+    border: 0 none;
+    @include md {
+      font-size: 14px;
+    }
+    @include sm {
+      font-size: 14px;
+      top: 0;
+    }
+    &:focus {
+      box-shadow: none;
+    }
+    &.p-placeholder {
+      color: $inputPlaceholderTextColor;
     }
 
-    .p-dropdown-clear-icon {
-        color: $inputIconColor;
-        right: $inputGroupAddOnMinWidth;
+    &:enabled:focus {
+      outline: 0 none;
+      box-shadow: none;
     }
+  }
 
-    &.p-invalid.p-component {
-        @include invalid-input();
-    }
+  .p-dropdown-trigger {
+    background: transparent;
+    color: $inputIconColor;
+    width: $inputGroupAddOnMinWidth;
+    border-top-right-radius: $borderRadius;
+    border-bottom-right-radius: $borderRadius;
+  }
 
-    &.p-variant-filled {
-        background-color: $inputFilledBg;
+  .p-dropdown-clear-icon {
+    color: $inputIconColor;
+    right: 2.25rem;
+  }
 
-        &:enabled:hover {
-            background-color: $inputFilledHoverBg;
-        }
+  .p-inputtext {
+    box-shadow: none;
+    background: none;
+    border-radius: 0;
+    padding: 0;
+    
+  }
 
-        &:enabled:focus {
-            background-color: $inputFilledFocusBg;
-        }
-    }
 }
 
 .p-dropdown-panel {
-    background: $inputOverlayBg;
-    color: $inputListTextColor;
-    border: $inputOverlayBorder;
-    border-radius: $borderRadius;
-    box-shadow: $inputOverlayShadow;
+  background: $inputOverlayBg;
+  color: $inputListTextColor;
+  border: $inputOverlayBorder;
+  border-radius: $borderRadius;
+  box-shadow: $inputOverlayShadow;
 
-    .p-dropdown-header {
-        padding: $inputListHeaderPadding;
-        border-bottom: $inputListHeaderBorder;
-        color: $inputListHeaderTextColor;
-        background: $inputOverlayHeaderBg;
-        margin: $inputListHeaderMargin;
-        border-top-right-radius: $borderRadius;
-        border-top-left-radius: $borderRadius;
+  .p-dropdown-header {
+    padding: $inputListHeaderPadding;
+    border-bottom: $inputListHeaderBorder;
+    color: $inputListHeaderTextColor;
+    background: var(--widget-color);
+    margin: $inputListHeaderMargin;
+    border-top-right-radius: $borderRadius;
+    border-top-left-radius: $borderRadius;
 
-        .p-dropdown-filter {
-            padding-right: nth($inputPadding, 2) + $primeIconFontSize;
-            margin-right: -1 * (nth($inputPadding, 2) + $primeIconFontSize);
-        }
-
-        .p-dropdown-filter-icon {
-            right: nth($inputPadding, 2);
-            color: $inputIconColor;
-        }
+    .p-dropdown-filter {
+      padding-right: nth($inputPadding, 2) + $primeIconFontSize;
+      margin-right: -1 * (nth($inputPadding, 2) + $primeIconFontSize);
     }
 
-    .p-dropdown-items {
-        padding: $inputListPadding;
-
-        .p-dropdown-item {
-            margin: $inputListItemMargin;
-            padding: $inputListItemPadding;
-            border: $inputListItemBorder;
-            color: $inputListItemTextColor;
-            background: $inputListItemBg;
-            transition: $listItemTransition;
-            border-radius: $inputListItemBorderRadius;
-
-            &:first-child {
-                margin-top: 0;
-            }
-
-            &.p-highlight {
-                color: $highlightTextColor;
-                background: $highlightBg;
-
-                &.p-focus {
-                    background: $highlightFocusBg;
-                }
-            }
-
-            &:not(.p-highlight):not(.p-disabled) {
-                &.p-focus {
-                    color: $inputListItemTextFocusColor;
-                    background: $inputListItemFocusBg;
-                }
-
-                &:hover {
-                    color: $inputListItemTextHoverColor;
-                    background: $inputListItemHoverBg;
-                }
-            }
-        }
-
-        .p-dropdown-item-group {
-            margin: $submenuHeaderMargin;
-            padding: $submenuHeaderPadding;
-            color: $submenuHeaderTextColor;
-            background: $submenuHeaderBg;
-            font-weight: $submenuHeaderFontWeight;
-        }
-
-        .p-dropdown-empty-message {
-            padding: $inputListItemPadding;
-            color: $inputListItemTextColor;
-            background: $inputListItemBg;
-        }
+    .p-dropdown-filter-icon {
+      right: nth($inputPadding, 2);
+      color: $inputIconColor;
     }
+  }
+
+  .p-dropdown-items {
+    padding: 0;
+    margin: 0;
+
+    .p-dropdown-item {
+      margin: $inputListItemMargin;
+      padding: $inputListItemPadding;
+      border: $inputListItemBorder;
+      color: $inputListItemTextColor;
+      background: $inputListItemBg;
+      transition: $listItemTransition;
+      border-radius: $inputListItemBorderRadius;
+
+      &.p-highlight {
+        color: white;
+        background: $highlightBg;
+      }
+
+      &:not(.p-highlight):not(.p-disabled):hover {
+        color: $inputListItemTextHoverColor;
+        background: $inputListItemHoverBg;
+      }
+    }
+
+    .p-dropdown-empty-message {
+      padding: $inputListItemPadding;
+      color: $inputListItemTextColor;
+      background: $inputListItemBg;
+    }
+
+    .p-dropdown-item-group {
+      margin: $submenuHeaderMargin;
+      padding: $submenuHeaderPadding;
+      color: $submenuHeaderTextColor;
+      background: $submenuHeaderBg;
+      font-weight: $submenuHeaderFontWeight;
+    }
+  }
+}
+
+p-dropdown.ng-dirty.ng-invalid>.p-dropdown {
+  @include invalid-input();
+
+  .p-dropdown-label,
+  .p-dropdown-trigger {
+    color: $errorColor
+  }
 }
 
 .p-input-filled {
-    .p-dropdown {
-        background: $inputFilledBg;
+  .p-dropdown {
+    background: $inputFilledBg;
 
-        &:not(.p-disabled):hover {
-            background-color: $inputFilledHoverBg;
-        }
-    
-        &:not(.p-disabled).p-focus {
-            background-color: $inputFilledFocusBg;
-
-            .p-inputtext {
-                background-color: transparent;
-            }
-        }
+    &:not(.p-disabled):hover {
+      background-color: $inputFilledHoverBg;
     }
-}
 
-p-dropdown.ng-dirty.ng-invalid > .p-dropdown {
-    @include invalid-input();
+    &:not(.p-disabled).p-focus {
+      background-color: $inputFilledFocusBg;
+
+      .p-inputtext {
+        background-color: transparent;
+      }
+    }
+  }
 }

@@ -1,5 +1,64 @@
+.p-dialog.no-header {
+  
+  .p-dialog-content {
+    padding: $dialogContentNoHeaderPadding;
+    @include sm {
+      width: 96vw;
+    }
+    @include md {
+      min-width: 90vw;
+    }
+  }
+}
+.p-dialog.form-dialog {
+  .p-dialog-content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+}
+.p-dialog.xxxlarge {
+  .p-dialog-content {
+    max-height: 90vh;
+    max-width: 1000px;
+    min-width: 55vw;
+  }
+}
+
+.p-dialog.xxlarge {
+  .p-dialog-content {
+    width: 100vw;
+    max-height: 90vh;
+    max-width: 900px;
+  }
+}
+
+.p-dialog.xlarge {
+  .p-dialog-content {
+    overflow: visible;
+    width: 100vw;
+    max-width: 900px;
+  }
+}
+
+.p-dialog.large {
+  .p-dialog-content {
+    overflow: visible;
+    width: 100vw;
+    max-width: 750px;
+  }
+}
+
+.p-dialog.medium {
+  .p-dialog-content {
+    overflow: visible;
+    width: 100vw;
+    max-width: 700px;
+  }
+}
+
 .p-dialog {
-    border-radius: $borderRadius;
+    border-radius: 0;
     box-shadow: $overlayContainerShadow;
     border: $overlayContentBorder;
 
@@ -8,8 +67,8 @@
         background: $dialogHeaderBg;
         color: $dialogHeaderTextColor;
         padding: $dialogHeaderPadding;
-        border-top-right-radius: $borderRadius;
-        border-top-left-radius: $borderRadius;
+        border-top-right-radius: $borderRadius10;
+        border-top-left-radius: $borderRadius10;
 
         .p-dialog-title {
             font-weight: $dialogHeaderFontWeight;
@@ -20,6 +79,9 @@
             @include action-icon();
             margin-right: $inlineSpacing;
 
+            &:hover {
+              background-color: $primaryColor;
+          }
             &:last-child {
                 margin-right: 0;
             }
@@ -32,8 +94,7 @@
         padding: $dialogContentPadding;
 
         &:last-of-type {
-            border-bottom-right-radius: $borderRadius;
-            border-bottom-left-radius: $borderRadius;
+            border-radius: 0;
         }
     }
 
@@ -43,8 +104,8 @@
         color: $panelFooterTextColor;
         padding: $dialogFooterPadding;
         text-align: right;
-        border-bottom-right-radius: $borderRadius;
-        border-bottom-left-radius: $borderRadius;
+        border-bottom-right-radius: $borderRadius10;
+        border-bottom-left-radius: $borderRadius10;
 
         button {
             margin: 0 $inlineSpacing 0 0;
@@ -52,10 +113,40 @@
         }
     }
 
+// confirmation modal //
     &.p-confirm-dialog {
+      color: red;
+      .p-dialog-titlebar-close {
+        color: $primaryColor;
+        border: 8px solid blue;
+      }
+      .p-dialog-header-close {
+
+          position: absolute;
+          top: -17px;
+          right: -17px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 38px;
+          height: 38px;
+          padding: 0;
+          color: white;
+          background-color: $primaryColor;
+          &:hover {
+            background-color: $primaryColor!important;
+            .icon-close {
+              color:  var(--primary-text-color);
+              transition: all 0.5s ease-in-out;
+            }
+        }
+
+        }
+
+
         .p-confirm-dialog-icon {
             font-size: $primeIconFontSize * 2;
-
+            color: $primaryColor;
             &.p-icon {
                 width: $primeIconFontSize * 2;
                 height: $primeIconFontSize * 2;
@@ -67,3 +158,5 @@
         }
     }
 }
+
+

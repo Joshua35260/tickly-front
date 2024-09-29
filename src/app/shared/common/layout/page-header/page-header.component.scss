@@ -1,0 +1,72 @@
+@import "@assets/knacss/mixin.scss";
+
+.page-header {
+  display: flex;
+  align-items: center;
+  color: var(--primary-text-color);
+    .header-title{
+    font-size: 50px;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 24px;
+    line-height: 1.25;
+    padding-left: 10px;
+    @include lg {
+      font-size: 40px;
+      padding-left: 44px;
+      margin-bottom: 15px;
+    }
+    @include md {
+      font-size: 28px;
+      padding-left: 44px;
+      line-height: 1.15;
+      margin-bottom: 0px;
+    }
+    @include sm {
+      font-size: 22px;
+      padding-left: 44px;
+      line-height: 1.15;
+      margin-bottom: 0px;
+    }
+    small{
+      display: block;
+      font-size: 17px;
+      @include lg {
+        font-size: 16px;
+      }
+      @include md {
+        font-size: 15px;
+      }
+      @include sm {
+        font-size: 14px;
+      }
+      font-weight: 300;
+      color:var(--surface-300)
+    }
+  }
+
+  .header-avatar {
+    z-index: 11;
+    position: absolute;
+    top:0;
+    right: 0;
+    cursor: pointer;
+    background-color: transparent;
+  }
+  
+  .header-avatar-menu-open {
+    background-color: white;
+    border-radius: 50% 50% 0 0;
+    z-index: 99;
+    opacity: 1;
+    transition: background-color 0.2s ease-out;
+  }
+
+  .avatar {
+    overflow: hidden;
+    border-radius: 5px 0 0 5px;
+  }
+
+}
+
+

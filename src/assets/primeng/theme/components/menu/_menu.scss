@@ -1,13 +1,25 @@
+//you can change the color of one item in p-menu by giving red class to one element in p-menu, by example, red
+.red * {
+  color: var(--primary-color)!important;
+}
+
 .p-menu {
     padding: $verticalMenuPadding;
     background: $menuBg;
     color: $menuTextColor;
     border: $menuBorder;
     border-radius: $borderRadius;
-    width: $menuWidth;
+    overflow: hidden;
+    min-width: $menuWidth;
+    max-width: $menuMaxWidth;
+    
+    .p-menu-list{
+        padding: 0;
+        margin: 0;
+    }
 
-    .p-menuitem {
-        @include menuitem();
+    .p-menuitem-link {
+        @include menuitem-link();
     }
 
     &.p-menu-overlay {
@@ -26,12 +38,29 @@
         border-top-left-radius: $submenuHeaderBorderRadius; 
     }
 
-    .p-menuitem-separator {
+    .p-menu-separator {
         border-top: $divider;
         margin: $menuSeparatorMargin;
+    }
+
+    .p-menuitem {
+        margin: $verticalMenuitemMargin;
+
+        &:last-child {
+            margin: 0;
+        }
     }
 
     .p-menuitem-badge {
         @include menuitem-badge();
     }
 }
+
+//custom p-menu for avatar at the top right corner of the application
+.p-menu-avatar.p-menu {
+  &.p-menu-overlay {
+    border-radius: 10px 0 10px 10px;
+    z-index: 98!important;
+  }
+}
+

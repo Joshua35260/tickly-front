@@ -10,10 +10,6 @@
 
         .p-splitter-gutter-handle {
             background: $splitterGutterHandleBg;
-
-            &:focus-visible {
-                @include focused();
-            }
         }
     }
 

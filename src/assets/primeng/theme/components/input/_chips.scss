@@ -1,65 +1,123 @@
 @use 'sass:math';
 
+.grid,
+form {
+  .chips-input-left-icon {
+    margin-top: 5px;
+
+  }
+}
+
+.chips-input-left-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: $input-left-icon-gap;
+  height: 48px;
+  max-height: 60px;
+
+  &>i {
+    min-width: 28px;
+    color: $primaryColor;
+    font-size: 28px;
+  }
+
+  p-chips {
+    flex: 1;
+  }
+}
+
 .p-chips {
+  width: 100%;
+  .p-chips-multiple-container {
+    padding: 13px;
+    @include md {
+      padding: 8px 9px;
+    }
+    @include sm {
+      padding: 8px 9px;
+    }
+    gap: $inlineSpacing;
+    width: 100%;
+    max-height: 60px;
+    overflow-y: auto;
     &:not(.p-disabled):hover {
-        .p-chips-multiple-container {
-            border-color: $inputHoverBorderColor;
-        }
+      border-color: $inputHoverBorderColor;
     }
 
     &:not(.p-disabled).p-focus {
-        .p-chips-multiple-container {
-            @include focused-input();
-        }
+      @include focused-input();
     }
 
-    .p-chips-multiple-container {
-        padding: math.div(nth($inputPadding, 1), 2) nth($inputPadding, 2);
-        gap: $inlineSpacing;
+    .p-chips-token {
+      //padding: math.div(nth($inputPadding, 1), 2) nth($inputPadding, 2);
+      padding: 1px 8px;
+      font-size: 15px;
+      @include md {
+     font-size: 14px;
+      }
+      @include sm {
+     font-size: 14px;
+     
+      }
+      background: $shade900;
+      color: white;
+      border-radius: $borderRadius;
 
-        .p-chips-token {
-            padding: math.div(nth($inputPadding, 1), 2) nth($inputPadding, 2);
-            margin-right: $inlineSpacing;
-            background: $chipBg;
-            color: $chipTextColor;
-            border-radius: $chipBorderRadius;
-
-            &.p-focus {
-                background: $chipFocusBg;
-                color: $chipFocusTextColor;
-            }
-
-            .p-chips-token-icon {
-                margin-left: $inlineSpacing;
-            }
-        }
-
-        .p-chips-input-token {
-            padding: math.div(nth($inputPadding, 1), 2) 0;
-                
-            input {
-                font-family: var(--font-family);
-                font-feature-settings: var(--font-feature-settings, normal);
-                font-size: $inputTextFontSize;
-                color: $textColor;
-                padding: 0;
-                margin: 0;
-            }
-        }
+      .p-chips-token-icon {
+        margin-left: $inlineSpacing;
+      }
     }
+
+    .p-chips-input-token {
+      //padding: math.div(nth($inputPadding, 1), 2) 0;
+      padding: 0;
+
+      input {
+        font-family: $fontFamily;
+        font-size: 16px;
+        color: $textColor;
+        padding: 0;
+        margin: 0;
+        @include md {
+          font-size: 14px;
+        }
+        @include sm {
+          font-size: 13px;
+        }
+      }
+      label {
+        display: none
+      }
+    }
+  }
 }
 
-p-chips.ng-dirty.ng-invalid > .p-chips > .p-inputtext {
+p-chips.ng-dirty.ng-invalid {
+  >.p-chips>.p-inputtext {
     @include invalid-input();
+
+    input {
+      color: $errorColor;
+    }
+  }
+
+  &+small {
+    color: $errorColor
+  }
+
+  &+label+small {
+    color: $errorColor
+  }
 }
 
 p-chips.p-chips-clearable {
-    .p-inputtext {
-        padding-right: nth($inputPadding, 2) + $primeIconFontSize;
-    }
+  .p-inputtext {
+    padding-right: nth($inputPadding, 2) + $primeIconFontSize;
+  }
 
-    .p-chips-clear-icon {
-        color: $inputIconColor;
-        right: nth($inputPadding, 2);
-    } 
+  .p-chips-clear-icon {
+    color: $inputIconColor;
+    right: nth($inputPadding, 2);
+  }
 }

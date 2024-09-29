@@ -1,0 +1,683 @@
+@import "@assets/knacss/mixin.scss";
+
+.card {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  box-shadow: var(--box-shadow-card);
+  border-radius: var(--border-radius-card);
+  background-color: var(--card-bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  &:hover {
+    cursor: pointer;
+    transition: ease-in-out 0.2s;
+    background-color: var(--card-bg-hover);
+    
+    .card-bottom {
+      background-color: var(--card-bottom-bg-hover);
+      transition: ease-in-out 0.2s;
+    }
+  }
+
+  .icon-menu {
+    position: absolute;
+    top: 42%;
+    right: 0px;
+    text-align: center;
+    z-index: 10;
+    width: 36px;
+  }
+  
+  .icon-favorite {
+    border-radius: 50%;
+  }
+
+  // TOP CARD
+
+  .card-top {
+    --avatar-height-top: 60;
+    --avatar-width-top: 60;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    gap: 10px;
+    @include sm {
+      gap: 5px;
+    }
+    height: 60px;
+    border-radius: 5px 5px 0 0;
+    .card-content {
+      padding: 0px 15px;
+      @include sm {
+        padding: 0 2px;
+      }
+      width: 100%;
+      margin: auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      @include sm {
+        gap: 5px;
+        padding-right: 2px;
+      }
+  
+      .avatar {order:1;}
+      .card-main-info  {order: 2;flex-shrink: 0;}
+      .card-icon {order:2; line-height: 0;}
+      .card-top-title {order: 2;}
+      .card-contact {order: 3; display: flex; gap: 20px;flex-wrap: nowrap; text-wrap: nowrap;}
+      .card-top-text {order: 3; line-height: 1.1;}
+      .card-address,.adresses {order: 3;}
+      .archive-info {order: 4;flex-shrink: 0;}
+      .attach-info {order: 4;}
+      .card-icones {order: 4; margin-left: auto; text-align: right;}
+      .card-trigram {order: 4; margin-left: auto; text-align: right;}
+    }
+
+    .card-content.with-menu {
+      padding-right: 30px;
+    }
+
+    
+    .card-top-title {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      gap: 5px;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.35;
+
+      small {
+        line-height: 1;
+      }
+
+      @include md {
+        font-size: 15px;
+      }
+
+      @include sm {
+        font-size: 14px;
+      }
+
+      small {
+        flex: 1;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 15px;
+        font-style: italic;
+        font-weight: 400;
+
+        @include md {
+          font-size: 13px;
+        }
+
+        @include sm {
+          font-size: 12px;
+        }
+      }
+
+      .alert-icon {
+        font-size: 16px;
+      }
+
+    }
+
+  }
+
+  .card-top.only {
+    border-radius: 5px;
+    .card-top-title {
+      line-height: 1.5;
+    }
+    .card-content{
+      padding-left: 0;
+    }
+  }
+
+  //card with bottom, bottom section
+  .card-bottom {
+    --avatar-height-bottom: 41;
+    --avatar-width-bottom: 60;
+    height: 41px;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    gap: 8px;
+    background-color: var(--gray-10);
+    border-radius: 0 0 5px 5px;
+    font-size: 15px;
+    padding: 0 15px;
+
+    @include md {
+      font-size: 14px;
+    }
+
+    @include sm {
+      font-size: 13px;
+    }
+    
+    .card-content {
+    width: 100%;
+    margin: auto 0;
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    gap: 10px;
+    @include sm {
+      gap: 5px;
+    }
+    .avatar {order: 1;}
+    .card-icon {order: 2; line-height: 0;}
+    .card-bottom-title,.name,.date-limit-or-currency {order: 3;flex-wrap: wrap;}
+    .card-bottom-title {white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;}
+    .archive-info {order: 4;}
+  }
+  .card-content-2 {
+    position: relative;
+    width: 100%;
+    margin: auto 0;
+    display: flex;
+    align-items: center;
+    text-align: end;
+    justify-content: flex-end;
+    gap: 10px;
+
+    @include sm {
+      gap: 5px;
+    }
+    .flex-col { order: 1;}
+    .card-bottom-title { order: 2; display: flex; gap: 5px; white-space: nowrap; overflow: hidden};
+      .name, .city {
+        display: inline-block;
+        text-align: right;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex-shrink: 1; 
+      }
+      .separator {
+        margin: auto;
+      }
+    
+    
+    .card-icon { order: 4;flex-shrink: 0;}
+    app-flag {order:3; flex-shrink: 0;}
+  }
+
+
+.card-content-2::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: -5px;
+  width: 2px;
+  height: 30px;
+  border-left: var(--separator-card);
+}
+
+
+
+  .card-bottom-title-small {
+    font-size: 13px;
+    color: var(--primary-color);
+  }
+
+}
+
+app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}}
+.card-small-icon {
+  vertical-align: middle;
+  white-space: nowrap;
+  font-size: 15px;
+  display: inline;
+
+  @include md {
+    font-size: 14px;
+  }
+
+  @include sm {
+    font-size: 13px;
+  }
+
+
+
+  [class^="icon-"] {
+    font-size: 20px;
+    vertical-align: text-bottom;
+
+    @include md {
+      font-size: 17px;
+    }
+
+    @include sm {
+      font-size: 16px;
+    }
+
+  }
+}
+
+.card-icon.size-33 {
+  font-size: 33px;
+}
+.card-icon.size-25 {
+  font-size: 25px;
+}
+
+.card-icon {
+  vertical-align: middle;
+  white-space: nowrap;
+  text-overflow: unset;
+  font-size: 28px;
+  color: var(--primary-color);
+
+  @include md {
+    font-size: 22px;
+  }
+
+  @include sm {
+    font-size: 20px;
+  }
+}
+
+.card-icon,
+.avatar,
+.card-warning {
+  flex-shrink: 0;
+}
+
+.avatar {
+  position: relative;
+
+  i {
+    position: absolute;
+    top: 0px;
+    right: -10px;
+    background: white;
+    font-size: 20px;
+    color: var(--primary-color);
+  }
+}
+
+.card-medium-icon {
+  font-size: 20px;
+  color: var(--primary-color);
+
+  @include md {
+    font-size: 17px;
+  }
+
+  @include sm {
+    font-size: 16px;
+  }
+}
+
+.date-limit-or-currency {
+  display: flex;
+  flex-direction: column;
+  font-style: italic;
+  span {
+
+    font-weight: 600;
+  }
+  font-weight: 400;
+}
+
+.flex.flex-col {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.addresses {
+  // line-height: 0;
+}
+.card-address {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  line-height: 1;
+}
+.address {
+  line-height: 1;
+}
+
+.card-subtitle {
+  color: #9A9A9A;
+  font-weight: 400;
+  font-size: 15px;
+  @include md {
+    font-size: 13px;
+  }
+  @include sm {
+    font-size: 12px;
+  }
+}  
+
+.coordinate-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 33px;
+  height: 60px;
+  width: 60px;
+  background-color: var(--yellow-color);
+  color: var(--shade-000);
+}
+
+a {
+  color: var(--primary-text-color);
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.date {
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 14px;
+  margin: auto 0;
+  text-align: center;
+  color: var(--primary-color);
+
+  @include md {
+    font-size: 13px;
+  }
+
+  @include sm {
+    font-size: 12px;
+  }
+}
+
+.italic {
+  font-style: italic;
+}
+
+
+
+  .archive-info {
+    margin-left: auto;
+    font-weight: 600;
+    font-size: 14px;
+
+    @include md {
+      font-size: 13px;
+    }
+
+    @include sm {
+      font-size: 12px;
+    }
+
+    font-style: italic;
+    display: flex;
+    gap: 6px;
+
+    i {
+      font-size: 18px;
+
+      @include md {
+        font-size: 16px;
+      }
+
+      @include sm {
+        font-size: 15px;
+      }
+    }
+  }
+
+.comment-author {
+  font-size: 17px;
+  line-height: 1.2;
+  @include md {
+    font-size: 16px;
+  }
+  @include sm {
+    font-size: 15px;
+  }
+}
+
+.comment-date {
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.2;
+  @include md {
+    font-size: 14px;
+  }
+  @include sm {
+    font-size: 13px;
+  }
+}
+
+.comment {
+  font-size: 16px;
+  line-height: 1.25;
+  white-space: pre-wrap;
+  @include md {
+    font-size: 15px;
+  }
+  @include sm {
+    font-size: 14px;
+  }
+}
+
+} //! end of selector card
+
+// ARCHIVE STYLE
+.card.archive {
+  opacity: 0.5;
+  filter: grayscale(100%);
+
+  .title,
+  .card-bottom-title,
+  .card-top-title,
+  .card-top-text,
+  .card-contact,
+  .card-address {
+    text-decoration: line-through;
+  }
+
+  .card-bottom {
+    display: flex;
+
+    .card-bottom-title {
+      text-decoration: line-through;
+    }
+
+  }
+} 
+
+
+// SUB CARD //
+.card.sub-card .card-top .card-content {
+  .sub-card-icon { order: 0; }
+  .card-top-title { order: 2; }
+  .main-content { order: 2; }
+  .address { order: 3; }
+  .card-address { order: 4; }
+  .card-icon { order: 2; }
+  .avatar { order: 1; }
+}
+
+.card.sub-card {
+  width: calc(100% - 65px);
+  margin-top: 10px;
+  margin-left: auto;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  &:before {
+    content: '';
+    z-index: 2;
+    position: absolute;
+    left: -25px;
+    top: -35px;
+    width: 23px;
+    height: calc(100% + 10px);
+    border-left: 1px dashed var(--primary-color);
+    border-bottom: 1px dashed var(--primary-color);
+  }
+
+    
+    .sub-card-icon {
+      vertical-align: middle;
+      white-space: nowrap;
+      text-overflow: unset;
+      font-size: 28px;
+      color: var(--primary-color);
+    
+      @include md {
+        font-size: 22px;
+      }
+    
+      @include sm {
+        font-size: 20px;
+      }
+    }
+}
+
+.new-comment-avatar {
+  z-index: 2;
+  position: absolute;
+  top: 10px;
+  left: 2px;
+}
+
+//shadowcard
+
+
+/***************/
+/* shadow card */
+/***************/
+
+.shadow-card {
+  position: relative;
+  box-shadow: 6px 5px 7px #00000022;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+
+  i {
+    font-size: 20px;
+    vertical-align: middle;
+  }
+
+  @include md {
+    padding: 6px;
+
+    i {
+      font-size: 19px;
+    }
+  }
+
+  @include sm {
+    padding: 4px 6px;
+
+    i {
+      font-size: 17px;
+    }
+  }
+
+  &.child {
+    position: initial;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    width: calc(100% - 30px);
+    margin-left: 15px;
+    margin-top: -2px;
+  }
+
+  .value {
+    color: var(--primary-color);
+    font-weight: 600;
+  }
+
+  label {
+    text-align: center;
+
+    @include md {
+      font-size: 15px;
+    }
+
+    @include sm {
+      font-size: 14px;
+    }
+  }
+
+  &.key-value,
+  .key-value {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 15px;
+
+      @include md {
+        font-size: 15px;
+        gap: 4px;
+      }
+
+      @include sm {
+        font-size: 14px;
+        gap: 2px;
+      }
+    }
+
+    .value {
+      width: 100%;
+      text-align: center;
+      font-size: 19px;
+
+      @include md {
+        font-size: 17px;
+      }
+
+      @include sm {
+        font-size: 16px;
+      }
+    }
+  }
+
+  &:not(.key-value),
+  &>div:not(.key-value) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &.multi {
+    display: flex;
+    flex-direction: row;
+
+    &>div {
+      flex: 1;
+    }
+
+    &>div:not(:first-child) {
+      border-left: 1px dashed rgb(50, 50, 50, 0.25);
+    }
+  }
+}

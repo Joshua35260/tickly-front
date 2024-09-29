@@ -9,7 +9,7 @@
         border-radius: 0;
     }
 
-    .p-treetable-header {
+   .p-treetable-header {
         background: $tableHeaderBg;
         color: $tableHeaderTextColor;
         border: $tableHeaderBorder;
@@ -115,32 +115,10 @@
                             color: $textColor;
                         }
                     }
-
-                    &.p-variant-filled {
-                        .p-checkbox-box {
-                            background-color: $inputFilledBg;
-                
-                            &.p-highlight {
-                                background: $checkboxActiveBg;
-                            }
-                        }
-                
-                        &:not(.p-disabled) {
-                            .p-checkbox-box {
-                                &:hover {
-                                    background-color: $inputFilledHoverBg;
-                                }
-                
-                                &.p-highlight:hover {
-                                    background: $checkboxActiveHoverBg;
-                                }
-                            }
-                        }
-                    }
                 }
             }
 
-            &:focus-visible {
+            &:focus {
                 outline: 0.15rem solid $focusOutlineColor;
                 outline-offset: -0.15rem;
             }

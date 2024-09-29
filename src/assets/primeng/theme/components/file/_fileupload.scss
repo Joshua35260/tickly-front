@@ -24,11 +24,10 @@
         color: $panelContentTextColor;
         border-bottom-right-radius: $borderRadius;
         border-bottom-left-radius: $borderRadius;
-
-        &.p-fileupload-highlight {
-            border-color: $fileUploadContentHoverBorder;
-            border-style: dashed;
-            background-color: $highlightBg;
+        .ng-star-inserted {
+          display: flex;
+          flex-direction: column;
+          gap: 10px
         }
     }
 
@@ -37,8 +36,10 @@
     }
 
     .p-fileupload-row {
+      margin: 5px 0;
         > div {
             padding: $tableBodyCellPadding;
+        
         }
     }
 
@@ -49,13 +50,93 @@
     }
 }
 
+p-fileupload.thumbnail{
+    .p-fileupload {
+        position: relative;
+        .p-fileupload-buttonbar {
+            padding: 0;
+            background: none;
+            border: 0;
+            text-align: center;
+            .p-button.p-fileupload-choose{
+                background:none;
+                color: $primaryColor;
+                border: 0;
+                padding: 0;
+                margin: 0;
+                .p-button-label{
+                    font-size: 13px;
+                    font-weight: 400;
+                    display: block;
+                    &:before{
+                        content:"";
+                        display: block;
+                        width: 130px;
+                        height: 130px;
+                        background:var(--dummy-thumb);
+                        margin: auto;
+                    }
+                }
+                plusicon{display: none;}
+                &.p-focus{box-shadow: none;}
+            }
+            p-button{display: none;}
+        }
+        .p-fileupload-content{
+            padding: 0;
+            background: none;
+            border: 0;
+            position: static;
+            p-progressbar{display: none;}
+            .p-fileupload-row {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                > div{
+                    font-size: 0;
+                    padding: 0;
+                    display: block;
+                    width: auto;
+                    img{
+                        display: block;
+                        width: 130px;
+                        height: 130px;
+                        border-radius: 50%;
+                        margin: auto;
+                        border:solid 1px var(--surface-100);
+                    }
+                    button{
+                        position: absolute;
+                        left: calc(50% - 16px);
+                        bottom: 0;
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+fieldset .p-fileupload-row{background-color: var(--surface-50);} // No Sure if it's the right place for that
+
 .p-fileupload-choose {
+
     &:not(.p-disabled):hover {
         background: $buttonHoverBg;
         color: $buttonTextHoverColor;
         border-color: $buttonHoverBorderColor;
+        .p-button-icon {
+            color: white;
+            transition: 0.5s ease-in-out;
+          }
+        
     }
-
+    
     &:not(.p-disabled):active {
         background: $buttonActiveBg;
         color: $buttonTextActiveColor;
