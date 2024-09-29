@@ -1,0 +1,8 @@
+@if(isValidCountryCode()) {
+  <div>
+    <span *ngIf="withCountryName()">{{ countryName() }} </span>
+    <i [class]="flagClass()"></i>
+  </div>
+} @else {
+  <div>{{ countryName() }}</div>
+}

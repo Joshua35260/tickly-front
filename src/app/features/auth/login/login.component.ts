@@ -13,11 +13,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
+
 import { InputComponent } from '../../../shared/common/input/input.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CheckboxModule } from 'primeng/checkbox';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-login',
@@ -25,20 +25,14 @@ import { CheckboxModule } from 'primeng/checkbox';
   styleUrls: ['./login.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ButtonModule,
-    InputComponent,
-    ReactiveFormsModule,
-  ],
+  imports: [CommonModule, RouterModule, InputComponent, ReactiveFormsModule, ButtonModule],
 })
 export class LoginComponent {
   loginForm: FormGroup;
   loginFilled = signal<boolean>(false);
   formSubmitted: boolean;
 
-switchView = output<void>();
+  switchView = output<void>();
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -57,7 +51,7 @@ switchView = output<void>();
   backtoLogin() {
     this.loginFilled.set(false);
   }
- 
+
   onSignin() {
     this.authService
       .signIn(this.loginForm.value)

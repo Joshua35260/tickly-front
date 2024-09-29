@@ -66,15 +66,16 @@ export class PageHeaderComponent {
         return data?.header;
       })
     );
-
-    this.authService.user
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((user) => {
-        if (user) {
-          this.userConnected.set(user);
-        }
-      });
-      
+    
+    if (!this.userConnected()) {
+      this.authService.user
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe((user) => {
+          if (user) {
+            this.userConnected.set(user);
+          }
+        });
+    }   
   }
 
   // Rediriger vers le profil de l'utilisateur

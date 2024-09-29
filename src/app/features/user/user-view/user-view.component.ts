@@ -9,6 +9,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { BehaviorSubject, distinctUntilChanged, Observable, shareReplay, switchMap } from 'rxjs';
 import { startWith, take } from 'rxjs/operators';
+import { UserInfoComponent } from '../components/user-info/user-info.component';
 
 @Component({
   selector: 'app-user-view',
@@ -20,6 +21,7 @@ import { startWith, take } from 'rxjs/operators';
     CommonModule,
     ModalConfirmDeleteComponent,
     ButtonModule,
+    UserInfoComponent,
   ]
 })
 export class UserViewComponent implements OnInit {

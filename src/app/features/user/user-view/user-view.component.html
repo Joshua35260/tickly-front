@@ -3,8 +3,10 @@
 
   <div class="user flex flex-col gap-medium">
 
- 
 
+    <app-user-info class="widget height-auto" [user]="user" [sectionDisplayed]="sectionDisplayed()"/>
+    @if(sectionActionsDisplayed) {
+    
       <div class="widget height-auto">
 
         <div class="actions">
@@ -13,7 +15,7 @@
             (click)="showDeleteModal.set(true)"></p-button>
         </div>
       </div>
-    
+    }
   </div>
 
 

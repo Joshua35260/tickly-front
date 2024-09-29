@@ -9,6 +9,7 @@ import { switchMap, catchError, tap, map, finalize } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CookieService } from 'ngx-cookie-service';
 import { Auth } from '../models/auth.class';
+
 interface SigninDetails {
   login: string;
   password: string;
@@ -59,7 +60,6 @@ export class AuthService {
               this.user$.next(fetchedUser); // Mettre à jour l'utilisateur si trouvé
             } else {
               this.user$.next(null); // Aucun utilisateur trouvé
-              console.log('No user found after session check');
             }
           }),
           map(fetchedUser => {
@@ -80,20 +80,24 @@ export class AuthService {
       })
     );
   }
+  
 
-  private getTokenInfo(): Observable<User | null> {
-    // Vérifiez d'abord si le cookie d'authentification est présent
-    if (!this.cookieService.check(AuthService.COOKIE_TOKEN)) {
-      return of(null); // Retourne null si le cookie n'existe pas, évitant un appel réseau
-    }
+private getTokenInfo(): Observable<User | null> {
+  return this.http.get<{ user: User, token: string, expire: number }>(`${this.apiUrl}/auth/session`).pipe(
+    map(response => {
+      // Assurez-vous que la réponse contient bien un utilisateur
+      if (response && response.user) {
+        return response.user; // Retourne l'utilisateur extrait de la réponse
+      }
+      return null; // Retourne null si l'utilisateur n'est pas présent
+    }),
+    catchError(error => {
+      console.error('Error fetching token info', error); // Log the error
+      return of(null); // Retourne null en cas d'erreur
+    })
+  );
+}
 
-    return this.http.get<User>(`${environment.apiUrl}/auth/session`).pipe(
-      catchError(error => {
-        console.error('Error fetching token info', error); // Log error message
-        return of(null); // Retourne null en cas d'erreur
-      })
-    );
-  }
 
   tryRetrieveSession(): void {
     this.getTokenInfo().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(user => {
@@ -103,12 +107,10 @@ export class AuthService {
 
   // Connexion et récupération des informations utilisateur
   signIn(details: SigninDetails): Observable<Auth | null> {
-    const options = { withCredentials: true };
-    return this.http.post<Auth>(`${environment.apiUrl}/auth/signin`, details, options).pipe(
+    return this.http.post<Auth>(`${environment.apiUrl}/auth/signin`, details).pipe(
       switchMap(response => {
         if (response) {
-          const { user, token } = response;
-          this.cookieService.set(AuthService.COOKIE_TOKEN, token, 1); // Stocker le token dans un cookie
+          const { user } = response;
           this.user$.next(user); // Mise à jour de l'utilisateur en mémoire
           return of(response);
         }
@@ -123,12 +125,22 @@ export class AuthService {
 
   // Déconnexion de l'utilisateur
   signOut(): void {
-    this.http.get<boolean>(`${environment.apiUrl}/auth/signout`, { withCredentials: true }) // Correction de l'URL pour déconnexion
+    // Fournissez un objet vide comme deuxième paramètre pour le corps de la requête
+    this.http.post<void>(`${environment.apiUrl}/auth/signout`, {}, { withCredentials: true })
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.cookieService.delete(AuthService.COOKIE_TOKEN);
-        this.user$.next(null); // Réinitialise l'utilisateur en mémoire
-        this.router.navigate(['/auth']); // Redirection vers la page de connexion
+      .subscribe({
+        next: () => {
+          this.cookieService.delete(AuthService.COOKIE_TOKEN); // Supprimez le cookie en mémoire (même s'il est httpOnly)
+          this.user$.next(null); // Réinitialisez l'état de l'utilisateur
+        },
+        error: (error) => {
+          console.error('Error during signout:', error); // Gestion d'erreur
+        },
+        complete: () => {
+          this.router.navigate(['/auth']); // Redirection vers la page de connexion
+        }
       });
   }
+  
+  
 }

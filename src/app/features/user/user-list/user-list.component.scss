@@ -4,7 +4,7 @@
 }
 .list-and-map {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 2fr;
   height: 100%;
 }
 app-user-row {
@@ -14,8 +14,11 @@ app-user-row {
   height: 100%;
   overflow-y: auto;
 }
-#map {
+#mapId {
   height: 100%;
+  width: 100%;
   border-radius: 10px;
-  overflow: hidden;
+}
+.isloading {
+  display: none;
 }

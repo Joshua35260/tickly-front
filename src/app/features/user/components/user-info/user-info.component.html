@@ -1,0 +1,68 @@
+<div class="widget-user-info" *ngIf="!!user()">
+  <i type="button" (click)="update()" class="icon-edit"></i>
+
+  <div class="user-info-name">
+    <app-avatar class="avatar" [avatarUrl]="user().avatarUrl" [fullname]="user().fullName"></app-avatar>
+    <div class="names">
+      <div class="fullname">
+        <span class="name">{{user().lastname}}</span>&nbsp;
+        <span class="firstname">{{user().firstname}}</span>
+      </div>
+      <div class="roles" *ngIf="user().roles.length > 0">
+        <ng-container *ngFor="let role of user().roles; let last = last">
+          <div>{{ role.role }}<span *ngIf="!last">,</span></div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+@if (sectionInfoDisplayed) {
+  @if (user().addresses?.length > 0) {
+    <hr class="dashed-hr" />
+    <div class="localisation">
+      <div class="small-title"><i class="icon-location"></i>Localisation</div>
+  
+      <div class="localisation-main">
+        <ng-container *ngFor="let address of user().addresses">
+          <div class="localisation-main-value">{{ address.street_l1 }}</div>
+          <div class="localisation-main-value">{{ address.street_l2 }}</div>
+          <div class="localisation-main-value">{{ address.postcode }} {{ address.city }}</div>
+          <app-flag class="localisation-main-value" [countryCode]="address.country"></app-flag>
+          
+          <ng-container *ngIf="address.latitude && address.longitude">
+            <a [href]="'https://www.openstreetmap.org/?mlat=' + address.latitude + '&mlon=' + address.longitude"
+              target="_blank" class="color-link">
+              <span>Voir sur la carte</span> <i class="icon-maps"></i>
+            </a>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  }
+  
+
+  @if (!!user().phones.length || !!user().emails.length) {
+    <div class="small-title">
+      <i class="icon-information"></i>
+      Informations de contact
+    </div>
+  
+    <div class="coordinates">
+      <div class="contact-info">
+        @for (phone of user().phones; track phone.id) {
+          <a href="tel:{{phone.phone}}" class="coordinate">
+            <span class="icon-phone coordinate-icon"></span>{{phone.phone}}
+          </a>
+        }
+        @for (email of user().emails; track email.id) {
+          <a href="mailto:{{email.email}}" class="coordinate">
+            <span class="icon-mail coordinate-icon"></span>{{email.email}}
+          </a>
+        }
+      </div>
+    </div>
+  }
+  
+}
+
+</div>

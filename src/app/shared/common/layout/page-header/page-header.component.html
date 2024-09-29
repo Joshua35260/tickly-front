@@ -8,14 +8,14 @@
     </div>
 }
 
-@if (userConnected$ | async; as userConnected) {
+
 <div [ngClass]="menuVisible() ? 'header-avatar header-avatar-menu-open' : 'header-avatar'" (click)="menu.toggle($event)">
   <div class="avatar">
-    <app-avatar [fullname]="userConnected?.firstname + ' ' + userConnected?.lastname"
+    <app-avatar [fullname]="userConnected()?.firstname + ' ' + userConnected()?.lastname"
     [size]=64></app-avatar>
   </div>
 </div>
-}
+
 
 <p-menu #menu [model]="items" [popup]="true" (onHide)="menuVisible.set(false)" (onShow)="menuVisible.set(true)" styleClass="p-menu-avatar" appendTo="body"></p-menu>
 

@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
           this.router.navigate(['/auth']);
           return false;
         }
-        return true;
+        return true; // Autoriser l'accès si l'utilisateur est authentifié
       }),
       catchError(() => {
         // En cas d'erreur, rediriger vers la page de connexion
@@ -35,5 +35,5 @@ export class AuthGuard implements CanActivate {
       })
     );
   }
-
 }
+
