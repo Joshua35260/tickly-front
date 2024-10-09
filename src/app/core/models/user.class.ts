@@ -13,7 +13,7 @@ export class User {
   emails: Email[];
   phones: Phone[];
   
-  addresses: Address[];
+  address: Address;
   avatarUrl?: string;
   archive?: boolean;
 

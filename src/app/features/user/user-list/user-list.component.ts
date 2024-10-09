@@ -104,10 +104,10 @@ export class UserListComponent implements OnInit {
     }
 
     users.forEach(user => {
-      if (user.addresses && user.addresses.length > 0) {
-        user.addresses.forEach(address => {
-          const latitude = parseFloat(address.latitude.toString());
-          const longitude = parseFloat(address.longitude.toString());
+      if (!!user.address) {
+    
+          const latitude = parseFloat(user.address.latitude.toString());
+          const longitude = parseFloat(user.address.longitude.toString());
 
           // Create custom icon
           const customIcon = L.icon({
@@ -122,12 +122,12 @@ export class UserListComponent implements OnInit {
 
           const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(`
             <strong>${user.firstname} ${user.lastname}</strong><br>
-            ${address.street_l1 || ''}<br>
-            ${address.city}, ${address.postcode}
+            ${user.address.street_l1 || ''}<br>
+            ${user.address.city}, ${user.address.postcode}
           `);
             
           this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
-        });
+        
       }
     });
 

@@ -17,25 +17,25 @@
   </div>
 
 @if (sectionInfoDisplayed) {
-  @if (user().addresses?.length > 0) {
+  @if (!!user().address) {
     <hr class="dashed-hr" />
     <div class="localisation">
       <div class="small-title"><i class="icon-location"></i>Localisation</div>
   
       <div class="localisation-main">
-        <ng-container *ngFor="let address of user().addresses">
-          <div class="localisation-main-value">{{ address.street_l1 }}</div>
-          <div class="localisation-main-value">{{ address.street_l2 }}</div>
-          <div class="localisation-main-value">{{ address.postcode }} {{ address.city }}</div>
-          <app-flag class="localisation-main-value" [countryCode]="address.country"></app-flag>
+   
+          <div class="localisation-main-value">{{ user().address.street_l1 }}</div>
+          <div class="localisation-main-value">{{  user().address.street_l2 }}</div>
+          <div class="localisation-main-value">{{  user().address.postcode }} {{  user().address.city }}</div>
+          <app-flag class="localisation-main-value" [countryCode]=" user().address.country"></app-flag>
           
-          <ng-container *ngIf="address.latitude && address.longitude">
-            <a [href]="'https://www.openstreetmap.org/?mlat=' + address.latitude + '&mlon=' + address.longitude"
+          <ng-container *ngIf=" user().address.latitude &&  user().address.longitude">
+            <a [href]="'https://www.openstreetmap.org/?mlat=' +  user().address.latitude + '&mlon=' +  user().address.longitude"
               target="_blank" class="color-link">
               <span>Voir sur la carte</span> <i class="icon-maps"></i>
             </a>
           </ng-container>
-        </ng-container>
+    
       </div>
     </div>
   }
