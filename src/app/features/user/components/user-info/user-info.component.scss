@@ -1,8 +1,6 @@
 @import "@assets/knacss/mixin.scss";
 
-.widget-user-info {
-  position: relative;
-  height: fit-content;
+.user-info {
 
   .avatar {
     margin-right: 10px;
@@ -63,13 +61,6 @@
 
   }
 
-  .icon-edit {
-    position: absolute;
-    right: 0;
-    top: 0;
-    cursor: pointer;
-  }
-
   .names {
     display: flex;
     justify-content: space-between;
@@ -103,6 +94,9 @@
     align-items: center;
     gap: 10px;
     position: relative;
+    a {
+      color: var(--primary-color)
+    }
   }
   
   .contact-info {

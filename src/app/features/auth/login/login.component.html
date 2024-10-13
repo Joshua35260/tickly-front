@@ -1,18 +1,25 @@
-  <div class="card">
-    <h1 class="title">Bienvenue</h1>
-    <h2 class="subtitle">Entrez vos identifiants</h2>
 
-    <form class="card-body grid grid-cols-1 gap-large" [formGroup]="loginForm" (ngSubmit)="onSignin()" novalidate>
-          <app-input formControlName="login" label="Nom d'utilisateur"></app-input>
-          <app-input formControlName="password" type="password" label="Mot de passe"></app-input>
+<app-widget-title title="Se connecter" icon="icon-profile"></app-widget-title>
 
-          <button pButton type="submit">Se connecter</button>
-          <a class="forgot-password">Mot de passe oublié ?</a>
-    </form>
-
-    <div class="card-footer flex justify-center">
-        <a (click)="switchView.emit()">Pas encore inscrit ? Cliquez ici !</a>
+<fieldset>
+  <div class="small-title-c">
+    <i class="icon-idcard"></i>
+    <div>Entrez vos identifiants</div>
+  </div>
+  <form class="card-body flex flex-col sm:grid grid-cols-2 gap-small" [formGroup]="loginForm" (ngSubmit)="onSignin()"
+    novalidate>
+    <app-input data-cy="login" class="col-span-1" formControlName="login" label="Nom d'utilisateur"></app-input>
+    <app-input data-cy="password" class="col-span-1" formControlName="password" type="password" label="Mot de passe"></app-input>
+    <div class="actions col-span-full">
+      <p-button data-cy="submit"  label="Se connecter" severity="secondary" icon="icon-next" iconPos="left" [disabled]="loginForm.invalid"
+        type="submit"></p-button>
+      <!-- <a class="forgot-password">Mot de passe oublié ?</a> -->
     </div>
 
-  </div>
 
+  </form>
+
+</fieldset>
+<div class="card-footer flex justify-center">
+  <a (click)="switchView.emit()">Pas encore inscrit ? Cliquez ici !</a>
+</div>

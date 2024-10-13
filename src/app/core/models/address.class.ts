@@ -11,8 +11,8 @@ export class Address {
 
   postcode: string;
 
-  street_l1: string;
+  streetL1: string;
 
-  street_l2: string;
+  streetL2: string;
 
 }

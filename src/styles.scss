@@ -9,6 +9,14 @@
 @import "./assets/knacss/knacss.scss";
 @import './assets/knacss/mixin.scss';
 /* Règles globales pour le label lorsque l'input est non vide */
+h1,h2,h3,h4,h5,h6 {
+  margin: 0;
+  font-weight: 500;
+}
+
+b {
+  font-weight: 500;
+}
 
 input:-webkit-autofill + label {
   top: 1rem; /* Positionner le label au-dessus */
@@ -21,7 +29,6 @@ input:-webkit-autofill + label {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 3px 10px 10px 10px;
   width: 100%;
 }
 
@@ -34,9 +41,21 @@ input:-webkit-autofill + label {
 
 
 * {
-  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
-}
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
 
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-track-color);
+    border-radius: 10px;
+  }
+}
 a {
   cursor: pointer;
 }
@@ -271,16 +290,51 @@ app-scrollbar-overlay  {
     }
   }
 }
+.small-title-link {
+  font-size: 14px;
+
+  @include md {
+    font-size: 13px;
+  }
+
+  @include sm {
+    font-size: 12px;
+  }
+
+  font-weight: 300;
+  display: flex;
+  gap: 4px;
+
+  a {
+    color: $primaryColor;
+
+    &:hover {
+      color: $primaryTextColor;
+      transition: 0.25s ease-in-out;
+    }
+  }
+}
 // widget small title more div inside
 .small-title-c {
   display: grid;
-  grid-template-columns: auto;
+  grid-template-columns: 34px 1fr;
   align-items: center;
   line-height: 1;
   gap: 6px;
   font-size: 19px;
   margin-bottom: 14px;
-
+  @include md {
+    grid-template-columns: 24px 1fr;
+    i {
+      font-size: 20px;
+    }
+  }
+  i {
+    font-size: 30px;
+    @include md {
+      font-size: 17px;
+    }
+  }
   @include md {
     font-size: 17px;
   }
@@ -369,10 +423,26 @@ app-scrollbar-overlay  {
 /*********/
 /* Forms */
 /*********/
-
+input,app-input {
+  width: 100%;
+}
 
 fieldset {
   border: 0;
+  padding: 15px 20px;
+  background-color: var(--widget-color);
+  border-radius: 5px;
+  @include lg {
+    padding: 10px 15px;
+  }
+
+  @include md {
+    padding: 10px 15px;
+  }
+
+  @include sm {
+    padding: 10px;
+  }
 
   .title {
     font-size: 19px;

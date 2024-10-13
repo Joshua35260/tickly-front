@@ -1,0 +1,66 @@
+<div class="card">
+
+  <div #cardTop class="card-top">
+    
+    @if (withMenu()) {
+      <i class="icon-menu" (click)="menu.toggle($event); onMenuOpen()">
+        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body"></p-menu>
+      </i>
+      }
+    
+    <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openTicket.emit(ticket().id)">
+
+    <div class="card-icon">
+      <small>{{ticket().status.status}}</small>
+    <i class="pi pi-bookmark-fill" [ngClass]="iconColor()"></i>
+
+    </div>
+
+      <div class="card-main-info">
+        <div class="card-top-title">
+          Ticket n° {{ticket().id}}
+        </div>
+        <small class="card-text">{{ticket().description}}</small>
+    </div>
+
+    <div class="card-trigram date-limit-or-currency">
+
+      <small><span>Priorité: </span>{{ticket().priority.priority}}</small>
+        <small><span>Catégorie: </span>{{formattedCategories}}</small>
+      
+    </div>
+    @if(ticket().archivedAt) {
+      <div class="archive-info">
+        Archivé<i class="icon-archive"></i>
+      </div>
+      }
+    </div>
+    </div>
+
+  @if (ticket().author) {
+  <div #cardBottom class="card-bottom">
+
+    <div class="card-content">
+      <i class="card-icon icon-contact"></i>
+      <app-avatar
+          class="avatar"
+          [avatarUrl]="ticket().author.avatarUrl"
+          *ngIf="!!avatarBottomHeight() && !!avatarBottomWidth()"
+          [fullname]="ticket().author.firstname + ' ' + ticket().author.lastname"
+          [height]="avatarBottomHeight()"
+          [width]="avatarBottomWidth()">
+      </app-avatar>
+
+      <div class="card-bottom-title">
+        <div class="flex flex-col">
+         {{ticket().author.firstname}} {{ticket().author.lastname}}
+        </div>
+      </div>
+    </div>
+
+  </div>
+  }
+
+</div>
+
+

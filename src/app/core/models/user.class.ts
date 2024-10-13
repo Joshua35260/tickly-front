@@ -1,7 +1,9 @@
 import { Address } from "./address.class";
 import { Email } from "./email.class";
+import { jobType } from "./enums/job-type.enum";
 import { Phone } from "./phone.class";
 import { Role } from "./role.class";
+import { Structure } from "./structure.class";
 
 export class User {
   id?: number;
@@ -12,11 +14,11 @@ export class User {
   roles: Role[];
   emails: Email[];
   phones: Phone[];
-  
+  jobType : jobType;
   address: Address;
   avatarUrl?: string;
   archive?: boolean;
-
+  structures?: Structure[];
   get fullName(): string {
     return `${this.firstname} ${this.lastname}`;
   }

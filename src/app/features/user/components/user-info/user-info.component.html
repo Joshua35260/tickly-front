@@ -1,8 +1,9 @@
-<div class="widget-user-info" *ngIf="!!user()">
+<app-widget class="user-info">
+  <div header class="widget-top">
   <i type="button" (click)="update()" class="icon-edit"></i>
 
   <div class="user-info-name">
-    <app-avatar class="avatar" [avatarUrl]="user().avatarUrl" [fullname]="user().fullName"></app-avatar>
+    <app-avatar class="avatar" [avatarUrl]="user().avatarUrl" [fullname]="user().firstname + ' ' + user().lastname"></app-avatar>
     <div class="names">
       <div class="fullname">
         <span class="name">{{user().lastname}}</span>&nbsp;
@@ -15,7 +16,9 @@
       </div>
     </div>
   </div>
+</div>
 
+<div body>
 @if (sectionInfoDisplayed) {
   @if (!!user().address) {
     <hr class="dashed-hr" />
@@ -24,8 +27,8 @@
   
       <div class="localisation-main">
    
-          <div class="localisation-main-value">{{ user().address.street_l1 }}</div>
-          <div class="localisation-main-value">{{  user().address.street_l2 }}</div>
+          <div class="localisation-main-value">{{ user().address.streetL1 }}</div>
+          <div class="localisation-main-value">{{  user().address.streetL2 }}</div>
           <div class="localisation-main-value">{{  user().address.postcode }} {{  user().address.city }}</div>
           <app-flag class="localisation-main-value" [countryCode]=" user().address.country"></app-flag>
           
@@ -64,5 +67,5 @@
   }
   
 }
-
 </div>
+</app-widget>

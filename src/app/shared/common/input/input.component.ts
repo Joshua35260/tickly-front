@@ -1,33 +1,30 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   input,
-  model,
-  OnInit,
   Optional,
   output,
   Self,
 } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormControl,
-  NgControl,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { ControlValueAccessor, FormControl, NgControl, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoFocusModule } from 'primeng/autofocus';
-import { FloatLabelModule } from 'primeng/floatlabel';
+
 @Component({
   selector: 'app-input',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, InputTextModule, ReactiveFormsModule, AutoFocusModule, FloatLabelModule],
+  imports: [
+    CommonModule,
+    InputTextModule,
+    ReactiveFormsModule,
+    AutoFocusModule,
+  ],
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
 })
-export class InputComponent implements ControlValueAccessor, AfterViewInit{
+export class InputComponent implements ControlValueAccessor {
   valueChange = output<string>();
   label = input<string>();
   formControlName = input<string>();
@@ -35,55 +32,43 @@ export class InputComponent implements ControlValueAccessor, AfterViewInit{
   max = input<number | undefined>();
   min = input<number | undefined>();
   errorMessage = input<string>();
-  // give classes to elements if needed for more customization
-  classSpan = input<string>('');
   classIcon = input<string>('');
-  classInput = model<string>('');
+  iconSide = input<'left' | 'right'>('left');
+  classInput = input<string>('');
   classLabel = input<string>('');
   classSmall = input<string>('');
   autofocus = input<boolean>(false);
   notEmptyClass: string = 'empty';
 
-
-  onValueChange(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    this.valueChange.emit(inputElement.value);
-    this.updateClass();
+  onValueChange(value: string) {
+    this.valueChange.emit(value);
   }
 
   get control(): FormControl {
     return this.ngControl?.control as FormControl;
   }
 
-  constructor(@Optional() @Self() public ngControl: NgControl) {
+  constructor(
+    @Optional() @Self() public ngControl: NgControl,
+
+  ) {
     if (ngControl) {
       ngControl.valueAccessor = this;
-   
-    }
-  }
-  ngAfterViewInit(): void {
-    this.updateClass();
-  }
-  // Method for updating the class
-  updateClass(): void {
-    if (this.control?.value?.trim() !== '') {
-      this.classInput.set('not-empty');
     } else {
-      this.classInput.set('empty');
+      console.warn('NgControl not found. Make sure this component is used within a form.');
     }
   }
 
+
   // Implement ControlValueAccessor methods
-  // (You can leave these empty as you don't use them)
   registerOnChange(fn: any): void {}
   registerOnTouched(): void {}
   setDisabledState(isDisabled: boolean): void {}
-  writeValue(value : string): void {
-    if (!!value) {
-      this.classInput.set('not-empty');
+  writeValue(value): void {
+    if (value) {
+      this.control?.markAsDirty();
     } else {
-      this.classInput.set('empty');
+      this.control?.markAsPristine();
     }
-
   }
 }

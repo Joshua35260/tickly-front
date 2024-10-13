@@ -1,27 +1,27 @@
-<p-floatLabel>
+<span 
+    class="form-elem p-float-label"
+    [class.p-input-icon-left]="classIcon() !== '' && iconSide() === 'left'" 
+    [class.p-input-icon-right]="classIcon() !== '' && iconSide() === 'right'"
+>
+    <ng-container *ngIf="classIcon() !== ''">
+        <i [class]="classIcon()"></i>
+    </ng-container>
 
-<ng-container *ngIf="classIcon() !== ''">
-  <i [class]="classIcon()"></i>
-</ng-container>
+    <input
+        pInputText
+        pAutoFocus
+        autocomplete="off"
+        [autofocus]="autofocus()"
+        [ngClass]="[control.value !== null && control.value !== undefined && control.value !== '' ? 'not-empty' : 'empty', classInput()]"
+        [type]="type()"
+        [formControl]="control"
+        [max]="max() ? max() : null"
+        [min]="min() ? min() : null"
+    />
 
-<input
-pInputText
-pAutoFocus
-autocomplete="off"
-[autofocus]="autofocus()"
-[ngClass]="classInput()"
-[type]="type()"
-[formControl]="control"
-[max]="max() ? max() : null"
-[min]="min() ? min() : null"
-(input)="onValueChange($event)"
-id="name"
-/>
+    <label [class]="classLabel()">{{ label() }}</label>
 
-<label for="name" [class]="classLabel()">{{ label() }}</label>
-
-<ng-container *ngIf="control?.invalid && control?.dirty && errorMessage()">
-  <small [class]="classSmall()">{{ errorMessage() }}</small>
-</ng-container>
-
-</p-floatLabel>
+    <ng-container *ngIf="control?.invalid && control?.dirty && errorMessage()">
+        <small [class]="classSmall()">{{ errorMessage() }}</small>
+    </ng-container>
+</span>

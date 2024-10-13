@@ -1,5 +1,5 @@
 export class Email {
-  id?: number
-  email: string
-  type: string
+  id?: number;
+  email: string;
+  type: string;
 }

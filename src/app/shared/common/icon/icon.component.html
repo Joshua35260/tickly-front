@@ -1,0 +1,5 @@
+<i [class]="icon()">
+  @if (span() > 0) {
+    <span *ngFor="let number of arraySpan" [ngClass]="'path'+number"></span>
+  }
+</i>

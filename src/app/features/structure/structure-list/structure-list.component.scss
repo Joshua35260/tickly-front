@@ -1,0 +1,25 @@
+.structure-list {
+  height: 100%;
+  overflow-x: hidden;
+}
+.list-and-map {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  height: 100%;
+}
+app-structure-row {
+  width: 100%;
+}
+.scroll-list {
+  height: 100%;
+  padding-right: 5px;
+  overflow-y: auto;
+}
+#mapId {
+  height: 100%;
+  width: 100%;
+  border-radius: 0 10px 10px 0;
+}
+.isloading {
+  display: none;
+}

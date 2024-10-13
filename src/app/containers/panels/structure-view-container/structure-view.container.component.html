@@ -1,0 +1,9 @@
+<app-sidebar [dataMenu]="dataMenu" (activePanelChange)="onPanelSelected($event)" [activePanel]="section" label="Structure" icon="pi pi-bookmark-fill">
+  <app-structure-view
+    #itemViewComponent
+    [structureId]="structureId"
+    [sectionDisplayed]="section"
+    (edit)="onEditStructure($event)"
+    (deleted)="onStructureDeleted()"
+  ></app-structure-view>
+</app-sidebar>

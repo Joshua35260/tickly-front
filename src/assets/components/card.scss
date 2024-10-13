@@ -1,5 +1,16 @@
 @import "@assets/knacss/mixin.scss";
 
+//add padding to top and bottom automatically if avatar is not present
+.card {
+  .card-top:not(:has(.avatar)) .card-content,
+  .card-bottom:not(:has(.avatar)) {
+    padding: 0 15px;
+    @include sm {
+      padding: 0 5px;
+    }
+  }
+}
+
 .card {
   position: relative;
   z-index: 4;
@@ -9,7 +20,7 @@
   background-color: var(--card-bg);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+
   &:hover {
     cursor: pointer;
     transition: ease-in-out 0.2s;
@@ -49,19 +60,17 @@
     height: 60px;
     border-radius: 5px 5px 0 0;
     .card-content {
-      padding: 0px 15px;
+      padding: 0px 15px 0 0;
       @include sm {
-        padding: 0 2px;
+        padding: 0 5px 0 0;
       }
       width: 100%;
-      margin: auto 0;
       display: flex;
       align-items: center;
       justify-content: flex-start;
       gap: 10px;
       @include sm {
         gap: 5px;
-        padding-right: 2px;
       }
   
       .avatar {order:1;}
@@ -72,7 +81,7 @@
       .card-top-text {order: 3; line-height: 1.1;}
       .card-address,.adresses {order: 3;}
       .archive-info {order: 4;flex-shrink: 0;}
-      .attach-info {order: 4;}
+      .attach-info {order: 4;margin-left: auto}
       .card-icones {order: 4; margin-left: auto; text-align: right;}
       .card-trigram {order: 4; margin-left: auto; text-align: right;}
     }
@@ -93,7 +102,7 @@
       line-height: 1.35;
 
       small {
-        line-height: 1;
+        line-height: 0.8;
       }
 
       @include md {
@@ -101,7 +110,7 @@
       }
 
       @include sm {
-        font-size: 14px;
+        font-size: 13px;
       }
 
       small {
@@ -119,7 +128,7 @@
         }
 
         @include sm {
-          font-size: 12px;
+          font-size: 11px;
         }
       }
 
@@ -136,9 +145,13 @@
     .card-top-title {
       line-height: 1.5;
     }
-    .card-content{
-      padding-left: 0;
-    }
+  }
+
+  .card-contact {
+    gap: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%;
   }
 
   //card with bottom, bottom section
@@ -153,14 +166,15 @@
     background-color: var(--gray-10);
     border-radius: 0 0 5px 5px;
     font-size: 15px;
-    padding: 0 15px;
+    padding: 0 15px 0 0;
 
     @include md {
       font-size: 14px;
     }
 
     @include sm {
-      font-size: 13px;
+      font-size: 12px;
+      padding: 0 5px 0 0;
     }
     
     .card-content {
@@ -208,7 +222,7 @@
       }
     
     
-    .card-icon { order: 4;flex-shrink: 0;}
+    .card-icon { order: 4; flex-shrink: 0;}
     app-flag {order:3; flex-shrink: 0;}
   }
 
@@ -228,6 +242,12 @@
   .card-bottom-title-small {
     font-size: 13px;
     color: var(--primary-color);
+    @include md {
+      font-size: 12px;
+    }
+    @include sm {
+      font-size: 11px;
+    }
   }
 
 }
@@ -244,7 +264,7 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
   }
 
   @include sm {
-    font-size: 13px;
+    font-size: 12px;
   }
 
 
@@ -258,7 +278,7 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
     }
 
     @include sm {
-      font-size: 16px;
+      font-size: 15px;
     }
 
   }
@@ -266,9 +286,22 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
 
 .card-icon.size-33 {
   font-size: 33px;
+  @include md {
+    font-size: 31px;
+  }
+  @include sm {
+    font-size: 28px;
+  }
 }
+
 .card-icon.size-25 {
   font-size: 25px;
+  @include md {
+    font-size: 22px;
+  }
+  @include sm {
+    font-size: 21px;
+  }
 }
 
 .card-icon {
@@ -283,7 +316,7 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
   }
 
   @include sm {
-    font-size: 20px;
+    font-size: 18px;
   }
 }
 
@@ -315,7 +348,7 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
   }
 
   @include sm {
-    font-size: 16px;
+    font-size: 15px;
   }
 }
 
@@ -323,11 +356,14 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
   display: flex;
   flex-direction: column;
   font-style: italic;
+  font-weight: 600;
   span {
-
     font-weight: 600;
   }
-  font-weight: 400;
+  div {
+    font-weight: 400;
+  }
+
 }
 
 .flex.flex-col {
@@ -349,10 +385,10 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
   flex-wrap: wrap;
   align-items: center;
   gap: 5px;
-  line-height: 1;
+  line-height: 0.9;
 }
 .address {
-  line-height: 1;
+  line-height: 0.9;
 }
 
 .card-subtitle {
@@ -363,7 +399,7 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
     font-size: 13px;
   }
   @include sm {
-    font-size: 12px;
+    font-size: 11px;
   }
 }  
 
@@ -402,7 +438,7 @@ a {
   }
 
   @include sm {
-    font-size: 12px;
+    font-size: 11px;
   }
 }
 
@@ -413,7 +449,7 @@ a {
 
 
   .archive-info {
-    margin-left: auto;
+
     font-weight: 600;
     font-size: 14px;
 
@@ -422,7 +458,7 @@ a {
     }
 
     @include sm {
-      font-size: 12px;
+      font-size: 11px;
     }
 
     font-style: italic;
@@ -437,7 +473,7 @@ a {
       }
 
       @include sm {
-        font-size: 15px;
+        font-size: 14px;
       }
     }
   }
@@ -461,7 +497,7 @@ a {
     font-size: 14px;
   }
   @include sm {
-    font-size: 13px;
+    font-size: 12px;
   }
 }
 
@@ -503,12 +539,11 @@ a {
   }
 } 
 
-
 // SUB CARD //
 .card.sub-card .card-top .card-content {
   .sub-card-icon { order: 0; }
-  .card-top-title { order: 2; }
-  .main-content { order: 2; }
+  .card-top-title { order: 3; }
+  .main-content { order: 3; }
   .address { order: 3; }
   .card-address { order: 4; }
   .card-icon { order: 2; }
@@ -524,11 +559,11 @@ a {
   flex-direction: column;
   &:before {
     content: '';
-    z-index: 2;
+    z-index: 12;
     position: absolute;
-    left: -25px;
+    left: -36px;
     top: -35px;
-    width: 23px;
+    width: 35px;
     height: calc(100% + 10px);
     border-left: 1px dashed var(--primary-color);
     border-bottom: 1px dashed var(--primary-color);
@@ -559,8 +594,10 @@ a {
   left: 2px;
 }
 
-//shadowcard
 
+
+
+// shadow-card
 
 /***************/
 /* shadow card */
@@ -572,11 +609,8 @@ a {
   padding: 12px;
   border-radius: 10px;
   background-color: white;
-  margin-left: 10px;
-  margin-right: 10px;
-
   i {
-    font-size: 20px;
+    font-size: 18px;
     vertical-align: middle;
   }
 
@@ -584,7 +618,7 @@ a {
     padding: 6px;
 
     i {
-      font-size: 19px;
+      font-size: 16px;
     }
   }
 
@@ -592,17 +626,28 @@ a {
     padding: 4px 6px;
 
     i {
-      font-size: 17px;
+      font-size: 14px;
     }
   }
 
   &.child {
     position: initial;
+    top:20px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     width: calc(100% - 30px);
     margin-left: 15px;
-    margin-top: -2px;
+
+    padding: 6px;
+
+    @include md {
+      padding: 4px 6px;
+    }
+
+    @include sm {
+      padding: 3px 6px;
+    }
+   
   }
 
   .value {
@@ -612,13 +657,13 @@ a {
 
   label {
     text-align: center;
-
+    font-size: 15px;
     @include md {
-      font-size: 15px;
+      font-size: 14px;
     }
 
     @include sm {
-      font-size: 14px;
+      font-size: 12px;
     }
   }
 
@@ -632,16 +677,16 @@ a {
     label {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       font-size: 15px;
 
       @include md {
-        font-size: 15px;
+        font-size: 14px;
         gap: 4px;
       }
 
       @include sm {
-        font-size: 14px;
+        font-size: 12px;
         gap: 2px;
       }
     }
@@ -680,4 +725,55 @@ a {
       border-left: 1px dashed rgb(50, 50, 50, 0.25);
     }
   }
+}
+
+
+
+//COMMENT ROW//
+//override style of card.scss
+.card.comment-row {
+  padding-right: 8px;
+
+  &:hover {
+    cursor: default;
+  }
+
+  .card-top {
+    height: fit-content
+  }
+
+  .icon-menu {
+    top: 10px;
+    right: -10px;
+  }
+
+  .user-info {
+    width: fit-content;
+    padding-top: 2px;
+  }
+
+  .avatar {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    margin-left: 0px;
+    margin-right: 2px;
+  }
+
+
+  .comment,
+  .user-info {
+    cursor: text;
+  }
+
+
+  .comment-author {
+    font-weight: 600;
+  }
+}
+
+// CARD COORDINATE
+
+.card.card-coordinate .card-top .card-content {
+  padding-left: 0;
 }

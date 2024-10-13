@@ -36,6 +36,9 @@ $header-height: 110px;
     padding: 20px 50px; 
     height: 100%;
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
     @include lg {
       padding: 10px 25px;
     }
@@ -55,7 +58,7 @@ $header-height: 110px;
     }
 
     .content {
-      height: calc(100% - $header-height);
+      height: 100%;
       width: 100%;
       overflow: auto;
     }

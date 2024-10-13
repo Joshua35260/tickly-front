@@ -1,0 +1,20 @@
+  <form [formGroup]="structureForm" class="grid grid-cols-1 gap-medium" (ngSubmit)="onSave()">
+
+    <fieldset class="card-body sm:grid grid-cols-2 flex flex-col gap-medium">
+      <div class="small-title col-span-full">Entreprise</div>
+      <app-input class="sm:col-span-12" formControlName="name" label="Nom de l'entreprise"></app-input>
+      <app-input class="sm:col-span-12" formControlName="emails" label="Emails de l'entreprise"></app-input>
+      <app-input class="sm:col-span-12" formControlName="phones" label="Téléphones de l'entreprise"></app-input>
+  
+      <div formGroupName="address">
+        <div class="small-title col-span-full">Adresse de l'entreprise</div>
+        <app-input class="sm:col-span-12" formControlName="streetL1" label="Adresse"></app-input>
+        <app-input class="sm:col-span-12" formControlName="streetL2" label="Adresse (2)"></app-input>
+        <app-input class="sm:col-span-4" formControlName="postcode" label="Code postal"></app-input>
+        <app-input class="sm:col-span-4" formControlName="city" label="Ville"></app-input>
+        <app-input class="sm:col-span-4" formControlName="country" label="Pays"></app-input>
+      </div>
+    </fieldset>
+
+    <button pButton type="submit">Créer la structure</button>
+  </form>

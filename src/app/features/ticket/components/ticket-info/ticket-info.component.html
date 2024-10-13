@@ -1,0 +1,32 @@
+<app-widget class="ticket-info user-info">
+  <div header class="widget-top">
+    <i type="button" (click)="update()" class="icon-edit"></i>
+
+    <div class="ticket-info-name">
+      <div class="ticket-head">
+       <div class="fullname"> 
+          <div class="name">Ticket n° <span class="">{{ticket().id}}</span></div>
+          <div class="">{{ticket().status.status}}</div>
+          <div class="">{{ticket().priority.priority}}</div>
+          <div class="">{{formattedCategories}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div body>
+    <div class="fullname">
+      <app-avatar class="avatar" [avatarUrl]="ticket().author.avatarUrl"
+        [fullname]="ticket().author.firstname + ' ' + ticket().author.lastname"></app-avatar>
+      Auteur:
+      <span class="name">{{ticket().author.firstname}}</span>&nbsp;
+      <span class="lastname">{{ticket().author.lastname}}</span>
+    </div>
+    <app-widget-title title="Description" icon="icon-info"></app-widget-title>
+    {{ticket().description}}
+
+
+
+
+  </div>
+</app-widget>

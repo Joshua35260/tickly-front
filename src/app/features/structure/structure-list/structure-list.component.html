@@ -1,0 +1,24 @@
+@if (!!structures()) {
+<div class="structure-list">
+  <div class="list-and-map">
+    <div class="scroll-list">
+      @for  (structure of structures(); track structure.id) {
+        <app-structure-row [structure]="structure" (click)="displayStructureView.emit(structure.id)"></app-structure-row>
+      }
+    </div>
+    <div id="mapId" leaflet [leafletOptions]="mapOptions" (leafletMapReady)="onMapReady($event)"></div>
+
+    <p-paginator #paginator class="paginator" 
+    (onPageChange)="onPageChange($event)"
+    [first]="first"
+    [rows]="rows"
+    [totalRecords]="itemCount"
+    [showCurrentPageReport]="!!itemCount"
+    [rowsPerPageOptions]="[20, 50, 100]"
+    currentPageReportTemplate="{first} - {last} sur {totalRecords}"
+    appendTo="body"
+    />
+</div>
+
+</div>
+}

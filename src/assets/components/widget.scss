@@ -1,11 +1,13 @@
-@import "@assets/knacss/mixin.scss";
+// base style of widget
 
 .widget {
+  display: block;
   background: var(--widget-color);
   margin: 0;
   border-radius: 8px;
   position: relative;
-  padding: 15px 20px;
+  overflow: hidden;
+  height: 100%;
   min-height: 300px;
   color: var(--primary-text-color);
 
@@ -14,17 +16,212 @@
   }
 
   @include lg {
-    padding: 10px 15px;
     font-size: 15px;
+    border-radius: 15px;
+  }
+
+  @include md {
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  @include sm {
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  .icon-edit {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+  }
+}
+
+.widget-padding {
+  padding: 15px 20px;
+
+  @include lg {
+    padding: 10px 15px;
   }
 
   @include md {
     padding: 10px 15px;
-    font-size: 14px;
   }
 
   @include sm {
     padding: 10px;
-    font-size: 13px;
   }
+}
+
+// widget generic component with header, body scroll and footer
+.widget-container {
+
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto auto;
+  position: relative;
+
+  .widget-header {
+    height: fit-content;
+    padding: 15px 20px 0 20px;
+
+    @include lg {
+      padding: 10px 15px 0 15px;
+    }
+
+    @include md {
+      padding: 10px 15px 0 15px;
+    }
+
+    @include sm {
+      padding: 10px 15px 0 15px;
+    }
+  }
+
+  .widget-body {
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    padding: 10px 10px 15px 20px;
+    width: calc(100% - 15px);
+
+    @include lg {
+      padding: 10px 15px;
+    }
+
+    @include md {
+      padding: 10px 15px;
+    }
+
+    @include sm {
+      padding: 10px;
+    }
+  }
+  
+  .widget-top-footer {
+    height: fit-content;
+    padding: 0 20px;
+    
+    @include lg {
+      padding: 0 15px;
+    }
+
+    @include md {
+      padding: 0 10px;
+    }
+
+    @include sm {
+      padding: 0 10px;
+    }
+  }
+
+  .widget-footer {
+    height: fit-content;
+    background-color: #f4f4f4;
+    border-radius: 0 0 10px 10px;
+    padding: 5px 20px;
+    text-align: center;
+    color: var(--primary-color);
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .widget-footer.no-dialog {
+    cursor: default;
+  }
+}
+
+
+// overriding for theme euroenergie
+.widget {
+
+  .widget-header {
+
+    .alert-and-name {
+      margin-left: 0;
+      padding-left: 0px !important;
+    }
+  }
+  .widget-top {
+    .alert-and-name {
+      padding-left: 20px;
+    }
+  }
+}
+
+
+
+  .widget .site-info {
+    .dashed-hr {
+      display: none;
+    };
+    .widget-header {
+      background-color: #F3F3F3;
+    }
+  }
+
+
+
+.widget.structure-info {
+  app-avatar {
+    margin-top: 5px;
+    position: relative;
+    height: calc(100% - 5px);
+
+    img {
+      position: absolute;
+      object-fit: cover;
+      height: 100%;
+    }
+  }
+
+  .coordinate-icon {
+    border-radius: 5px !important;
+  }
+}
+
+.widget.user-info,
+.contact-info,
+.structure-info,
+.profil-info,
+.user-info {
+  .dashed-hr {
+    display: none;
+  };
+  .coordinate-icon {
+    border-radius: 5px !important;
+  }
+  .widget-header {
+    padding-left: 75px;
+    position: relative;
+    padding-bottom: 4px;
+    background-color: #F3F3F3;
+    app-avatar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      height: 100%;
+  
+      .avatar {
+        height: 100% !important;
+        width: 100%;
+  
+      }
+  
+      img {
+        position: absolute;
+        object-fit: cover;
+        height: 100%;
+      }
+    }
+  }
+
+
+ 
 }

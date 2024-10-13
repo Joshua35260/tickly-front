@@ -1,0 +1,9 @@
+<app-sidebar [dataMenu]="dataMenu" (activePanelChange)="onPanelSelected($event)" [activePanel]="section" label="Ticket" icon="pi pi-bookmark-fill">
+  <app-ticket-view
+    #itemViewComponent
+    [ticketId]="ticketId"
+    [sectionDisplayed]="section"
+    (edit)="onEditTicket($event)"
+    (deleted)="onTicketDeleted()"
+  ></app-ticket-view>
+</app-sidebar>

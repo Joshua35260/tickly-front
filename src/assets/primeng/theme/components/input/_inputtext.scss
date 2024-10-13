@@ -24,9 +24,6 @@
   left: 2.8rem;
 }
 
-textarea.p-inputtext {
-  height: auto !important;
-}
 
 // ***************** //
 // default input theme //
@@ -71,10 +68,16 @@ textarea.p-inputtext {
   }
   
 }
-  
-textarea~label {
-  top: 16px;   
+
+// TEXTAREA
+
+.p-float-label > textarea {
+  max-height: 70vh;
+  min-height: 120px;// property row from text area of prime ng is bugged actually, we have to set min height here
+  overflow-y: auto!important;//we have to search why we have hidden by default
 }
+// END OF TEXT AREA
+
 
 .p-float-label > .p-inputtext:focus ~ label, 
 .p-inputtext.not-empty ~ label {//! not-empty class is given by app-input component !
@@ -94,13 +97,6 @@ textarea~label {
     }
 }
 
-textarea:focus ~ label {
-  top: 12px
-}
-
-.p-float-label textarea ~ label {
-  top: 14px;
-}
 
 .p-float-label > label {
     z-index: 1;
@@ -313,7 +309,4 @@ textarea:focus ~ label {
     z-index: 1;
     font-size: 28px;
   }
-}
-.p-inputtextarea {//todo: textarea is broken at the moment, we have to set a default height for now, maybe we canremove this property later
-  min-height: 50px;
 }

@@ -18,6 +18,7 @@ import { InputComponent } from '../../../shared/common/input/input.component';
 import { AuthService } from '../../../core/services/auth.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ButtonModule } from 'primeng/button';
+import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-title.component';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,7 @@ import { ButtonModule } from 'primeng/button';
   styleUrls: ['./login.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterModule, InputComponent, ReactiveFormsModule, ButtonModule],
+  imports: [CommonModule, RouterModule, InputComponent, ReactiveFormsModule, ButtonModule, WidgetTitleComponent],
 })
 export class LoginComponent {
   loginForm: FormGroup;

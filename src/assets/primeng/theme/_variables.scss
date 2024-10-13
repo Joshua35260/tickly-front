@@ -68,7 +68,7 @@ $navMask:"/images/nav-mask.svg";
 $navCorner:"/images/round.svg";
 $dummyThumb:"/images/dummy-thumb.svg";
 $buttonAdd: "/images/button-add.svg";
-
+$loginBg: "/images/bg.jpg";
 //global
 $fontFamily:'Montserrat', sans-serif !default;
 $fontSize:16px !default;
@@ -912,7 +912,7 @@ $surface50 : #F9F9F9 !default;
 
 
 :root {
-
+    --login-bg: url(#{$loginBg});
     --text-color:#{$shade700};
     --text-color-secondary:#{$shade600};
     --primary-color:#{$primaryColor};

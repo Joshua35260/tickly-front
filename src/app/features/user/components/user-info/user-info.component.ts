@@ -4,6 +4,7 @@ import { RightPanelSection } from '@app/core/models/enums/right-panel-section.en
 import { User } from '@app/core/models/user.class';
 import { AvatarComponent } from '@app/shared/common/avatar/avatar.component';
 import { FlagComponent } from '@app/shared/common/flag/flag.component';
+import { WidgetComponent } from '@app/shared/common/widget/widget.component';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
@@ -17,6 +18,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
     AvatarComponent,
     OverlayPanelModule,
     FlagComponent,
+    WidgetComponent,
   ]
 })
 export class UserInfoComponent {

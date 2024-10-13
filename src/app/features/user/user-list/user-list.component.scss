@@ -12,12 +12,13 @@ app-user-row {
 }
 .scroll-list {
   height: 100%;
+  padding-right: 5px;
   overflow-y: auto;
 }
 #mapId {
   height: 100%;
   width: 100%;
-  border-radius: 10px;
+  border-radius: 0 10px 10px 0;
 }
 .isloading {
   display: none;

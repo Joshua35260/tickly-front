@@ -1,0 +1,27 @@
+<div class="card">
+
+  <div #cardTop class="card-top">
+    
+    @if (withMenu()) {
+      <i class="icon-menu" (click)="menu.toggle($event); onMenuOpen()">
+        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body"></p-menu>
+      </i>
+      }
+    
+    <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openStructure.emit(structure().id)">
+
+    <div class="card-title">
+      {{structure().name}}
+
+    <i class="pi pi-bookmark-fill" [ngClass]="iconColor()"></i>
+
+    </div>
+
+    </div>
+
+
+</div>
+
+</div>
+
+

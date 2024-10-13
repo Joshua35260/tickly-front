@@ -1,0 +1,35 @@
+<section class="widget-container">
+  
+  <div #header class="widget-header">
+    <ng-content select="[header]"></ng-content>
+  </div>
+
+  <div #body class="widget-body">
+    <ng-content select="[body]"></ng-content>
+  </div>
+
+  @if (withTopFooter()) {
+    <div #topFooter class="widget-top-footer">
+      <ng-content select="[topFooter]"></ng-content>
+    </div>
+  }
+
+  @if (withFooter()) {
+  <div #footer [ngClass]="withoutDialog() ? 'widget-footer no-dialog' : 'widget-footer'" (click)="withoutDialog() ? null : open.set(!open())" >
+    <ng-content select="[footer]"></ng-content>
+  </div>
+}
+
+</section>
+
+
+<app-form-dialog #form [visible]="open()" (closeDialog)="open.set(false)" [size]="size()" withHeader="false">
+  <app-widget-title [icon]="dialogIcon()" [title]="dialogTitle()"></app-widget-title>
+
+  @if (open()) {
+    <div #content>
+      <ng-content select="[form]"></ng-content>
+    </div>
+  }
+
+</app-form-dialog>

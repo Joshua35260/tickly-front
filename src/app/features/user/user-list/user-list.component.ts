@@ -122,7 +122,7 @@ export class UserListComponent implements OnInit {
 
           const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(`
             <strong>${user.firstname} ${user.lastname}</strong><br>
-            ${user.address.street_l1 || ''}<br>
+            ${user.address.streetL1 || ''}<br>
             ${user.address.city}, ${user.address.postcode}
           `);
             

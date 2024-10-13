@@ -24,7 +24,7 @@ export class AuthService {
   private apiUrl = environment.apiUrl;
 
   private isCheckingAuth: boolean = false; // État pour vérifier si l'authentification est en cours
-
+  private hasAttemptedTokenFetch: boolean = false;
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -43,17 +43,22 @@ export class AuthService {
     return this.user$.pipe(
       switchMap(user => {
         if (user) {
-          return of(true); // Si un utilisateur est présent
+          return of(true); // L'utilisateur est déjà authentifié
         }
 
         // Vérifiez si une vérification d'authentification est déjà en cours
         if (this.isCheckingAuth) {
-          return of(false); // Retourne false si la vérification est déjà en cours
+          return of(false); // Si la vérification est déjà en cours, ne rien faire
+        }
+
+        // Si une tentative de récupération du token a déjà été faite, ne pas réessayer
+        if (this.hasAttemptedTokenFetch) {
+          return of(false); // Éviter d'envoyer plusieurs requêtes
         }
 
         this.isCheckingAuth = true; // Marquer que la vérification est en cours
+        this.hasAttemptedTokenFetch = true; // Marquer qu'une tentative a été faite
 
-        // Sinon, tenter de récupérer la session
         return this.getTokenInfo().pipe(
           tap(fetchedUser => {
             if (fetchedUser) {
@@ -63,11 +68,7 @@ export class AuthService {
             }
           }),
           map(fetchedUser => {
-            console.log(fetchedUser);
-            if (!fetchedUser) {
-              return false; // Retourne false si pas d'utilisateur
-            }
-            return true; // Retourne true si l'utilisateur est authentifié
+            return !!fetchedUser; // Retourner true si l'utilisateur est authentifié
           }),
           catchError(error => {
             console.error('Error during authentication check:', error); // Log error
@@ -111,6 +112,7 @@ private getTokenInfo(): Observable<User | null> {
       switchMap(response => {
         if (response) {
           const { user } = response;
+          this.hasAttemptedTokenFetch = false
           this.user$.next(user); // Mise à jour de l'utilisateur en mémoire
           return of(response);
         }
@@ -130,7 +132,8 @@ private getTokenInfo(): Observable<User | null> {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.cookieService.delete(AuthService.COOKIE_TOKEN); // Supprimez le cookie en mémoire (même s'il est httpOnly)
+          this.cookieService.delete(AuthService.COOKIE_TOKEN);
+          this.hasAttemptedTokenFetch = false; // Supprimez le cookie en mémoire (même s'il est httpOnly)
           this.user$.next(null); // Réinitialisez l'état de l'utilisateur
         },
         error: (error) => {
