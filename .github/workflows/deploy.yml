@@ -25,7 +25,7 @@ jobs:
         run: npm run build --prod  # Change si nécessaire
 
       - name: Build Docker image for frontend
-        run: docker build -t djosh35/tickly-frontend:${{ github.sha }} -f ./path/to/your/frontend/Dockerfile .
+        run: docker build -t djosh35/tickly-frontend:${{ github.sha }} -f ./.github/workflows/Dockerfile .
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
