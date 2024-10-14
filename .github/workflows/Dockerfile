@@ -1,4 +1,4 @@
-# Utiliser une image de Node.js comme base
+# Étape 1: Construction de l'application
 FROM node:22 AS build
 
 # Définir le répertoire de travail
@@ -16,14 +16,11 @@ COPY . .
 # Construire l'application Angular
 RUN npm run build --prod
 
-# Utiliser une image Nginx pour servir l'application
-FROM nginx:alpine
+# Étape 2: Utiliser Caddy pour servir l'application
+FROM caddy:alpine
 
-# Copier les fichiers de build dans le répertoire de Nginx
-COPY --from=build /app/dist/tickly-front /usr/share/nginx/html
+# Copier les fichiers de build dans le répertoire de Caddy
+COPY --from=build /app/dist/tickly-front /usr/share/caddy
 
-# Exposer le port 80
-EXPOSE 80
-
-# Lancer Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Caddyfile par défaut qui sert les fichiers statiques
+# Il doit être configuré pour correspondre à votre domaine
