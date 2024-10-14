@@ -20,7 +20,7 @@ RUN npm run build --prod
 FROM caddy:alpine
 
 # Copier les fichiers de build dans le répertoire de Caddy
-COPY --from=build /app/dist/tickly-front /usr/share/caddy
+COPY --from=build /app/dist/tickly-front/browser /usr/share/caddy
 
 # Caddyfile par défaut qui sert les fichiers statiques
-# Il doit être configuré pour correspondre à votre domaine
+COPY Caddyfile /etc/caddy/Caddyfile
