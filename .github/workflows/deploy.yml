@@ -19,19 +19,28 @@ jobs:
           node-version: '22'
 
       - name: Install frontend dependencies
-        run: npm install
+        run: |
+          echo "Installing frontend dependencies..."
+          npm install
 
       - name: Build the frontend project
-        run: npm run build --prod  # Change si nécessaire
+        run: |
+          echo "Building the frontend project..."
+          npm run build --prod  # Change si nécessaire
 
       - name: Build Docker image for frontend
-        run: docker build -t djosh35/tickly-frontend:${{ github.sha }} -f ./.github/workflows/Dockerfile .
+        run: |
+          echo "Building Docker image for frontend..."
+          docker build -t djosh35/tickly-frontend:${{ github.sha }} -f ./.github/workflows/Dockerfile .
 
       - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        run: |
+          echo "Logging in to Docker Hub..."
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push Docker image to Docker Hub
         run: |
+          echo "Tagging and pushing Docker image..."
           docker tag djosh35/tickly-frontend:${{ github.sha }} djosh35/tickly-frontend:latest
           docker push djosh35/tickly-frontend:${{ github.sha }}
           docker push djosh35/tickly-frontend:latest
@@ -43,19 +52,22 @@ jobs:
     steps:
       # Installer sshpass pour permettre l'utilisation de mots de passe avec SSH
       - name: Install sshpass
-        run: sudo apt-get install -y sshpass
+        run: |
+          echo "Installing sshpass..."
+          sudo apt-get install -y sshpass
 
       - name: Deploy to VPS
         run: |
-          # Connexion au VPS en utilisant sshpass
+          echo "Connecting to VPS to deploy the frontend..."
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << 'EOF'
-            # Pull the latest image for frontend
+            echo "Pulling the latest image for frontend..."
             docker pull djosh35/tickly-frontend:latest
 
-            # Stop and remove any existing containers (si nécessaire)
+            echo "Stopping and removing existing container if it exists..."
             docker stop tickly-frontend || true
             docker rm tickly-frontend || true
 
-            # Lancer le frontend
+            echo "Starting the frontend container..."
             docker run -d --name tickly-frontend -p 8080:80 djosh35/tickly-frontend:latest
+            echo "Frontend deployed successfully!"
           EOF

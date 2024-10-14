@@ -27,6 +27,3 @@ COPY --from=build /app/dist/tickly-front/browser /usr/share/caddy
 
 # Vérifier le contenu de /usr/share/caddy
 RUN ls -l /usr/share/caddy
-
-# Caddyfile par défaut qui sert les fichiers statiques
-COPY Caddyfile /etc/caddy/Caddyfile
