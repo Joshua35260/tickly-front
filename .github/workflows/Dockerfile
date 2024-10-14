@@ -18,12 +18,3 @@ RUN npm run build --prod
 
 # Vérifier le contenu du répertoire de build
 RUN ls -l /app/dist/tickly-front/browser
-
-# Étape 2: Utiliser Caddy pour servir l'application
-FROM caddy:alpine
-
-# Copier les fichiers de build dans le répertoire de Caddy
-COPY --from=build /app/dist/tickly-front/* /usr/share/caddy
-
-# Vérifier le contenu de /usr/share/caddy
-RUN ls -l /usr/share/caddy
