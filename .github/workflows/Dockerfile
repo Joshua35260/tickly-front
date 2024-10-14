@@ -16,5 +16,14 @@ COPY . .
 # Construire l'application Angular
 RUN npm run build --prod
 
-# Vérifier le contenu du répertoire de build
-RUN ls -l /app/dist/tickly-front/browser
+# Étape 2: Servir l'application avec Nginx
+FROM nginx:alpine
+
+# Copier les fichiers de build vers le répertoire de Nginx
+COPY --from=build /app/dist/tickly-front/browser /usr/share/nginx/html
+
+# Exposer le port 80
+EXPOSE 80
+
+# Commande par défaut pour démarrer Nginx
+CMD ["nginx", "-g", "daemon off;"]
