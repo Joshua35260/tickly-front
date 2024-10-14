@@ -23,7 +23,7 @@ RUN ls -l /app/dist/tickly-front/browser
 FROM caddy:alpine
 
 # Copier les fichiers de build dans le répertoire de Caddy
-COPY --from=build /app/dist/* /usr/share/caddy
+COPY --from=build /app/dist/tickly-front/* /usr/share/caddy
 
 # Vérifier le contenu de /usr/share/caddy
 RUN ls -l /usr/share/caddy
