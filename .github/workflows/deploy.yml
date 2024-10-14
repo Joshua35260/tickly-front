@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: Deploy Frontend to VPS
 
 on:
   push:
@@ -6,39 +6,8 @@ on:
       - main  # ou master selon votre workflow
 
 jobs:
-  build-backend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '22'
-
-      - name: Install backend dependencies
-        run: npm install
-
-      - name: Build the backend project
-        run: npm run build
-
-      - name: Build Docker image for backend
-        run: docker build -t djosh35/tickly-back:${{ github.sha }} .
-
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Push Docker image to Docker Hub
-        run: |
-          docker tag djosh35/tickly-back:${{ github.sha }} djosh35/tickly-back:latest
-          docker push djosh35/tickly-back:${{ github.sha }}
-          docker push djosh35/tickly-back:latest
-
   build-frontend:
     runs-on: ubuntu-latest
-    needs: build-backend  # S'assurer que le backend est construit en premier
 
     steps:
       - name: Checkout code
@@ -56,7 +25,10 @@ jobs:
         run: npm run build --prod  # Change si nécessaire
 
       - name: Build Docker image for frontend
-        run: docker build -t djosh35/tickly-frontend:${{ github.sha }} -f /path/to/your/frontend/Dockerfile .
+        run: docker build -t djosh35/tickly-frontend:${{ github.sha }} -f ./path/to/your/frontend/Dockerfile .
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push Docker image to Docker Hub
         run: |
@@ -66,7 +38,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [build-backend, build-frontend]  # Déploiement après construction des deux
+    needs: build-frontend  # Déploiement après construction du frontend
 
     steps:
       # Installer sshpass pour permettre l'utilisation de mots de passe avec SSH
@@ -77,17 +49,13 @@ jobs:
         run: |
           # Connexion au VPS en utilisant sshpass
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << 'EOF'
-            # Pull the latest images for backend and frontend
-            docker pull djosh35/tickly-back:latest
+            # Pull the latest image for frontend
             docker pull djosh35/tickly-frontend:latest
 
             # Stop and remove any existing containers (si nécessaire)
-            docker stop tickly-back || true
             docker stop tickly-frontend || true
-            docker rm tickly-back || true
             docker rm tickly-frontend || true
 
-            # Lancer le backend et le frontend
-            docker run -d --name tickly-back -p 3000:3000 djosh35/tickly-back:latest
+            # Lancer le frontend
             docker run -d --name tickly-frontend -p 80:80 djosh35/tickly-frontend:latest
           EOF
