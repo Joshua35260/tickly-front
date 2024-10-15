@@ -44,7 +44,7 @@ jobs:
           # Transfer new built files to the VPS
           scp -r dist/tickly-front/browser/* root@$SERVER_IP:/usr/share/caddy/ || { echo "Failed to transfer files"; exit 1; }
 
-          echo "Deployment completed!"
+          echo "Deployment completed! "
 
           # Restart Caddy to apply changes
           ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy" || { echo "Failed to restart Caddy"; exit 1; }
