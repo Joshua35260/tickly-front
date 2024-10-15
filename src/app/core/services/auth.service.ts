@@ -14,7 +14,6 @@ interface SigninDetails {
   login: string;
   password: string;
 }
-
 @Injectable({
   providedIn: 'root',
 })
