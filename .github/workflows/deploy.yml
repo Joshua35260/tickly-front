@@ -31,9 +31,7 @@ jobs:
       - name: Build Docker image for frontend
         run: |
           echo "Building Docker image for frontend..."
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
           docker build -t djosh35/tickly-frontend:${{ github.sha }} -f ./.github/workflows/Dockerfile .
-          docker tag djosh35/tickly-frontend:${{ github.sha }} djosh35/tickly-frontend:latest
 
       - name: Log in to Docker Hub
         run: |
@@ -65,15 +63,6 @@ jobs:
             echo "Pulling the latest image for frontend..."
             docker pull djosh35/tickly-frontend:latest
             
-            # Créer un conteneur temporaire pour extraire les fichiers
-            docker create --name temp-container djosh35/tickly-frontend:latest
-            
-            # Copier les fichiers du conteneur vers le VPS
-            docker cp temp-container:/app/dist/tickly-front/browser /usr/share/caddy/browser
-            
-            # Supprimer le conteneur temporaire
-            docker rm temp-container
-
             echo "Stopping and removing existing container if it exists..."
             docker stop tickly-frontend || true
             docker rm tickly-frontend || true
