@@ -68,6 +68,6 @@ jobs:
             docker rm tickly-frontend || true
 
             echo "Starting the frontend container..."
-            docker run -d --name tickly-frontend -p 8080:80 djosh35/tickly-frontend:latest
+            docker run -d --name tickly-frontend -p 80:80 djosh35/tickly-frontend:latest
             echo "Frontend deployed successfully!"
           EOF

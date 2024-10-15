@@ -19,14 +19,12 @@ RUN npm run build --prod
 # Vérifier le contenu du dossier de sortie
 RUN ls -la /app/dist/tickly-front
 
-# Étape 2: Servir l'application avec Nginx
-FROM nginx:alpine
+# Étape 2: Servir l'application avec Caddy
+FROM caddy:latest
 
-# Copier les fichiers de build vers le répertoire de Nginx
-COPY --from=build /app/dist/tickly-front/browser /usr/share/nginx/html
+# Copier les fichiers de build vers le répertoire de Caddy
+COPY --from=build /app/dist/tickly-front/browser /usr/share/caddy
 
-# Exposer le port 80
+# Exposer le port 80 (par défaut pour Caddy)
 EXPOSE 80
 
-# Commande par défaut pour démarrer Nginx
-CMD ["nginx", "-g", "daemon off;"]
