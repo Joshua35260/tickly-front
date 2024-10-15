@@ -36,20 +36,23 @@ jobs:
       - name: Deploy to VPS
         env:
           SERVER_IP: ${{ secrets.SERVER_IP }}  # Obtenir l'IP du VPS depuis les secrets GitHub
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}  # Obtenir le mot de passe depuis les secrets GitHub
         run: |
           echo "Transferring files to VPS..."
 
           # Supprimer le contenu existant dans le répertoire Caddy
-          ssh -o StrictHostKeyChecking=no root@$SERVER_IP "rm -rf /usr/share/caddy/*" || { echo "Failed to connect to VPS"; exit 1; }
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "rm -rf /usr/share/caddy/*" || { echo "Failed to connect to VPS"; exit 1; }
 
           # Transférer les nouveaux fichiers construits vers le VPS
-          scp -r dist/tickly-front/browser/* root@$SERVER_IP:/usr/share/caddy/ || { echo "Failed to transfer files"; exit 1; }
+          sshpass -p "$VPS_PASSWORD" scp -o StrictHostKeyChecking=no -r dist/tickly-front/browser/* root@$SERVER_IP:/usr/share/caddy/ || { echo "Failed to transfer files"; exit 1; }
 
           echo "Deployment completed!"
 
           # Redémarrer Caddy pour appliquer les changements
-          ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy" || { echo "Failed to restart Caddy"; exit 1; }
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy" || { echo "Failed to restart Caddy"; exit 1; }
 
       - name: Check Caddy Status
+        env:
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}  # Obtenir le mot de passe depuis les secrets GitHub
         run: |
-          ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl status caddy" || { echo "Failed to check Caddy status"; exit 1; }
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl status caddy" || { echo "Failed to check Caddy status"; exit 1; }
