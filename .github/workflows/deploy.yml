@@ -49,10 +49,15 @@ jobs:
           echo "Deployment completed!"
 
           # Redémarrer Caddy pour appliquer les changements
+          echo "Restarting Caddy..."
           sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy" || { echo "Failed to restart Caddy"; exit 1; }
+          
+          echo "Waiting for Caddy to restart..."
+          sleep 10  # Attendre que Caddy ait le temps de redémarrer
 
       - name: Check Caddy Status
         env:
           VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}  # Obtenir le mot de passe depuis les secrets GitHub
         run: |
+          echo "Checking Caddy status..."
           sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl status caddy" || { echo "Failed to check Caddy status"; exit 1; }
