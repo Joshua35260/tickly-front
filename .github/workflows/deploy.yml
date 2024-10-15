@@ -31,7 +31,8 @@ jobs:
       - name: Install sshpass
         run: |
           echo "Installing sshpass..."
-          apt-get update && apt-get install -y sshpass
+          sudo apt-get update
+          sudo apt-get install -y sshpass
 
       - name: Deploy to VPS
         env:
@@ -48,8 +49,7 @@ jobs:
           echo "Deployment completed!"
 
           # Redémarrez Caddy pour appliquer les modifications
-          echo "Restarting Caddy..."
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy && echo Caddy restarted!"
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy"
 
       - name: Check Caddy Status
         run: |
