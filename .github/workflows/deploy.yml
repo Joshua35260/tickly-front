@@ -1,56 +1,59 @@
-name: Deploy Frontend to VPS
-
 on:
   push:
     branches:
-      - main  # Déclenche le workflow sur des pushes vers la branche main
+      - main  # Trigger the workflow on pushes to the main branch
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest  # Utilise un environnement Ubuntu pour l'exécution
+    runs-on: ubuntu-latest  # Use an Ubuntu environment for execution
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2  # Récupère le code source du dépôt
+        uses: actions/checkout@v2  # Retrieve the source code from the repository
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2  # Configure Node.js dans l'environnement
+        uses: actions/setup-node@v2  # Configure Node.js in the environment
         with:
-          node-version: '22'  # Spécifie la version de Node.js à utiliser
+          node-version: '22'  # Specify the Node.js version to use
 
       - name: Install frontend dependencies
         run: |
           echo "Installing frontend dependencies..."
-          npm install  # Installe les dépendances définies dans package.json
+          npm install  # Install the dependencies defined in package.json
 
       - name: Build the frontend project
         run: |
           echo "Building the frontend project..."
-          npm run build --prod  # Compile le projet en mode production
+          npm run build --prod  # Compile the project in production mode
 
       - name: Install sshpass
         run: |
           echo "Installing sshpass..."
-          sudo apt-get update  # Met à jour la liste des paquets
-          sudo apt-get install -y sshpass  # Installe sshpass pour gérer les connexions SSH avec un mot de passe
+          sudo apt-get update  # Update the package list
+          sudo apt-get install -y sshpass  # Install sshpass for SSH connections with a password
 
       - name: Deploy to VPS
         env:
-          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}  # Récupère le mot de passe du VPS à partir des secrets GitHub
-          SERVER_IP: ${{ secrets.SERVER_IP }}  # Récupère l'adresse IP du VPS à partir des secrets GitHub
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}  # Get the VPS password from GitHub secrets
+          SERVER_IP: ${{ secrets.SERVER_IP }}  # Get the VPS IP from GitHub secrets
         run: |
           echo "Transferring files to VPS..."
-          # Supprimez le contenu existant dans le répertoire de Caddy
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "rm -rf /usr/share/caddy/*"
+          
+          # Debugging: Check if variables are set
+          echo "VPS IP: $SERVER_IP"
+          echo "VPS Password: [hidden]"
 
-          # Transférez les nouveaux fichiers construits vers le VPS
-          scp -r dist/tickly-front/browser/* root@$SERVER_IP:/usr/share/caddy/
+          # Remove existing content in the Caddy directory
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "rm -rf /usr/share/caddy/*" || { echo "Failed to connect to VPS"; exit 1; }
+
+          # Transfer new built files to the VPS
+          scp -r dist/tickly-front/browser/* root@$SERVER_IP:/usr/share/caddy/ || { echo "Failed to transfer files"; exit 1; }
 
           echo "Deployment completed!"
 
-          # Redémarrez Caddy pour appliquer les modifications
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy"
+          # Restart Caddy to apply changes
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy" || { echo "Failed to restart Caddy"; exit 1; }
 
       - name: Check Caddy Status
         run: |
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl status caddy"  # Vérifie l'état du service Caddy
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl status caddy" || { echo "Failed to check Caddy status"; exit 1; }
