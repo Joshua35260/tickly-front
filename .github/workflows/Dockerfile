@@ -16,6 +16,9 @@ COPY . .
 # Construire l'application Angular
 RUN npm run build --prod
 
+# Vérifier le contenu du dossier de sortie
+RUN ls -la /app/dist/tickly-front
+
 # Étape 2: Servir l'application avec Nginx
 FROM nginx:alpine
 
