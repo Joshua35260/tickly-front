@@ -32,6 +32,7 @@ constructor(
   private destroyRef: DestroyRef,  
 ) {}
 
+
 ngOnInit() {
   this.baseSize = this.size(); 
   this.resizeService.resize$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(({ width }) => {
