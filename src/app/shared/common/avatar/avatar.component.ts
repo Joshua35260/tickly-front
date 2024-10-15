@@ -26,7 +26,6 @@ export class AvatarComponent implements OnInit {
   avatarUrl = input<string>();
 
   avatarUrl$: Observable<File | string> = toObservable(this.avatarUrl);
-  
   baseSize: number;
 constructor(
   private resizeService: ResizeService,
