@@ -40,18 +40,22 @@ jobs:
         run: |
           echo "Transferring files to VPS..."
 
-          # Supprimer le contenu existant dans le répertoire Caddy
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "rm -rf /usr/share/caddy/*" || { echo "Failed to connect to VPS"; exit 1; }
+          # Créer un répertoire temporaire pour le transfert
+          TEMP_DIR="/usr/share/caddy_tmp"
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "mkdir -p $TEMP_DIR" || { echo "Failed to create temp directory on VPS"; exit 1; }
 
-          # Transférer les nouveaux fichiers construits vers le VPS
-          sshpass -p "$VPS_PASSWORD" scp -o StrictHostKeyChecking=no -r dist/tickly-front/browser/* root@$SERVER_IP:/usr/share/caddy/ || { echo "Failed to transfer files"; exit 1; }
+          # Transférer les nouveaux fichiers construits vers le VPS avec rsync
+          sshpass -p "$VPS_PASSWORD" rsync -avz --delete dist/tickly-front/browser/ root@$SERVER_IP:$TEMP_DIR/ || { echo "Failed to transfer files"; exit 1; }
 
           echo "Deployment completed!"
+
+          # Déplacer les fichiers transférés vers le répertoire final
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "rm -rf /usr/share/caddy/* && mv $TEMP_DIR/* /usr/share/caddy/" || { echo "Failed to move files to final directory"; exit 1; }
 
           # Redémarrer Caddy pour appliquer les changements
           echo "Restarting Caddy..."
           sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy" || { echo "Failed to restart Caddy"; exit 1; }
-          
+
           echo "Waiting for Caddy to restart..."
           sleep 10  # Attendre que Caddy ait le temps de redémarrer
 
