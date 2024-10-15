@@ -28,6 +28,12 @@ jobs:
           echo "Building the frontend project..."
           npm run build --prod  # Change si nécessaire
 
+      - name: Install sshpass
+        run: |
+          echo "Installing sshpass..."
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
       - name: Deploy to VPS
         env:
           VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
@@ -44,3 +50,7 @@ jobs:
 
           # Redémarrez Caddy pour appliquer les modifications
           sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy"
+
+      - name: Check Caddy Status
+        run: |
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl status caddy"
