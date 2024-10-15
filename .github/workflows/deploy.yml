@@ -1,52 +1,53 @@
 on:
   push:
     branches:
-      - main  # Trigger the workflow on pushes to the main branch
+      - main  # Déclenche le workflow sur les pushes à la branche principale
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest  # Use an Ubuntu environment for execution
+    runs-on: ubuntu-latest  # Utiliser un environnement Ubuntu pour l'exécution
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2  # Retrieve the source code from the repository
+        uses: actions/checkout@v2  # Récupérer le code source du dépôt
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2  # Configure Node.js in the environment
+        uses: actions/setup-node@v2  # Configurer Node.js dans l'environnement
         with:
-          node-version: '22'  # Specify the Node.js version to use
+          node-version: '22'  # Spécifier la version de Node.js à utiliser
 
       - name: Install frontend dependencies
         run: |
           echo "Installing frontend dependencies..."
-          npm install  # Install the dependencies defined in package.json
+          npm install  # Installer les dépendances définies dans package.json
 
       - name: Build the frontend project
         run: |
           echo "Building the frontend project..."
-          npm run build --prod  # Compile the project in production mode
+          npm run build --prod  # Compiler le projet en mode production
 
       - name: Set up SSH key
         run: |
-          mkdir -p ~/.ssh  # Create the .ssh directory if it doesn't exist
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa  # Write the private key to the file
-          chmod 600 ~/.ssh/id_rsa  # Set the correct permissions
+          mkdir -p ~/.ssh  # Créer le répertoire .ssh s'il n'existe pas
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts  # Ajouter l'hôte à known_hosts
 
       - name: Deploy to VPS
         env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}  # Get the VPS IP from GitHub secrets
+          SERVER_IP: ${{ secrets.SERVER_IP }}  # Obtenir l'IP du VPS depuis les secrets GitHub
         run: |
           echo "Transferring files to VPS..."
-          
-          # Remove existing content in the Caddy directory
+
+          # Supprimer le contenu existant dans le répertoire Caddy
           ssh -o StrictHostKeyChecking=no root@$SERVER_IP "rm -rf /usr/share/caddy/*" || { echo "Failed to connect to VPS"; exit 1; }
 
-          # Transfer new built files to the VPS
+          # Transférer les nouveaux fichiers construits vers le VPS
           scp -r dist/tickly-front/browser/* root@$SERVER_IP:/usr/share/caddy/ || { echo "Failed to transfer files"; exit 1; }
 
           echo "Deployment completed!"
 
-          # Restart Caddy to apply changes
+          # Redémarrer Caddy pour appliquer les changements
           ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy" || { echo "Failed to restart Caddy"; exit 1; }
 
       - name: Check Caddy Status
