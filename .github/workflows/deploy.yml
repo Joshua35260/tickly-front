@@ -7,37 +7,37 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Utilise un environnement Ubuntu pour l'exécution
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2  # Récupère le code source du dépôt
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2  # Configure Node.js dans l'environnement
         with:
-          node-version: '22'
+          node-version: '22'  # Spécifie la version de Node.js à utiliser
 
       - name: Install frontend dependencies
         run: |
           echo "Installing frontend dependencies..."
-          npm install
+          npm install  # Installe les dépendances définies dans package.json
 
       - name: Build the frontend project
         run: |
           echo "Building the frontend project..."
-          npm run build --prod  # Change si nécessaire
+          npm run build --prod  # Compile le projet en mode production
 
       - name: Install sshpass
         run: |
           echo "Installing sshpass..."
-          sudo apt-get update
-          sudo apt-get install -y sshpass
+          sudo apt-get update  # Met à jour la liste des paquets
+          sudo apt-get install -y sshpass  # Installe sshpass pour gérer les connexions SSH avec un mot de passe
 
       - name: Deploy to VPS
         env:
-          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
-          SERVER_IP: ${{ secrets.SERVER_IP }}
+          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}  # Récupère le mot de passe du VPS à partir des secrets GitHub
+          SERVER_IP: ${{ secrets.SERVER_IP }}  # Récupère l'adresse IP du VPS à partir des secrets GitHub
         run: |
           echo "Transferring files to VPS..."
           # Supprimez le contenu existant dans le répertoire de Caddy
@@ -53,4 +53,4 @@ jobs:
 
       - name: Check Caddy Status
         run: |
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl status caddy"
+          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl status caddy"  # Vérifie l'état du service Caddy
