@@ -31,7 +31,9 @@ jobs:
       - name: Build Docker image for frontend
         run: |
           echo "Building Docker image for frontend..."
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
           docker build -t djosh35/tickly-frontend:${{ github.sha }} -f ./.github/workflows/Dockerfile .
+          docker tag djosh35/tickly-frontend:${{ github.sha }} djosh35/tickly-frontend:latest
 
       - name: Log in to Docker Hub
         run: |
