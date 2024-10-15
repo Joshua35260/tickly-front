@@ -26,27 +26,28 @@ jobs:
           echo "Building the frontend project..."
           npm run build --prod  # Compile the project in production mode
 
-      - name: Install sshpass
+      - name: Set up SSH key
         run: |
-          echo "Installing sshpass..."
-          sudo apt-get update  # Update the package list
-          sudo apt-get install -y sshpass  # Install sshpass for SSH connections with a password
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
       - name: Deploy to VPS
         env:
-          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}  # Get the VPS password from GitHub secrets
           SERVER_IP: ${{ secrets.SERVER_IP }}  # Get the VPS IP from GitHub secrets
         run: |
           echo "Transferring files to VPS..."
           
-          # Debugging: Check if variables are set
-          echo "VPS IP: $SERVER_IP"
-          echo "VPS Password: [hidden]"  # This is to avoid exposing the password in logs
-
           # Remove existing content in the Caddy directory
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "rm -rf /usr/share/caddy/*" || { echo "Failed to connect to VPS"; exit 1; }
+          ssh -o StrictHostKeyChecking=no root@$SERVER_IP "rm -rf /usr/share/caddy/*" || { echo "Failed to connect to VPS"; exit 1; }
 
           # Transfer new built files to the VPS
           scp -r dist/tickly-front/browser/* root@$SERVER_IP:/usr/share/caddy/ || { echo "Failed to transfer files"; exit 1; }
 
-       
+          echo "Deployment completed!"
+
+          # Restart Caddy to apply changes
+          ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl restart caddy" || { echo "Failed to restart Caddy"; exit 1; }
+
+      - name: Check Caddy Status
+        run: |
+          ssh -o StrictHostKeyChecking=no root@$SERVER_IP "systemctl status caddy" || { echo "Failed to check Caddy status"; exit 1; }
