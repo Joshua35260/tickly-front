@@ -49,7 +49,7 @@ jobs:
             docker rm tickly-frontend || true
     
             # Démarrer un nouveau container avec la nouvelle image
-            docker run -d --name tickly-frontend -p 80:80 ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
+            docker run -d --name tickly-frontend -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
           EOF
 
       # Étape 7: Vérifier l'état du container sur le VPS

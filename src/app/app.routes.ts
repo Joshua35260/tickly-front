@@ -68,7 +68,6 @@ export const routes: Routes = [
 
   // Others routes (auxiliary with outlet in url)
 
-
   // Panels
   {
     path: 'user/view/:id/:section',
