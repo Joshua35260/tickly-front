@@ -66,7 +66,6 @@ export const routes: Routes = [
     },
   },
 
-  
   // Others routes (auxiliary with outlet in url)
 
 
