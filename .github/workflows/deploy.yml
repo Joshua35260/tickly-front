@@ -29,34 +29,27 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
 
-      # Étape 5: Configurer la clé SSH pour accéder au VPS
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+      # Étape 5: Installer sshpass
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
 
       # Étape 6: Déployer sur le VPS
       - name: Deploy to VPS
-        env:
-          SERVER_IP: ${{ secrets.SERVER_IP }}
-          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
         run: |
           echo "Deploying Docker container on VPS..."
 
           # Se connecter au VPS et puller la dernière image depuis Docker Hub
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "docker pull ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest"
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << 'EOF'
+            docker pull ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
 
-          # Stopper et supprimer tout ancien container frontend
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "docker stop tickly-frontend || true && docker rm tickly-frontend || true"
+            # Stopper et supprimer tout ancien container frontend
+            docker stop tickly-frontend || true && docker rm tickly-frontend || true
 
-          # Démarrer un nouveau container avec la nouvelle image
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "docker run -d --name tickly-frontend -p 80:80 ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest"
+            # Démarrer un nouveau container avec la nouvelle image
+            docker run -d --name tickly-frontend -p 80:80 ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
+          EOF
 
-      # Étape 7: Vérifier l'état du container Caddy sur le VPS
+      # Étape 7: Vérifier l'état du container sur le VPS
       - name: Check Docker container status
-        env:
-          VPS_PASSWORD: ${{ secrets.VPS_PASSWORD }}
         run: |
-          sshpass -p "$VPS_PASSWORD" ssh -o StrictHostKeyChecking=no root@$SERVER_IP "docker ps | grep tickly-frontend"
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "docker ps | grep tickly-frontend"
