@@ -22,7 +22,7 @@ FROM nginx:latest
 COPY --from=build /app/dist/tickly-front/browser /usr/share/nginx/html
 
 # Copier le fichier de configuration de Nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 # Exposer le port 80 pour Nginx
 EXPOSE 80
