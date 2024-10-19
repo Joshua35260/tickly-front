@@ -17,7 +17,7 @@ jobs:
       # Étape 2: Construire l'image Docker pour le frontend
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest -f Dockerfile.frontend .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest -f Dockerfile .
 
       # Étape 3: Se connecter à Docker Hub
       - name: Log in to Docker Hub
