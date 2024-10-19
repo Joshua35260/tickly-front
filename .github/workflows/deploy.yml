@@ -33,27 +33,13 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get install -y sshpass
 
-      # Étape 6: Configurer la clé SSH pour accéder au VPS
-      - name: Set up SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
-
-      # Étape 7: Démarrer l'agent SSH et ajouter la clé
-      - name: Start SSH agent and add key
-        run: |
-          eval "$(ssh-agent -s)"
-          echo "${{ secrets.VPS_PASSWORD }}" | ssh-add ~/.ssh/id_rsa
-
-      # Étape 8: Déployer sur le VPS
+      # Étape 6: Déployer sur le VPS
       - name: Deploy to VPS
         run: |
           echo "Deploying Docker container on VPS..."
 
           # Se connecter au VPS et puller la dernière image depuis Docker Hub
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << 'EOF'
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << 'EOF'
             docker pull ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
 
             # Stopper et supprimer tout ancien container frontend
@@ -63,7 +49,7 @@ jobs:
             docker run -d --name tickly-frontend -p 80:80 ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
           EOF
 
-      # Étape 9: Vérifier l'état du container sur le VPS
+      # Étape 7: Vérifier l'état du container sur le VPS
       - name: Check Docker container status
         run: |
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "docker ps | grep tickly-frontend"
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "docker ps | grep tickly-frontend"
