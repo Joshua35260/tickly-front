@@ -1,4 +1,4 @@
-name: CI/CD for Frontend
+name: CI/CD for Full Stack
 
 on:
   push:
@@ -12,40 +12,48 @@ jobs:
     steps:
       # Étape 1: Récupérer le code source depuis le dépôt
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      # Étape 2: Construire l'image Docker pour le frontend
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest -f .github/workflows/Dockerfile .
-
-      # Étape 3: Se connecter à Docker Hub
+      # Étape 2: Se connecter à Docker Hub
       - name: Log in to Docker Hub
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # Étape 4: Pousser l'image Docker sur Docker Hub
-      - name: Push Docker image to Docker Hub
+      # Étape 3: Construire l'image Docker pour le frontend
+      - name: Build Docker image for frontend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest -f frontend/Dockerfile.prod ./frontend
+
+      # Étape 4: Construire l'image Docker pour le backend
+      - name: Build Docker image for backend
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/tickly-back:latest -f ./backend/Dockerfile .
+
+      # Étape 5: Pousser les images Docker sur Docker Hub
+      - name: Push Docker images to Docker Hub
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/tickly-back:latest
 
-      # Étape 5: Installer sshpass
+      # Étape 6: Installer sshpass
       - name: Install sshpass
         run: sudo apt-get install -y sshpass
 
-      # Étape 6: Déployer sur le VPS
+      # Étape 7: Déployer sur le VPS
       - name: Deploy to VPS
         run: |
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << 'EOF'
-            # Stopper et supprimer l'ancien conteneur frontend
-            docker stop tickly-frontend || true
-            docker rm tickly-frontend || true
+            # Naviguer vers le répertoire de l'application
+            cd /chemin/vers/ton/projet
 
-            # Démarrer le nouveau conteneur
-            docker run -d --name tickly-frontend --network tickly_default -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
+            # Arrêter et supprimer les conteneurs existants
+            docker-compose -f docker-compose.prod.yml down
+
+            # Démarrer les nouveaux conteneurs
+            docker-compose -f docker-compose.prod.yml up -d
           EOF
 
-      # Étape 7: Vérifier l'état du container sur le VPS
+      # Étape 8: Vérifier l'état des conteneurs sur le VPS
       - name: Check Docker container status
         run: |
-          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "docker ps | grep tickly-frontend"
+          sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} "docker ps"
