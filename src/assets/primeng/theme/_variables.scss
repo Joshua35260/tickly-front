@@ -912,7 +912,7 @@ $surface50 : #F9F9F9 !default;
 
 
 :root {
-    --login-bg: url(#{$loginBg});
+    --login-bg: url(#{$splash});
     --text-color:#{$shade700};
     --text-color-secondary:#{$shade600};
     --primary-color:#{$primaryColor};
