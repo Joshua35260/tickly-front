@@ -36,19 +36,14 @@ jobs:
       # Étape 6: Déployer sur le VPS
       - name: Deploy to VPS
         run: |
-          echo "Deploying Docker container on VPS..."
-
-          # Se connecter au VPS et puller la dernière image depuis Docker Hub
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << 'EOF'
-            # Vérifier les conteneurs en cours d'exécution
-            echo "Current running containers:"
-            docker ps
-
-            # Stopper et supprimer tout ancien container frontend si existant
+            # Stopper et supprimer l'ancien conteneur frontend
             docker stop tickly-frontend || true
             docker rm tickly-frontend || true
 
-            # Démarrer un nouveau container avec la nouvelle image
+            # Démarrer le nouveau conteneur
+            docker run -d --name tickly-frontend --network tickly_default -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
+          EOF# Démarrer un nouveau container avec la nouvelle image
             docker run -d --name tickly-frontend --network tickly_default -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/tickly-frontend:latest
           EOF
 
