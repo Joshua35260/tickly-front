@@ -45,7 +45,7 @@ jobs:
       - name: Start SSH agent and add key
         run: |
           eval "$(ssh-agent -s)"
-          echo "${{ secrets.SSH_PASSPHRASE }}" | ssh-add ~/.ssh/id_rsa
+          echo "${{ secrets.VPS_PASSWORD }}" | ssh-add ~/.ssh/id_rsa
 
       # Étape 8: Déployer sur le VPS
       - name: Deploy to VPS
