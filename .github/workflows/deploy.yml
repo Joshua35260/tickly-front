@@ -43,11 +43,14 @@ jobs:
       - name: Deploy to VPS
         run: |
           sshpass -p "${{ secrets.VPS_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IP }} << 'EOF'
-            # Naviguer vers le répertoire de l'application
-            cd /chemin/vers/ton/projet
+            # Naviguer vers le répertoire de l'application sur le VPS
+            cd /root/tickly
 
             # Arrêter et supprimer les conteneurs existants
             docker-compose -f docker-compose.prod.yml down
+
+            # Télécharger les nouvelles images
+            docker-compose -f docker-compose.prod.yml pull
 
             # Démarrer les nouveaux conteneurs
             docker-compose -f docker-compose.prod.yml up -d
