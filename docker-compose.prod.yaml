@@ -31,9 +31,7 @@ services:
           - tickly-back
 
   tickly-frontend:
-    build:
-      context: ./frontend  # Chemin vers ton Dockerfile Angular
-      dockerfile: Dockerfile.prod  # Assure-toi que ton Dockerfile est nommé correctement
+    image: djosh35/tickly-frontend:latest
     restart: unless-stopped
     ports:
       - '8080:80'  # Mappe le port 80 du conteneur sur le port 8080 de l'hôte
