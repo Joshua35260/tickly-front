@@ -1,29 +1,25 @@
-# Étape 1 : Construction de l'application
-FROM node:22 AS builder
+# Étape 1: Construction de l'application Angular
+FROM node:22 AS build
 
 WORKDIR /app
 
-# Copie des dépendances et des fichiers Prisma
-COPY package*.json ./ 
-COPY prisma ./prisma/
+# Copier package.json et package-lock.json
+COPY package*.json ./
+
+# Installer les dépendances
 RUN npm install
 
-# Copie du code source et construction de l'application
+# Copier le code de l'application
 COPY . .
-RUN npm run build
 
-# Étape 2 : Utilisation d'une image allégée pour exécuter l'application
-FROM node:22-alpine
+# Compiler l'application en mode production
+RUN npm run build --prod
 
-WORKDIR /app
+# Étape 2: Servir l'application avec Nginx
+FROM nginx:latest
 
-# Copie des fichiers nécessaires depuis l'étape builder
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
+# Copier les fichiers de build vers le répertoire de Nginx
+COPY --from=build /app/dist/tickly-front/browser /usr/share/nginx/html
 
-# Exposition du port de l'application NestJS
-EXPOSE 3000
-
-# Démarrage de l'application en mode production
-CMD ["npm", "run", "start:prod"]
+# Exposer le port
+EXPOSE 80
