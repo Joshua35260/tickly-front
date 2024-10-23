@@ -1,9 +1,11 @@
-<app-sidebar [dataMenu]="dataMenu" (activePanelChange)="onPanelSelected($event)" [activePanel]="section" label="Utilisateur" icon="icon-idcard">
+<app-sidebar [dataMenu]="dataMenu()" (activePanelChange)="onPanelSelected($event)" [activePanel]="section" label="Utilisateur" icon="icon-idcard">
   <app-user-view
     #itemViewComponent
     [userId]="userId"
     [sectionDisplayed]="section"
+    (jobTypeOutputOnLoad)="onJobTypeLoaded($event)"
     (edit)="onEditUser($event)"
     (deleted)="onUserDeleted()"
+    (displayStructureView)="displayStructureView($event)"
   ></app-user-view>
 </app-sidebar>

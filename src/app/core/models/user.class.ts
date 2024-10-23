@@ -14,7 +14,7 @@ export class User {
   roles: Role[];
   emails: Email[];
   phones: Phone[];
-  jobType : jobType;
+  jobTypeId : jobType;
   address: Address;
   avatarUrl?: string;
   archive?: boolean;

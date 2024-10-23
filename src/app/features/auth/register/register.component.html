@@ -26,7 +26,7 @@
 </span>
   </fieldset>
 
-  @if (!isEmployee) {
+
   <fieldset formGroupName="address" class="card-body sm:grid grid-cols-2 flex flex-col">
     <div class="small-title-c col-span-full">
       <i class="icon-location"></i>
@@ -41,41 +41,10 @@
     <app-input class="sm:col-span-4" formControlName="country" label="Pays *"></app-input>
   </div>
   </fieldset>
-}
-  @if (isEmployee) {
 
-      <div class="small-title-link ">Rechercher une structure ou<a (click)="openAddStructure()"> créer une nouvelle structure</a></div>
-      <div class="autocomplete-input-left-icon">
-        <i class="icon-organization"></i>
-       
-      <span class="p-float-label form-elem ">
-        <p-autoComplete 
-                        [suggestions]="filteredStructures()"
-                        (completeMethod)="filterStructures($event)"
-                        field="name"
-                        emptyMessage="Aucune suggestion"
-                        appendTo="body"
-                        [forceSelection]="true"
-                        showClear="true">
-                        <ng-template let-structure pTemplate="selectedItem">
-                          <div>{{ structure.name }}</div>
-                        </ng-template>
-                        <ng-template let-structure pTemplate="item">
-                          <div class="autocomplete-with-address">{{ structure.name }} <span class="small-italic" *ngIf="!!structure.address.streetL1 || structure.address.streetL2 || !!structure.address.postcode || !!structure.address.city ">({{structure.address.streetL1 || ''}} {{structure.address.postcode || ''}} {{structure.address.city || ''}})</span></div>
-                        </ng-template>
-        </p-autoComplete>
-        <label>Rattacher une nouvelle structure</label>
-      </span>
-
-      </div>
-
-    <app-form-dialog showHeader="false" (closeDialog)="resetFormDialog()" [visible]="isAddStructureModalOpen" size="xxlarge">
-      <app-structure-form (saved)="structureCreated($event)" (cancel)="resetFormDialog()"></app-structure-form>
-    </app-form-dialog>
-  }
   <div class="actions">
   <p-button label="S'inscrire" severity="secondary" icon="icon-add" iconPos="left"
-  [disabled]="registerForm.invalid || !structureLinked()" type="submit"></p-button>
+  [disabled]="registerForm.invalid" type="submit"></p-button>
 
 </div>
 </form>

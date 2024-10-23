@@ -1,6 +1,5 @@
 @import "@assets/knacss/mixin.scss";
 
-//add padding to top and bottom automatically if avatar is not present
 .card {
   .card-top:not(:has(.avatar)) .card-content,
   .card-bottom:not(:has(.avatar)) {
@@ -11,6 +10,7 @@
   }
 }
 
+
 .card {
   position: relative;
   z-index: 4;
@@ -20,7 +20,9 @@
   background-color: var(--card-bg);
   display: flex;
   flex-direction: column;
-
+  div,span {
+    line-height: 1.2;
+  }
   &:hover {
     cursor: pointer;
     transition: ease-in-out 0.2s;
@@ -57,40 +59,43 @@
     @include sm {
       gap: 5px;
     }
-    height: 60px;
+    min-height: 60px;
     border-radius: 5px 5px 0 0;
     .card-content {
       padding: 0px 15px 0 0;
       @include sm {
-        padding: 0 5px 0 0;
+        padding: 0px 5px 0 0;
       }
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: flex-start;
       gap: 10px;
+      font-size: 15px;
+      @include md {
+        font-size: 14px;
+      }
       @include sm {
+        font-size: 12px;
         gap: 5px;
       }
-  
-      .avatar {order:1;}
-      .card-main-info  {order: 2;flex-shrink: 0;}
-      .card-icon {order:2; line-height: 0;}
+      .avatar {order:2;}
+      .card-main-info  {order: 2; flex:1;}
+      .card-icon {order:1; line-height: 0;}
       .card-top-title {order: 2;}
-      .card-contact {order: 3; display: flex; gap: 20px;flex-wrap: nowrap; text-wrap: nowrap;}
-      .card-top-text {order: 3; line-height: 1.1;}
+      .card-contact {order: 3;}
+      .card-top-text {order: 3;}
       .card-address,.adresses {order: 3;}
       .archive-info {order: 4;flex-shrink: 0;}
-      .attach-info {order: 4;margin-left: auto}
+      .attach-info {order: 4; align-items: center;}
       .card-icones {order: 4; margin-left: auto; text-align: right;}
       .card-trigram {order: 4; margin-left: auto; text-align: right;}
     }
 
     .card-content.with-menu {
-      padding-right: 30px;
+      padding-right: 35px;
     }
 
-    
     .card-top-title {
       overflow: hidden;
       white-space: nowrap;
@@ -99,11 +104,7 @@
       gap: 5px;
       font-size: 17px;
       font-weight: 600;
-      line-height: 1.35;
 
-      small {
-        line-height: 0.8;
-      }
 
       @include md {
         font-size: 15px;
@@ -122,7 +123,10 @@
         font-size: 15px;
         font-style: italic;
         font-weight: 400;
-
+        line-height: 0.8;
+        span {
+          line-height: 0.8;
+        }
         @include md {
           font-size: 13px;
         }
@@ -142,32 +146,28 @@
 
   .card-top.only {
     border-radius: 5px;
-    .card-top-title {
-      line-height: 1.5;
     }
-  }
 
-  .card-contact {
-    gap: 20px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 100%;
-  }
+.card-contact {
+  gap: 20px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100%;
+}
 
   //card with bottom, bottom section
   .card-bottom {
     --avatar-height-bottom: 41;
     --avatar-width-bottom: 60;
-    height: 41px;
+    min-height: 41px;
     position: relative;
     display: flex;
     overflow: hidden;
     gap: 8px;
-    background-color: var(--gray-10);
+    background-color: var(--card-bottom-bg);
     border-radius: 0 0 5px 5px;
     font-size: 15px;
     padding: 0 15px 0 0;
-
     @include md {
       font-size: 14px;
     }
@@ -209,7 +209,7 @@
       gap: 5px;
     }
     .flex-col { order: 1;}
-    .card-bottom-title { order: 2; display: flex; gap: 5px; white-space: nowrap; overflow: hidden};
+    .card-bottom-title { order: 2; display: flex; gap: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis};
       .name, .city {
         display: inline-block;
         text-align: right;
@@ -222,7 +222,7 @@
       }
     
     
-    .card-icon { order: 4; flex-shrink: 0;}
+    .card-icon { order: 4;flex-shrink: 0;}
     app-flag {order:3; flex-shrink: 0;}
   }
 
@@ -358,12 +358,12 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
   font-style: italic;
   font-weight: 600;
   span {
+
     font-weight: 600;
   }
   div {
     font-weight: 400;
   }
-
 }
 
 .flex.flex-col {
@@ -371,25 +371,16 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
   text-overflow: ellipsis;
 }
 
-.card-contact {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
 .addresses {
-  // line-height: 0;
+
 }
 .card-address {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 5px;
-  line-height: 0.9;
 }
-.address {
-  line-height: 0.9;
-}
+
 
 .card-subtitle {
   color: #9A9A9A;
@@ -401,16 +392,17 @@ app-flag {i {width: 17px; height: 10px; line-height: 0; vertical-align: middle;}
   @include sm {
     font-size: 11px;
   }
-}  
+} 
 
 .coordinate-icon {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 33px;
-  height: 60px;
-  width: 60px;
+  font-size: 22px;
+  height: 38px;
+  width: 38px;
+  border-radius: 50%;
   background-color: var(--yellow-color);
   color: var(--shade-000);
 }
@@ -449,7 +441,7 @@ a {
 
 
   .archive-info {
-
+    margin-left: auto;
     font-weight: 600;
     font-size: 14px;
 
@@ -539,15 +531,16 @@ a {
   }
 } 
 
+
 // SUB CARD //
 .card.sub-card .card-top .card-content {
   .sub-card-icon { order: 0; }
-  .card-top-title { order: 3; }
-  .main-content { order: 3; }
+  .card-top-title { order: 2; }
+  .main-content { order: 2; }
   .address { order: 3; }
   .card-address { order: 4; }
-  .card-icon { order: 2; }
-  .avatar { order: 1; }
+  .card-icon { order: 1; }
+  .avatar { order: 2; }
 }
 
 .card.sub-card {
@@ -559,7 +552,7 @@ a {
   flex-direction: column;
   &:before {
     content: '';
-    z-index: 12;
+    z-index: 2;
     position: absolute;
     left: -36px;
     top: -35px;
@@ -732,6 +725,8 @@ a {
 //COMMENT ROW//
 //override style of card.scss
 .card.comment-row {
+  padding-top: 6px;
+  padding-bottom: 4px;
   padding-right: 8px;
 
   &:hover {
@@ -743,23 +738,21 @@ a {
   }
 
   .icon-menu {
-    top: 10px;
-    right: -10px;
+    top: 5px;
+    right: 5px;
   }
 
   .user-info {
     width: fit-content;
-    padding-top: 2px;
   }
 
   .avatar {
     height: 100%;
     display: flex;
     justify-content: center;
-    margin-left: 0px;
+    margin-left: 10px;
     margin-right: 2px;
   }
-
 
   .comment,
   .user-info {
@@ -769,11 +762,6 @@ a {
 
   .comment-author {
     font-weight: 600;
+
   }
-}
-
-// CARD COORDINATE
-
-.card.card-coordinate .card-top .card-content {
-  padding-left: 0;
 }

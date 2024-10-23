@@ -10,6 +10,8 @@ import { ButtonModule } from 'primeng/button';
 import { BehaviorSubject, distinctUntilChanged, Observable, shareReplay, switchMap } from 'rxjs';
 import { startWith, take } from 'rxjs/operators';
 import { UserInfoComponent } from '../components/user-info/user-info.component';
+import { jobType } from '@app/core/models/enums/job-type.enum';
+import { UserStructuresComponent } from '../components/user-structures/user-structures.component';
 
 @Component({
   selector: 'app-user-view',
@@ -22,13 +24,15 @@ import { UserInfoComponent } from '../components/user-info/user-info.component';
     ModalConfirmDeleteComponent,
     ButtonModule,
     UserInfoComponent,
+    UserStructuresComponent,
   ]
 })
 export class UserViewComponent implements OnInit {
-
+  displayStructureView = output<number>();
   sectionDisplayed = input<RightPanelSection>();
-  userId = input<number>();
+  jobTypeOutputOnLoad = output<jobType>();
 
+  userId = input<number>();
   userId$: Observable<number> = toObservable(this.userId);
 
   edit = output<number>();
@@ -46,6 +50,9 @@ export class UserViewComponent implements OnInit {
   get sectionActionsDisplayed() {
     return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS;
   }
+  get sectionStructuresDisplayed() {
+    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_STRUCTURES;
+  }
 
   constructor(
     private destroyRef: DestroyRef,
@@ -55,18 +62,21 @@ export class UserViewComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.loadUser();
+    this.loadUser();    
   }
-
-
   loadUser() {
     this.user$ = this.userId$.pipe(
-      startWith(this.userId),
+      startWith(this.userId()), // Utiliser la valeur initiale de userId
       distinctUntilChanged(),
-      switchMap(() => this.reloadUser$),
+      switchMap(() => this.reloadUser$), // Utiliser la BehaviorSubject pour déclencher le rechargement
       takeUntilDestroyed(this.destroyRef),
       switchMap(() => this.userService.getUser(this.userId())),
-      shareReplay(),
+      switchMap(user => {
+        // Émettre le jobType après le chargement de l'utilisateur
+        this.jobTypeOutputOnLoad.emit(user.jobTypeId);
+        return [user]; // Transformer la réponse en tableau pour que shareReplay fonctionne
+      }),
+      shareReplay(1), // Partager la dernière valeur
     );
   }
 
@@ -74,8 +84,8 @@ export class UserViewComponent implements OnInit {
     this.reloadUser$.next();
   }
 
-  onEdit() {
-    this.edit.emit(this.userId());
+  onEdit(user:User) {
+    this.edit.emit(user.id);
   }
 
   onDelete() {

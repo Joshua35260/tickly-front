@@ -8,7 +8,9 @@
     </div>
     <div id="mapId" leaflet [leafletOptions]="mapOptions" (leafletMapReady)="onMapReady($event)"></div>
 
-    <p-paginator #paginator class="paginator" 
+    <p-paginator 
+    #paginator 
+    class="paginator" 
     (onPageChange)="onPageChange($event)"
     [first]="first"
     [rows]="rows"

@@ -91,6 +91,7 @@ export class UserListComponent implements OnInit {
       });
   }
   addMarkers(users: User[]) {
+ 
     setTimeout(() => {
       
 
@@ -134,14 +135,15 @@ export class UserListComponent implements OnInit {
     // Center the map only if markers are present
     if (this.itemsMarkers.getLayers().length > 0) {
       this.centerMap(); // Call centerMap after all markers are added
+      
     }
   }, 100);
+
 }
   
 
 centerMap() {
   const bounds = this.itemsMarkers.getBounds();
-  console.log(bounds);
   this.map.fitBounds(bounds); // Fit map to bounds of markers
   this.map.invalidateSize(); // Invalidate size to ensure correct rendering
 }

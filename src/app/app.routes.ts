@@ -73,19 +73,24 @@ export const routes: Routes = [
   {
     path: 'user/view/:id/:section',
     outlet: 'panel',
-    loadComponent: () => import('./containers/panels/user-view-container/user-view.container.component').then(c => c.UserViewContainerComponent) // Assurez-vous que le chemin est correct
+    loadComponent: () => import('./containers/panels/user-view-container/user-view.container.component').then(c => c.UserViewContainerComponent)
   },
   {
     path: 'ticket/view/:id/:section',
     outlet: 'panel',
-    loadComponent: () => import('./containers/panels/ticket-view-container/ticket-view.container.component').then(c => c.TicketViewContainerComponent) // Assurez-vous que le chemin est correct
+    loadComponent: () => import('./containers/panels/ticket-view-container/ticket-view.container.component').then(c => c.TicketViewContainerComponent)
   },
   {
     path: 'structure/view/:id/:section',
     outlet: 'panel',
-    loadComponent: () => import('./containers/panels/structure-view-container/structure-view.container.component').then(c => c.StructureViewContainerComponent) // Assurez-vous que le chemin est correct
+    loadComponent: () => import('./containers/panels/structure-view-container/structure-view.container.component').then(c => c.StructureViewContainerComponent)
   },
   
 
   // ...ModalsRouting,
+  {
+    path: 'user/edit/:id',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/user-edit-container/user-edit.container.component').then(c => c.UserEditContainerComponent)
+  },
 ];

@@ -60,8 +60,6 @@ export class PageHeaderComponent {
       switchMap(() => this.route.firstChild?.data || []),
       takeUntilDestroyed(this.destroyRef),
       map((data: any) => {
-        console.log('data :', data);
-
         this.cdr.detectChanges();  // Forcer la détection des changements
         return data?.header;
       })

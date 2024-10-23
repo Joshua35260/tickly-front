@@ -134,7 +134,6 @@ export class StructureListComponent {
 
 centerMap() {
   const bounds = this.itemsMarkers.getBounds();
-  console.log(bounds);
   this.map.fitBounds(bounds); // Fit map to bounds of markers
   this.map.invalidateSize(); // Invalidate size to ensure correct rendering
 }

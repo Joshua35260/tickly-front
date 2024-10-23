@@ -1,0 +1,17 @@
+@import "@assets/knacss/mixin.scss";
+
+.title-parent-contact {
+  margin-bottom: 0px;
+}
+
+.avatar {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signature{
+  display: grid;
+  justify-content: center;
+}

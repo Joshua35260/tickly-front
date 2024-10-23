@@ -4,7 +4,7 @@
   height: 100%;
   display: grid;
   grid-template-columns: 1fr; /* Une seule colonne */
-  grid-auto-rows: auto auto auto;
+  grid-auto-rows: auto 1fr;
 
   .widget-action {
     min-height: 0;

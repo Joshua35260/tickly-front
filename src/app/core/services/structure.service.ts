@@ -5,6 +5,8 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PaginatedData } from '../models/paginated-data.class';
 import { Structure } from '../models/structure.class';
+import { User } from '../models/user.class';
+
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +73,7 @@ export class StructureService {
     return this.http.get<PaginatedData<Structure>>(`${environment.apiUrl}/structure`, {
       params: {
         'name': name,
+        'pageSize': 1000,
       },
     }).pipe(
       catchError((error) => {
@@ -79,7 +82,18 @@ export class StructureService {
       })
     );
   }
-  
-  
 
+  
+// add structure to user
+
+addStructureToUser(userId: number, structureId: number,): Observable<User> {
+  return this.http.post<any>(`${environment.apiUrl}/user/${userId}/structures/${structureId}`, {
+    userId: userId,
+    structureId: structureId,
+  })
+}
+
+deleteStructureFromUser(userId: number, structureId: number): Observable<User> {
+  return this.http.delete<any>(`${environment.apiUrl}/user/${userId}/structures/${structureId}`)
+}
 }

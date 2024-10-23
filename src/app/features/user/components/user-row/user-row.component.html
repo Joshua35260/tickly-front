@@ -4,14 +4,12 @@
 
   <div class="card-top only" (click)="openUser.emit(user().id)">
     <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'">
-
-
       <app-avatar class="avatar" [fullname]="user().firstname + user().lastname" [size]="60">
       </app-avatar>
 
       @if (withMenu()) {
       <i class="icon-menu pi pi-ellipsis-v" (click)="menu.toggle($event); onMenuOpen()">
-        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body"></p-menu>
+        <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body"></p-menu>
       </i>
       }
 

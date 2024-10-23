@@ -56,6 +56,14 @@ input:-webkit-autofill + label {
     border-radius: 10px;
   }
 }
+
+.input-icon-left {
+
+  i {
+    color: $primaryColor;
+  }
+}
+
 a {
   cursor: pointer;
 }

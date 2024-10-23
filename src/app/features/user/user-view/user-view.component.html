@@ -1,26 +1,28 @@
-<div class="panel-content" *ngIf="user$ | async as user">
-  
-
-  <div class="main-grid gap-medium">
+<div class="main-grid gap-medium" *ngIf="user$ | async as user">
 
 
-    <app-user-info class="widget height-auto" [user]="user" [sectionDisplayed]="sectionDisplayed()"/>
-    @if(sectionActionsDisplayed) {
-    
-      <div class="widget height-auto">
+  <app-user-info class="widget height-auto" (saved)="reload()" [user]="user" [sectionDisplayed]="sectionDisplayed()"
+    (edit)="onEdit($event)" />
+  @if(sectionActionsDisplayed) {
 
-        <div class="actions">
-          <p-button severity="warning" icon="icon-archive" [label]="user.archive ? 'Désarchiver' : 'Archiver'" ></p-button>
-          <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
-            (click)="showDeleteModal.set(true)"></p-button>
-        </div>
-      </div>
-    }
+  <div class="widget height-auto">
+
+    <div class="actions">
+      <p-button severity="warning" icon="icon-archive" [label]="user.archive ? 'Désarchiver' : 'Archiver'"></p-button>
+      <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
+        (click)="showDeleteModal.set(true)"></p-button>
+    </div>
   </div>
-
+  }
+  @if (sectionStructuresDisplayed) {
+  <app-user-structures class="widget" [user]="user" (listUpdated)="reload()"
+    (displayStructureView)="displayStructureView.emit($event)"></app-user-structures>
+  }
 
 </div>
 
-<app-modal-confirm-delete (delete)="onDelete()"
-  title="Voulez-vous supprimer cet utilisateur de façon permanente ?" (closeDialog)="showDeleteModal.set(false)"
-  [visible]="showDeleteModal()"></app-modal-confirm-delete>
+
+
+
+<app-modal-confirm-delete (delete)="onDelete()" title="Voulez-vous supprimer cet utilisateur de façon permanente ?"
+  (closeDialog)="showDeleteModal.set(false)" [visible]="showDeleteModal()"></app-modal-confirm-delete>

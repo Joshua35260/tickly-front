@@ -18,6 +18,7 @@ import { MenuModule } from 'primeng/menu';
   ]
 })
 export class UserRowComponent {
+  delete = output<number>();
   user = input.required<User>();
   constructor() { }
 
@@ -25,12 +26,24 @@ export class UserRowComponent {
   openUser = output<number>();
 
   withMenu = input<boolean>();
-  menuItems = input<MenuItem[]>();
 
+  menuItems: MenuItem[] = [
+    {
+      label: 'Supprimer',
+      icon: 'icon-trashcan',
+      command: () => {
+        this.onDelete();
+      }
+    }
+  ];
   onMenuOpen() {
     this.menuOpened.emit(this.user().id);
   }
   getRoleNames(): string {
     return this.user().roles.map(role => role.role).join(', ');
+  }
+  
+  onDelete() {
+    this.delete.emit(this.user().id);
   }
 }
