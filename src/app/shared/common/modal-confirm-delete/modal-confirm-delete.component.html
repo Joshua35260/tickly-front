@@ -1,14 +1,15 @@
-  <app-form-dialog (closeDialog)="onCancel()" [visible]="visible()" [size]="size()">
-    <div class="in">
-    <form [formGroup]="deleteForm">
-      <fieldset class="widget">
-        <app-input formControlName="delete" label='Écrivez "supprimer" pour confirmer la suppression'></app-input>
-      </fieldset>
-      <div class="actions">
-        <p-button [disabled]="!canDelete()" label="!! Supprimer !!" severity="danger" icon="icon-trashcan" iconPos="left"
-          (click)="onDelete()"></p-button>
-        <a class="cancel" (click)="onCancel()">Annuler</a>
-      </div>
-    </form>
-  </div>
+<app-form-dialog (closeDialog)="onCancel()" [visible]="visible()" [size]="size()">
+  <div class="in">
+  <app-widget-title title="{{title()}}" icon="icon-warning"></app-widget-title>
+  <form [formGroup]="deleteForm">
+    <fieldset class="widget">
+      <app-input formControlName="delete" label='Écrivez "supprimer" pour confirmer la suppression'></app-input>
+    </fieldset>
+    <div class="actions">
+      <p-button [disabled]="!canDelete()" label="!! Supprimer !!" severity="danger" icon="icon-trashcan" iconPos="left"
+        (click)="onDelete()"></p-button>
+      <a class="cancel" (click)="onCancel()">Annuler</a>
+    </div>
+  </form>
+</div>
 </app-form-dialog>

@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, input, output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { RightPanelSection } from '@app/core/models/enums/right-panel-section.enum';
 import { User } from '@app/core/models/user.class';
@@ -7,16 +15,23 @@ import { UserService } from '@app/core/services/user.service';
 import { ModalConfirmDeleteComponent } from '@app/shared/common/modal-confirm-delete/modal-confirm-delete.component';
 import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { BehaviorSubject, distinctUntilChanged, Observable, shareReplay, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  Observable,
+  shareReplay,
+  switchMap,
+} from 'rxjs';
 import { startWith, take } from 'rxjs/operators';
 import { UserInfoComponent } from '../components/user-info/user-info.component';
 import { jobType } from '@app/core/models/enums/job-type.enum';
 import { UserStructuresComponent } from '../components/user-structures/user-structures.component';
+import { WidgetTitleComponent } from '../../../shared/common/widget-title/widget-title.component';
 
 @Component({
   selector: 'app-user-view',
   templateUrl: './user-view.component.html',
-  styleUrls: [ './user-view.component.scss' ],
+  styleUrls: ['./user-view.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -25,7 +40,8 @@ import { UserStructuresComponent } from '../components/user-structures/user-stru
     ButtonModule,
     UserInfoComponent,
     UserStructuresComponent,
-  ]
+    WidgetTitleComponent,
+  ],
 })
 export class UserViewComponent implements OnInit {
   displayStructureView = output<number>();
@@ -39,30 +55,44 @@ export class UserViewComponent implements OnInit {
   deleted = output<void>();
 
   user$: Observable<User>;
-  private reloadUser$: BehaviorSubject<void> = new BehaviorSubject<void>(void 0);
+  private reloadUser$: BehaviorSubject<void> = new BehaviorSubject<void>(
+    void 0
+  );
 
   showDeleteModal = signal<boolean>(false);
 
   get sectionInfoDisplayed() {
-    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_INFO;
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_INFO
+    );
   }
 
   get sectionActionsDisplayed() {
-    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS;
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS
+    );
   }
   get sectionStructuresDisplayed() {
-    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_STRUCTURES;
+    return (
+      this.sectionDisplayed() ===
+      RightPanelSection.RIGHT_PANEL_SECTION_STRUCTURES
+    );
   }
 
   constructor(
     private destroyRef: DestroyRef,
     private userService: UserService,
-    private confirmationService: ConfirmationService,
+    private confirmationService: ConfirmationService
   ) {
-    }
+    this.userService.entityChanged$ //reload users automatically on crud activity on this service
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.reload();
+      });
+  }
 
   ngOnInit() {
-    this.loadUser();    
+    this.loadUser();
   }
   loadUser() {
     this.user$ = this.userId$.pipe(
@@ -70,13 +100,13 @@ export class UserViewComponent implements OnInit {
       distinctUntilChanged(),
       switchMap(() => this.reloadUser$), // Utiliser la BehaviorSubject pour déclencher le rechargement
       takeUntilDestroyed(this.destroyRef),
-      switchMap(() => this.userService.getUser(this.userId())),
-      switchMap(user => {
+      switchMap(() => this.userService.getById(this.userId())),
+      switchMap((user) => {
         // Émettre le jobType après le chargement de l'utilisateur
         this.jobTypeOutputOnLoad.emit(user.jobTypeId);
         return [user]; // Transformer la réponse en tableau pour que shareReplay fonctionne
       }),
-      shareReplay(1), // Partager la dernière valeur
+      shareReplay(1) // Partager la dernière valeur
     );
   }
 
@@ -84,14 +114,33 @@ export class UserViewComponent implements OnInit {
     this.reloadUser$.next();
   }
 
-  onEdit(user:User) {
+  onEdit(user: User) {
     this.edit.emit(user.id);
   }
 
   onDelete() {
-        this.userService.deleteUser(this.userId()).subscribe(() => this.deleted.emit());
+    this.userService.delete(this.userId()).subscribe(() => this.deleted.emit());
   }
-
+  archive() {
+    this.confirmationService.confirm({
+      message: 'Voulez-vous archiver ce contact?',
+      icon: 'icon-warning',
+      header: 'Confirmation',
+      dismissableMask: true,
+      accept: () => {
+        this.user$
+          .pipe(
+            take(1),
+            switchMap((user: User) =>
+              this.userService.update({ ...user, archive: true })
+            )
+          )
+          .subscribe(() => {
+            this.reload();
+          });
+      },
+    });
+  }
   // onArchive(isArchived: boolean) {
   //   this.confirmationService.confirm({
   //     message: isArchived ? 'Voulez-vous désarchiver ce contact?' : 'Voulez-vous archiver ce contact?',

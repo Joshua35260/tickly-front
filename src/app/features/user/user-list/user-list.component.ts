@@ -61,11 +61,15 @@ export class UserListComponent implements OnInit {
   constructor(
     private userService: UserService,
     private destroyRef: DestroyRef
-  ) {}
+  ) {
+    this.userService.entityChanged$ //reload users automatically on crud activity on this service
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadUsers();
+      })
+  }
 
   ngOnInit() {
-
-    
   }
 
 
@@ -81,7 +85,7 @@ export class UserListComponent implements OnInit {
 
   loadUsers() {
     this.userService
-      .getPaginatedUsers(this.page, this.rows)
+      .getPaginated(this.page, this.rows)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         this.users.set(data.items);
@@ -91,61 +95,61 @@ export class UserListComponent implements OnInit {
       });
   }
   addMarkers(users: User[]) {
- 
     setTimeout(() => {
-      
+        // Clear existing markers first
+        this.itemsMarkers.clearLayers(); 
 
-    // Clear existing markers first
-    this.itemsMarkers.clearLayers(); 
+        if (users?.length === 0) {
+            // Set a default position for the map
+            this.map?.setView(L.latLng(48.864716, 2.349014), 5); 
+            return; 
+        }
 
-    if (users.length === 0) {
-      // Optionally, if there are no users, you can set a default position for the map
-      this.map.setView(L.latLng(48.864716, 2.349014), 5); // Default view
-      return; // Exit early if there are no users
-    }
+        users.forEach(user => {
+            if (user.address && user.address.latitude && user.address.longitude) {
+                const latitude = parseFloat(user.address.latitude.toString());
+                const longitude = parseFloat(user.address.longitude.toString());
 
-    users.forEach(user => {
-      if (!!user.address) {
-    
-          const latitude = parseFloat(user.address.latitude.toString());
-          const longitude = parseFloat(user.address.longitude.toString());
+                // Vérifiez si latitude et longitude sont valides
+                if (!isNaN(latitude) && !isNaN(longitude)) {
+                    // Create custom icon
+                    const customIcon = L.icon({
+                        iconUrl: 'images/images/marker-icon.png', 
+                        shadowUrl: 'images/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        shadowSize: [41, 41],
+                        iconAnchor: [12, 41],
+                        shadowAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                    });
 
-          // Create custom icon
-          const customIcon = L.icon({
-            iconUrl: 'images/images/marker-icon.png', 
-            shadowUrl: 'images/images/marker-shadow.png',
-            iconSize: [25, 41],
-            shadowSize: [41, 41],
-            iconAnchor: [12, 41],
-            shadowAnchor: [12, 41],
-            popupAnchor: [1, -34],
-          });
+                    const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(`
+                        <strong>${user.firstname} ${user.lastname}</strong><br>
+                        ${user.address.streetL1 || ''}<br>
+                        ${user.address.city}, ${user.address.postcode}
+                    `);
+                    
+                    this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
+                } else {
+                    console.warn(`Invalid coordinates for user: ${user.firstname} ${user.lastname}`);
+                }
+            } else {
+                console.warn(`Missing address for user: ${user.firstname} ${user.lastname}`);
+            }
+        });
 
-          const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(`
-            <strong>${user.firstname} ${user.lastname}</strong><br>
-            ${user.address.streetL1 || ''}<br>
-            ${user.address.city}, ${user.address.postcode}
-          `);
-            
-          this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
-        
-      }
-    });
-
-    // Center the map only if markers are present
-    if (this.itemsMarkers.getLayers().length > 0) {
-      this.centerMap(); // Call centerMap after all markers are added
-      
-    }
-  }, 100);
-
+        // Center the map only if markers are present
+        if (this.itemsMarkers?.getLayers().length > 0) {
+            this.centerMap(); // Call centerMap after all markers are added
+        }
+    }, 100);
 }
   
 
 centerMap() {
-  const bounds = this.itemsMarkers.getBounds();
-  this.map.fitBounds(bounds); // Fit map to bounds of markers
-  this.map.invalidateSize(); // Invalidate size to ensure correct rendering
+  const bounds = this.itemsMarkers?.getBounds();
+  this.map?.fitBounds(bounds); // Fit map to bounds of markers
+  this.map?.invalidateSize(); // Invalidate size to ensure correct rendering
 }
 
   onPageChange(event: PageEvent) {

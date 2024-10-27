@@ -77,7 +77,7 @@ export class RegisterComponent {
       const registrationData = this.registerForm.value;
     
       this.userService
-        .registerUser(registrationData)
+        .create(registrationData)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => this.switchView.emit(),

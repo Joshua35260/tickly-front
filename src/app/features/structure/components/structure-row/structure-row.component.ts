@@ -32,22 +32,15 @@ export class StructureRowComponent implements AfterViewInit {
 
   structure = input.required<Structure>();
   withMenu = input<boolean>(false);
-
+  menuItemsInput = input<MenuItem[]>();
+  
   avatarTopHeight = signal<number>(undefined);
   avatarTopWidth = signal<number>(undefined);
   avatarBottomHeight = signal<number>(undefined);
   avatarBottomWidth = signal<number>(undefined);
   iconColor = signal<string>('');
+ 
 
-  menuItems: MenuItem[] = [
-    {
-      label: 'Supprimer',
-      icon: 'icon-trashcan',
-      command: () => {
-        this.delete.emit(this.structure().id);
-      },
-    },
-  ];
   constructor() {}
 
   ngAfterViewInit() {
@@ -68,5 +61,8 @@ export class StructureRowComponent implements AfterViewInit {
       )
     );
   }
-
+  onMenuClick(event: Event, menu: any): void {
+    menu.toggle(event);
+    this.menuOpened.emit(this.structure().id);
+  }
 }

@@ -1,6 +1,6 @@
 <!--! don't forget to use the _card.scss file for the css !-->
 
-<div class="card">
+<div [ngClass]="user().archive ? 'card archive':'card'">
 
   <div class="card-top only" (click)="openUser.emit(user().id)">
     <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'">

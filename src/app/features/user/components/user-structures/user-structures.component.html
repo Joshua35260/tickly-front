@@ -65,7 +65,7 @@ size="medium" >
   <div body class="scroll-list">
 
     @for (structure of filteredAndSortedStructures(); track structure.id) {
-    <app-structure-row [structure]="structure" [withMenu]="true" (openStructure)="displayStructureView.emit(structure.id)" (delete)="onDelete($event)"></app-structure-row>
+    <app-structure-row [structure]="structure" (menuOpened)="setEntityIdFromMenu($event)" [menuItemsInput]="menuItems" [withMenu]="true" (openStructure)="displayStructureView.emit(structure.id)"></app-structure-row>
     }
 
   </div>

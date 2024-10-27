@@ -10,6 +10,19 @@
   }
 }
 
+.no-bg .card {
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  cursor: default;
+  .card-trigram, .card-icones, .card-contact{
+    display: none;
+  }
+  &:hover {
+    background-color: transparent;
+    cursor: default;
+  }
+}
 
 .card {
   position: relative;
@@ -34,13 +47,21 @@
     }
   }
 
+
   .icon-menu {
     position: absolute;
-    top: 42%;
+    top: 0;
+    height: 100%;
     right: 0px;
+    bottom:0;
     text-align: center;
     z-index: 10;
-    width: 36px;
+    width: 50px;
+    &::before {
+      position: absolute;
+      top: 24px;
+      right: 15px;
+    }
   }
   
   .icon-favorite {

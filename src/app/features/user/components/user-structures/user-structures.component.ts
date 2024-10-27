@@ -61,8 +61,8 @@ export class UserStructuresComponent implements OnInit {
   user = input.required<User>();
   private user$: Observable<User> = toObservable(this.user);
 
-  rowId?: number;
-  menuItems: MenuItem[] | undefined;
+  entityIdFromMenu?: number;
+  menuItems: MenuItem[];
 
   filteredStructures = signal<Structure[]>([]);
   structureAttachedToSite = signal<any[]>([]);
@@ -105,7 +105,15 @@ export class UserStructuresComponent implements OnInit {
     private destroyRef: DestroyRef,
     private structureService: StructureService,
     private router: Router
-  ) {}
+  ) {
+    this.menuItems = [
+      {
+        label: 'Détacher',
+        icon: 'icon-trashcan',
+        command: () => this.deleteAttachment(),
+      },
+    ];
+  }
 
   ngOnInit() {
     this.user$
@@ -116,7 +124,6 @@ export class UserStructuresComponent implements OnInit {
 
     this.initStructureAttachedForm();
     this.initNewStructureForm();
-    console.log(this.user().structures);
   }
 
   loadStructuresAttachedToUser() {
@@ -151,8 +158,8 @@ export class UserStructuresComponent implements OnInit {
 
   onSortChanged(event) {
     this.selectedOption.set(event.value);
-    console.log(this.selectedOption());
   }
+
   initNewStructureForm() {
     this.newStructureForm = new FormGroup({
       selectedNewStructure: new FormControl(null, Validators.required),
@@ -170,8 +177,8 @@ export class UserStructuresComponent implements OnInit {
         });
       });
   }
-  setRowId(id: number) {
-    this.rowId = id;
+  setEntityIdFromMenu(id: number) {
+    this.entityIdFromMenu = id;
   }
   onAttach() {
     const selectedStructureId =
@@ -186,9 +193,9 @@ export class UserStructuresComponent implements OnInit {
         this.subFormOpened = false;
       });
   }
-  onDelete(id: number) {
+  deleteAttachment() {
     this.structureService
-      .deleteStructureFromUser(this.user().id, id)
+      .deleteStructureFromUser(this.user().id, this.entityIdFromMenu)
       .pipe(take(1))
       .subscribe(() => {
         this.listUpdated.emit();

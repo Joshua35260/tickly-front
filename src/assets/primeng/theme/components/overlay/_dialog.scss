@@ -1,162 +1,215 @@
+.p-dialog {
+  background: #ffffff;
+  padding: 20px 10px 10px 10px;
+}
 .p-dialog.no-header {
   
   .p-dialog-content {
-    padding: $dialogContentNoHeaderPadding;
+    // padding: $dialogContentNoHeaderPadding;
+    width: 100vw;
+    max-width: 1100px;
+    overflow-y: auto;
+    overflow-x: hidden;
     @include sm {
-      width: 96vw;
+      width: 90vw;
     }
     @include md {
       min-width: 90vw;
+      max-width: 900px;
     }
-  }
-}
-.p-dialog.form-dialog {
-  .p-dialog-content {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-}
-.p-dialog.xxxlarge {
-  .p-dialog-content {
-    max-height: 90vh;
-    max-width: 1000px;
-    min-width: 55vw;
-  }
-}
-
-.p-dialog.xxlarge {
-  .p-dialog-content {
-    width: 100vw;
-    max-height: 90vh;
-    max-width: 900px;
   }
 }
 
 .p-dialog.xlarge {
   .p-dialog-content {
-    overflow: visible;
     width: 100vw;
-    max-width: 900px;
+    max-width: 1100px;
+    @include sm {
+      width: 90vw;
+    }
+    @include md {
+      width: 90vw;
+    }
   }
 }
 
 .p-dialog.large {
   .p-dialog-content {
-    overflow: visible;
     width: 100vw;
-    max-width: 750px;
+    max-width: 900px;
+    @include sm {
+      width: 90vw;
+    }
+    @include md {
+      width: 90vw;
+    }
   }
 }
 
 .p-dialog.medium {
   .p-dialog-content {
-    overflow: visible;
     width: 100vw;
     max-width: 700px;
+    @include sm {
+      width: 90vw;
+    }
   }
 }
-
 .p-dialog {
-    border-radius: 0;
-    box-shadow: $overlayContainerShadow;
-    border: $overlayContentBorder;
+  // border-radius: $borderRadius20;
+  box-shadow: $overlayContainerShadow;
+  border: $overlayContentBorder;
 
-    .p-dialog-header {
-        border-bottom: $dialogHeaderBorder;
-        background: $dialogHeaderBg;
-        color: $dialogHeaderTextColor;
-        padding: $dialogHeaderPadding;
-        border-top-right-radius: $borderRadius10;
-        border-top-left-radius: $borderRadius10;
+  .p-dialog-header {
+    border-bottom: $dialogHeaderBorder;
+    background: $dialogHeaderBg;
+    color: $dialogHeaderTextColor;
+    padding: $dialogHeaderPadding;
+    border-top-right-radius: $borderRadius10;
+    border-top-left-radius: $borderRadius10;
 
-        .p-dialog-title {
-            font-weight: $dialogHeaderFontWeight;
-            font-size: $dialogHeaderFontSize;
-        }
-
-        .p-dialog-header-icon {
-            @include action-icon();
-            margin-right: $inlineSpacing;
-
-            &:hover {
-              background-color: $primaryColor;
-          }
-            &:last-child {
-                margin-right: 0;
-            }
-        }
+    .p-dialog-title {
+      font-weight: $dialogHeaderFontWeight;
+      font-size: $dialogHeaderFontSize;
     }
 
-    .p-dialog-content {
-        background: $overlayContentBg;
-        color: $panelContentTextColor;
-        padding: $dialogContentPadding;
+    .p-dialog-header-icon {
+      @include action-icon();
+      margin-right: $inlineSpacing;
 
-        &:last-of-type {
-            border-radius: 0;
-        }
-    }
-
-    .p-dialog-footer {
-        border-top:  $dialogFooterBorder;
-        background: $overlayContentBg;
-        color: $panelFooterTextColor;
-        padding: $dialogFooterPadding;
-        text-align: right;
-        border-bottom-right-radius: $borderRadius10;
-        border-bottom-left-radius: $borderRadius10;
-
-        button {
-            margin: 0 $inlineSpacing 0 0;
-            width: auto;
-        }
-    }
-
-// confirmation modal //
-    &.p-confirm-dialog {
-      color: red;
-      .p-dialog-titlebar-close {
-        color: $primaryColor;
-        border: 8px solid blue;
+      &:hover {
+        background-color: $primaryColor;
       }
-      .p-dialog-header-close {
 
-          position: absolute;
-          top: -17px;
-          right: -17px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 38px;
-          height: 38px;
-          padding: 0;
-          color: white;
-          background-color: $primaryColor;
-          &:hover {
-            background-color: $primaryColor!important;
-            .icon-close {
-              color:  var(--primary-text-color);
-              transition: all 0.5s ease-in-out;
-            }
-        }
-
-        }
-
-
-        .p-confirm-dialog-icon {
-            font-size: $primeIconFontSize * 2;
-            color: $primaryColor;
-            &.p-icon {
-                width: $primeIconFontSize * 2;
-                height: $primeIconFontSize * 2;
-            }
-        }
-
-        .p-confirm-dialog-message {
-            margin-left: $inlineSpacing * 2;
-        }
+      &:last-child {
+        margin-right: 0;
+      }
     }
+  }
+
+  .p-dialog-content {
+    background: $overlayContentBg;
+    color: $panelContentTextColor;
+    // padding: $dialogContentPadding;
+    padding-right: 10px;
+    padding-left: 10px;
+
+    &:last-of-type {
+      // border-radius: $borderRadius20;
+    }
+  }
+
+  .p-dialog-footer {
+    border-top: $dialogFooterBorder;
+    background: $overlayContentBg;
+    color: $panelFooterTextColor;
+    padding: $dialogFooterPadding;
+    text-align: right;
+    border-bottom-right-radius: $borderRadius10;
+    border-bottom-left-radius: $borderRadius10;
+
+    button {
+      margin: 0 $inlineSpacing 0 0;
+      width: auto;
+    }
+  }
+
+  // confirmation modal //
+  &.p-confirm-dialog {
+
+    .p-dialog-titlebar-close {
+      color: $primaryColor;
+    }
+
+    .p-dialog-header-close {
+
+      position: absolute;
+      top: -17px;
+      right: -17px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      box-shadow: 3px 3px 3px #00000029;
+      color: white;
+      background-color: $primaryColor;
+
+      &:hover {
+        background-color: $primaryColor !important;
+
+        .icon-close {
+          color: var(--primary-text-color);
+          transition: all 0.5s ease-in-out;
+        }
+      }
+
+    }
+
+
+    .p-confirm-dialog-icon {
+      font-size: $primeIconFontSize * 2;
+      color: $primaryColor;
+
+      &.p-icon {
+        width: $primeIconFontSize * 2;
+        height: $primeIconFontSize * 2;
+      }
+    }
+
+    .p-confirm-dialog-message {
+      margin-left: $inlineSpacing * 2;
+    }
+  }
+
+  .p-dialog-footer {
+    padding-top: 10px;
+    display: flex;
+    gap: 30px;
+    justify-content: flex-end;
+
+    .p-confirm-dialog-reject {
+      background: none;
+      color: $primaryTextColor;
+      border: none;
+      text-decoration: underline;
+      padding: 0;
+      order: 2;
+
+      .p-button-icon-left {
+        display: none;
+      }
+
+      * {
+        background: none;
+        color: $primaryTextColor;
+        border: none;
+        text-decoration: underline;
+      }
+    }
+
+    .p-confirm-dialog-reject:enabled:hover,
+    .p-confirm-dialog-reject:hover {
+      background: none;
+      color: $primaryTextColor;
+      border: none;
+      text-decoration: underline;
+
+      * {
+        color: black;
+        transition: all 0.5s ease-in-out;
+      }
+
+      .p-button-icon-left {
+        display: none;
+      }
+    }
+
+    .p-confirm-dialog-accept {
+      order: 1
+    }
+  }
+
 }
-
-

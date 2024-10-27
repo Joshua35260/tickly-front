@@ -1,4 +1,4 @@
-<app-widget-title [title]="userId() ? 'Modifier le compte' : 'Créer un compte'" icon="icon-profile"></app-widget-title>
+<app-widget-title [title]="userId() ? 'Modifier l\'utilisateur' : 'Créer un compte'" icon="icon-profile"></app-widget-title>
 
 <form class="card-body sm:grid grid-cols-1 flex flex-col gap-medium" [formGroup]="userForm" (ngSubmit)="onSubmit()">
 

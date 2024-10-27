@@ -99,7 +99,7 @@ export class UserCreateEditComponent {
       .subscribe((id: number) => {
         if (id) {
           this.userService
-            .getUser(id)
+            .getById(id)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((user: User) => {
               this.user.set(user);
@@ -174,7 +174,7 @@ export class UserCreateEditComponent {
       if (this.userId()) {
         userData.id = this.userId();
         this.userService
-          .updateUser(userData)
+          .update(userData)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => this.saved.emit(),
@@ -183,7 +183,7 @@ export class UserCreateEditComponent {
       } else {
         // ADD
         this.userService
-          .registerUser(userData)
+          .create(userData)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => this.saved.emit(),

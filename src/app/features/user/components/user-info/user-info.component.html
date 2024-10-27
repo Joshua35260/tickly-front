@@ -7,8 +7,8 @@
     <app-avatar class="avatar" [avatarUrl]="user().avatarUrl" [fullname]="user().firstname + ' ' + user().lastname"></app-avatar>
     <div class="names">
       <div class="fullname">
-        <span class="name">{{user().lastname}}</span>&nbsp;
-        <span class="firstname">{{user().firstname}}</span>
+        <span class="name">{{user().firstname}}</span>&nbsp;
+        <span class="firstname">{{user().lastname}}</span>
       </div>
       <div class="roles" *ngIf="user().roles.length > 0">
         <ng-container *ngFor="let role of user().roles; let last = last">
@@ -27,7 +27,6 @@
       <div class="small-title"><i class="icon-location"></i>Localisation</div>
   
       <div class="localisation-main">
-   
           <div class="localisation-main-value">{{ user().address.streetL1 }}</div>
           <div class="localisation-main-value">{{  user().address.streetL2 }}</div>
           <div class="localisation-main-value">{{  user().address.postcode }} {{  user().address.city }}</div>

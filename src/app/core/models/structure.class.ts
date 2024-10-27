@@ -12,4 +12,5 @@ export class Structure {
   phones: Phone[];
   users?: User[];
   address: Address;
+  archive?: boolean;
 }
