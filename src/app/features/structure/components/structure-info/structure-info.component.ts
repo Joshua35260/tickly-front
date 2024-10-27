@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, input, OnInit, output } from '@angu
 import { RightPanelSection } from '@app/core/models/enums/right-panel-section.enum';
 import { Structure } from '@app/core/models/structure.class';
 import { AvatarComponent } from '@app/shared/common/avatar/avatar.component';
+import { FlagComponent } from '@app/shared/common/flag/flag.component';
 import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-title.component';
 import { WidgetComponent } from '@app/shared/common/widget/widget.component';
 
@@ -17,6 +18,8 @@ import { WidgetComponent } from '@app/shared/common/widget/widget.component';
     WidgetComponent,
     AvatarComponent,
     WidgetTitleComponent,
+    FlagComponent,
+    AvatarComponent,
   ]
 })
 export class StructureInfoComponent implements OnInit {

@@ -10,7 +10,7 @@
     <div class="flex flex-col gap-medium">
       <app-widget-title title="Actions d'administrations" subtitle="Ces actions peuvent avoir des répercussions sur l'intégralité des données" icon="icon-gears"></app-widget-title>
       <div class="actions">
-        <p-button severity="warning" icon="icon-archive" [label]="user.archive ? 'Désarchiver' : 'Archiver'" (click)="archive()"></p-button>
+        <p-button severity="warning" icon="icon-archive" [label]="user.archive ? 'Désarchiver' : 'Archiver'" (click)="onArchive(user?.archive)"></p-button>
         <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
           (click)="showDeleteModal.set(true)"></p-button>
       </div>

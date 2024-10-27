@@ -22,4 +22,6 @@ export class Ticket {
   priority: Priority;
 
   category: Category[];
+
+  archive?: boolean;
 }

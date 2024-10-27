@@ -15,7 +15,6 @@ import { Structure } from '@app/core/models/structure.class';
 import { StructureService } from '@app/core/services/structure.service';
 import { StructureRowComponent } from '@app/features/structure/components/structure-row/structure-row.component';
 
-
 interface PageEvent {
   first?: number;
   rows?: number;
@@ -61,7 +60,13 @@ export class StructureListComponent {
   constructor(
     private structureService: StructureService,
     private destroyRef: DestroyRef
-  ) {}
+  ) {
+    this.structureService.entityChanged$ //reload users automatically on crud activity on this service
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadStructures();
+      });
+  }
 
   onMapReady(map: L.Map) {
     this.map = map; // Set the map reference
@@ -72,71 +77,73 @@ export class StructureListComponent {
     return this.itemsMarkers ? this.itemsMarkers.getLayers() : [];
   }
 
-
   loadStructures() {
     this.structureService
-      .getPaginatedStructures(this.page, this.rows)
+      .getPaginated(this.page, this.rows)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         this.structures.set(data.items);
         this.itemCount = data.total; // Mettre à jour le nombre total d'items
         this.addMarkers(data.items); // Ajouter des marqueurs
-        
       });
   }
   addMarkers(structures: Structure[]) {
     setTimeout(() => {
-    
-    // Clear existing markers first
-    this.itemsMarkers.clearLayers(); 
+      // Clear existing markers first
+      this.itemsMarkers.clearLayers();
 
-    if (structures.length === 0) {
-      // Optionally, if there are no structures, you can set a default position for the map
-      this.map.setView(L.latLng(48.864716, 2.349014), 5); // Default view
-      return; // Exit early if there are no structures
-    }
+      if (structures.length === 0) {
+        // Optionally, if there are no structures, you can set a default position for the map
+        this.map.setView(L.latLng(48.864716, 2.349014), 5); // Default view
+        return; // Exit early if there are no structures
+      }
 
-    structures.forEach(structure => {
-      if (!!structure.address) {
-    
+      structures.forEach((structure) => {
+        if (
+          !!structure.address &&
+          !!structure.address.latitude &&
+          !!structure.address.longitude
+        ) {
           const latitude = parseFloat(structure.address.latitude.toString());
           const longitude = parseFloat(structure.address.longitude.toString());
+          if (!isNaN(latitude) && !isNaN(longitude)) {
+            // Create custom icon
+            const customIcon = L.icon({
+              iconUrl: 'images/images/marker-icon.png',
+              shadowUrl: 'images/images/marker-shadow.png',
+              iconSize: [25, 41],
+              shadowSize: [41, 41],
+              iconAnchor: [12, 41],
+              shadowAnchor: [12, 41],
+              popupAnchor: [1, -34],
+            });
 
-          // Create custom icon
-          const customIcon = L.icon({
-            iconUrl: 'images/images/marker-icon.png', 
-            shadowUrl: 'images/images/marker-shadow.png',
-            iconSize: [25, 41],
-            shadowSize: [41, 41],
-            iconAnchor: [12, 41],
-            shadowAnchor: [12, 41],
-            popupAnchor: [1, -34],
-          });
-
-          const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(`
+            const marker = L.marker([latitude, longitude], { icon: customIcon })
+              .bindPopup(`
             <strong>${structure.name}</strong><br>
             ${structure.address.streetL1 || ''}<br>
             ${structure.address.city}, ${structure.address.postcode}
           `);
-            
-          this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
-        
+
+            this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
+          } else {
+            console.warn(`Invalid coordinates for ticket: ${structure.name} `);
+          }
+        } 
+      });
+
+      // Center the map only if markers are present
+      if (this.itemsMarkers?.getLayers().length > 0) {
+        this.centerMap(); // Call centerMap after all markers are added
       }
-    });
+    }, 100);
+  }
 
-    // Center the map only if markers are present
-    if (this.itemsMarkers.getLayers().length > 0) {
-      this.centerMap(); // Call centerMap after all markers are added
-    }
-  }, 100);
-}
-  
-
-centerMap() {
-  const bounds = this.itemsMarkers.getBounds();
-  this.map.fitBounds(bounds); // Fit map to bounds of markers
-  this.map.invalidateSize(); // Invalidate size to ensure correct rendering
-}
+  centerMap() {
+    const bounds = this.itemsMarkers.getBounds();
+    this.map.fitBounds(bounds); // Fit map to bounds of markers
+    this.map.invalidateSize(); // Invalidate size to ensure correct rendering
+  }
 
   onPageChange(event: PageEvent) {
     this.first = event.first;

@@ -3,7 +3,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { jobType } from '@app/core/models/enums/job-type.enum';
 import { RightPanelSection } from '@app/core/models/enums/right-panel-section.enum';
 import { UserViewComponent } from '@app/features/user/user-view/user-view.component';
 import { SidebarComponent } from '@app/shared/common/layout/sidebar/sidebar.component';
@@ -23,9 +22,7 @@ import { MenuSidebar } from '@app/shared/common/layout/sidebar/sidebar.model';
 
 export class UserViewContainerComponent {
 
-  dataMenu = computed<MenuSidebar[]>(() => {
-    // Commencez par définir le tableau de base
-    const menuItems: MenuSidebar[] = [
+  dataMenu: MenuSidebar[] = [
       {
         'panel': RightPanelSection.RIGHT_PANEL_SECTION_INFO,
         'title': '',
@@ -45,10 +42,7 @@ export class UserViewContainerComponent {
         'iconSpan': 0
       }
     ];
-  
-    // Si showStructureMenu est vrai, on retourne tous les éléments, sinon on exclut l'onglet structures
-    return this.showStructureMenu() ? menuItems : menuItems.filter((_, index) => index !== 1);
-  });
+
 
 
   showStructureMenu = signal<boolean>(false);
@@ -66,13 +60,7 @@ export class UserViewContainerComponent {
   get section(): RightPanelSection {
     return this.route.snapshot.params['section'];
   }
-  onJobTypeLoaded(jobTypeValue: jobType) {
-    if (jobTypeValue === jobType.EMPLOYEE) {
-      this.showStructureMenu.set(true);
-    } else {
-      this.showStructureMenu.set(false);
-    }
-  }
+
 checkIfUserIsEmployee(): boolean {
   return this.route.snapshot.data['isEmployee'];
 }

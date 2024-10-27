@@ -22,10 +22,10 @@
         </div>
 
         <div class="card-contact">
-          <div class="card-small-icon" *ngIf="user().phones && user().phones.length > 0"><i class="icon-phone"></i>
-            {{user().phones?.[0].phone}}</div>
-          <div class="card-small-icon" *ngIf="user().emails && user().emails.length > 0"><i class="icon-mail"></i>
-            {{user().emails?.[0].email}}</div>
+          <div class="card-small-icon" *ngIf="user().phone"><i class="icon-phone"></i>
+            {{user().phone}}</div>
+          <div class="card-small-icon" *ngIf="user().email"><i class="icon-mail"></i>
+            {{user().email}}</div>
         </div>
       </div>
 

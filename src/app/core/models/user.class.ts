@@ -1,7 +1,4 @@
 import { Address } from "./address.class";
-import { Email } from "./email.class";
-import { jobType } from "./enums/job-type.enum";
-import { Phone } from "./phone.class";
 import { Role } from "./role.class";
 import { Structure } from "./structure.class";
 
@@ -12,9 +9,8 @@ export class User {
   firstname: string;
   lastname: string;
   roles: Role[];
-  emails: Email[];
-  phones: Phone[];
-  jobTypeId : jobType;
+  email: string;
+  phone: string;
   address: Address;
   avatarUrl?: string;
   archive?: boolean;

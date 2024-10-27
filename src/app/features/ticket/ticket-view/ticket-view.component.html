@@ -10,7 +10,7 @@
       <div class="widget height-auto">
 
         <div class="actions">
-          <p-button severity="warning" icon="icon-archive" [label]="ticket.archivedAt ? 'Désarchiver' : 'Archiver'" ></p-button>
+          <p-button severity="warning" icon="icon-archive" [label]="ticket.archivedAt ? 'Désarchiver' : 'Archiver'" (click)="onArchive(ticket?.archive)"></p-button>
           <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
             (click)="showDeleteModal.set(true)"></p-button>
         </div>

@@ -29,12 +29,7 @@ interface PageEvent {
   styleUrls: ['./user-list.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    UserRowComponent,
-    LeafletModule,
-    PaginatorModule,
-  ],
+  imports: [CommonModule, UserRowComponent, LeafletModule, PaginatorModule],
 })
 export class UserListComponent implements OnInit {
   displayUserView = output<number>();
@@ -66,12 +61,10 @@ export class UserListComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.loadUsers();
-      })
+      });
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 
   onMapReady(map: L.Map) {
     this.map = map; // Set the map reference
@@ -82,7 +75,6 @@ export class UserListComponent implements OnInit {
     return this.itemsMarkers ? this.itemsMarkers.getLayers() : [];
   }
 
-
   loadUsers() {
     this.userService
       .getPaginated(this.page, this.rows)
@@ -91,66 +83,65 @@ export class UserListComponent implements OnInit {
         this.users.set(data.items);
         this.itemCount = data.total; // Mettre à jour le nombre total d'items
         this.addMarkers(data.items); // Ajouter des marqueurs
-        
       });
   }
   addMarkers(users: User[]) {
     setTimeout(() => {
-        // Clear existing markers first
-        this.itemsMarkers.clearLayers(); 
+      // Clear existing markers first
+      this.itemsMarkers.clearLayers();
 
-        if (users?.length === 0) {
-            // Set a default position for the map
-            this.map?.setView(L.latLng(48.864716, 2.349014), 5); 
-            return; 
-        }
+      if (users?.length === 0) {
+        // Set a default position for the map
+        this.map?.setView(L.latLng(48.864716, 2.349014), 5);
+        return;
+      }
 
-        users.forEach(user => {
-            if (user.address && user.address.latitude && user.address.longitude) {
-                const latitude = parseFloat(user.address.latitude.toString());
-                const longitude = parseFloat(user.address.longitude.toString());
+      users.forEach((user) => {
+        if (user.address && user.address.latitude && user.address.longitude) {
+          const latitude = parseFloat(user.address.latitude.toString());
+          const longitude = parseFloat(user.address.longitude.toString());
 
-                // Vérifiez si latitude et longitude sont valides
-                if (!isNaN(latitude) && !isNaN(longitude)) {
-                    // Create custom icon
-                    const customIcon = L.icon({
-                        iconUrl: 'images/images/marker-icon.png', 
-                        shadowUrl: 'images/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        shadowSize: [41, 41],
-                        iconAnchor: [12, 41],
-                        shadowAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                    });
+          // Vérifiez si latitude et longitude sont valides
+          if (!isNaN(latitude) && !isNaN(longitude)) {
+            // Create custom icon
+            const customIcon = L.icon({
+              iconUrl: 'images/images/marker-icon.png',
+              shadowUrl: 'images/images/marker-shadow.png',
+              iconSize: [25, 41],
+              shadowSize: [41, 41],
+              iconAnchor: [12, 41],
+              shadowAnchor: [12, 41],
+              popupAnchor: [1, -34],
+            });
 
-                    const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(`
+            const marker = L.marker([latitude, longitude], { icon: customIcon })
+              .bindPopup(`
                         <strong>${user.firstname} ${user.lastname}</strong><br>
                         ${user.address.streetL1 || ''}<br>
                         ${user.address.city}, ${user.address.postcode}
                     `);
-                    
-                    this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
-                } else {
-                    console.warn(`Invalid coordinates for user: ${user.firstname} ${user.lastname}`);
-                }
-            } else {
-                console.warn(`Missing address for user: ${user.firstname} ${user.lastname}`);
-            }
-        });
 
-        // Center the map only if markers are present
-        if (this.itemsMarkers?.getLayers().length > 0) {
-            this.centerMap(); // Call centerMap after all markers are added
-        }
+            this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
+          } else {
+            console.warn(
+              `Invalid coordinates for user: ${user.firstname} ${user.lastname}`
+            );
+          }
+        } 
+      });
+
+      // Center the map only if markers are present
+      if (this.itemsMarkers?.getLayers().length > 0) {
+        this.centerMap(); // Call centerMap after all markers are added
+      }
     }, 100);
-}
-  
+  }
 
-centerMap() {
-  const bounds = this.itemsMarkers?.getBounds();
-  this.map?.fitBounds(bounds); // Fit map to bounds of markers
-  this.map?.invalidateSize(); // Invalidate size to ensure correct rendering
-}
+  centerMap() {
+    const bounds = this.itemsMarkers?.getBounds();
+    this.map?.fitBounds(bounds); // Fit map to bounds of markers
+    this.map?.invalidateSize(); // Invalidate size to ensure correct rendering
+  }
 
   onPageChange(event: PageEvent) {
     this.first = event.first;

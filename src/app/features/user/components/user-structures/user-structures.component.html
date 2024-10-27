@@ -93,7 +93,8 @@ size="medium" >
           emptyMessage="Aucune suggestion"
           appendTo="body"
           (keydown.enter)="onAttach()"
-          showClear="true"
+          [showClear]="true"
+          [dropdown]="true"
         >
         </p-autoComplete>
         <label>Rattacher une nouvelle structure</label>

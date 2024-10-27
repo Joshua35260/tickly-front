@@ -53,6 +53,11 @@ export class StructureViewComponent implements OnInit {
     private structureService: StructureService,
     private confirmationService: ConfirmationService,
   ) {
+    this.structureService.entityChanged$ //reload users automatically on crud activity on this service
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe(() => {
+      this.loadStructure();
+    })
     }
 
   ngOnInit() {
@@ -62,11 +67,11 @@ export class StructureViewComponent implements OnInit {
 
   loadStructure() {
     this.structure$ = this.structureId$.pipe(
-      startWith(this.structureId),
+      startWith(this.structureId()),
       distinctUntilChanged(),
       switchMap(() => this.reloadStructure$),
       takeUntilDestroyed(this.destroyRef),
-      switchMap(() => this.structureService.getStructure(this.structureId())),
+      switchMap(() => this.structureService.getById(this.structureId())),
       shareReplay(),
     );
   }
@@ -80,26 +85,26 @@ export class StructureViewComponent implements OnInit {
   }
 
   onDelete() {
-        this.structureService.deleteStructure(this.structureId()).subscribe(() => this.deleted.emit());
+        this.structureService.delete(this.structureId()).subscribe(() => this.deleted.emit());
   }
 
-  // onArchive(isArchived: boolean) {
-  //   this.confirmationService.confirm({
-  //     message: isArchived ? 'Voulez-vous désarchiver ce contact?' : 'Voulez-vous archiver ce contact?',
-  //     icon: 'icon-warning',
-  //     header:'Confirmation',
-  //     dismissableMask: true,
-  //     accept: () => {
-  //       this.structure$.pipe(
-  //         take(1),
-  //         switchMap((structure: Structure) => this.structureService.updateStructure(new Structure({
-  //           ...structure,
-  //           archive: isArchived ? false : true,
-  //         }))),
-  //       ).subscribe(() => {
-  //         this.reload();
-  //       });
-  //     }
-  //   });
-  // };
+  onArchive(isArchived: boolean) {
+    this.confirmationService.confirm({
+      message: isArchived ? 'Voulez-vous désarchiver ce contact?' : 'Voulez-vous archiver ce contact?',
+      icon: 'icon-warning',
+      header:'Confirmation',
+      dismissableMask: true,
+      accept: () => {
+        this.structure$.pipe(
+          take(1),
+          switchMap((structure: Structure) => this.structureService.update({
+            ...structure,
+            archive: isArchived ? false : true,
+          })),
+        ).subscribe(() => {
+          this.reload();
+        });
+      }
+    });
+  };
 }

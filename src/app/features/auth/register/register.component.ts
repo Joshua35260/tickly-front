@@ -18,7 +18,6 @@ import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { CommonModule } from '@angular/common';
-import { jobType, JobTypeDropdown } from '@app/core/models/enums/job-type.enum';
 import { StructureService } from '@app/core/services/structure.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-title.component';
@@ -43,8 +42,6 @@ import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-tit
 export class RegisterComponent {
   switchView = output<void>();
   registerForm: FormGroup;
-  jobType = jobType;
-  JobTypeDropdown = JobTypeDropdown;
   constructor(
     private userService: UserService,
     private structureService: StructureService,
@@ -58,7 +55,6 @@ export class RegisterComponent {
         Validators.required,
         Validators.minLength(4),
       ]),
-      jobType: new FormControl('', [Validators.required]),
       address: new FormGroup({
         streetL1: new FormControl('', [Validators.required]),
         streetL2: new FormControl(''),

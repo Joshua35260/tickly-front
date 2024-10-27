@@ -28,12 +28,7 @@ interface PageEvent {
   styleUrls: ['./ticket-list.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    CommonModule,
-    TicketRowComponent,
-    LeafletModule,
-    PaginatorModule,
-  ],
+  imports: [CommonModule, TicketRowComponent, LeafletModule, PaginatorModule],
 })
 export class TicketListComponent {
   displayTicketView = output<number>();
@@ -60,7 +55,13 @@ export class TicketListComponent {
   constructor(
     private ticketService: TicketService,
     private destroyRef: DestroyRef
-  ) {}
+  ) {
+    this.ticketService.entityChanged$ //reload users automatically on crud activity on this service
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadTickets();
+      });
+  }
 
   onMapReady(map: L.Map) {
     this.map = map; // Set the map reference
@@ -71,71 +72,80 @@ export class TicketListComponent {
     return this.itemsMarkers ? this.itemsMarkers.getLayers() : [];
   }
 
-
   loadTickets() {
     this.ticketService
-      .getPaginatedTickets(this.page, this.rows)
+      .getPaginated(this.page, this.rows)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         this.tickets.set(data.items);
         this.itemCount = data.total; // Mettre à jour le nombre total d'items
         this.addMarkers(data.items); // Ajouter des marqueurs
-        
       });
   }
   addMarkers(tickets: Ticket[]) {
     setTimeout(() => {
-    
-    // Clear existing markers first
-    this.itemsMarkers.clearLayers(); 
+      // Clear existing markers first
+      this.itemsMarkers.clearLayers();
 
-    if (tickets.length === 0) {
-      // Optionally, if there are no tickets, you can set a default position for the map
-      this.map.setView(L.latLng(48.864716, 2.349014), 5); // Default view
-      return; // Exit early if there are no tickets
-    }
+      if (tickets.length === 0) {
+        // Optionally, if there are no tickets, you can set a default position for the map
+        this.map.setView(L.latLng(48.864716, 2.349014), 5); // Default view
+        return; // Exit early if there are no tickets
+      }
 
-    tickets.forEach(ticket => {
-      if (!!ticket.author.address) {
-    
-          const latitude = parseFloat(ticket.author.address.latitude.toString());
-          const longitude = parseFloat(ticket.author.address.longitude.toString());
+      tickets.forEach((ticket) => {
+        if (
+          !!ticket.author.address &&
+          !!ticket.author.address.latitude &&
+          !!ticket.author.address.longitude
+        ) {
+          const latitude = parseFloat(
+            ticket.author.address.latitude.toString()
+          );
+          const longitude = parseFloat(
+            ticket.author.address.longitude.toString()
+          );
+          // Vérifiez si latitude et longitude sont valides
+          if (!isNaN(latitude) && !isNaN(longitude)) {
+            // Create custom icon
+            const customIcon = L.icon({
+              iconUrl: 'images/images/marker-icon.png',
+              shadowUrl: 'images/images/marker-shadow.png',
+              iconSize: [25, 41],
+              shadowSize: [41, 41],
+              iconAnchor: [12, 41],
+              shadowAnchor: [12, 41],
+              popupAnchor: [1, -34],
+            });
 
-          // Create custom icon
-          const customIcon = L.icon({
-            iconUrl: 'images/images/marker-icon.png', 
-            shadowUrl: 'images/images/marker-shadow.png',
-            iconSize: [25, 41],
-            shadowSize: [41, 41],
-            iconAnchor: [12, 41],
-            shadowAnchor: [12, 41],
-            popupAnchor: [1, -34],
-          });
-
-          const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(`
-            <strong>${ticket.author.firstname} ${ticket.author.lastname}</strong><br>
+            const marker = L.marker([latitude, longitude], { icon: customIcon })
+              .bindPopup(`
+            <strong>${ticket.author.firstname} ${
+              ticket.author.lastname
+            }</strong><br>
             ${ticket.author.address.streetL1 || ''}<br>
             ${ticket.author.address.city}, ${ticket.author.address.postcode}
           `);
-            
-          this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
-        
+
+            this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
+          } else {
+            console.warn(`Invalid coordinates for ticket: ${ticket.id} `);
+          }
+        }
+      });
+
+      // Center the map only if markers are present
+      if (this.itemsMarkers?.getLayers().length > 0) {
+        this.centerMap(); // Call centerMap after all markers are added
       }
-    });
+    }, 100);
+  }
 
-    // Center the map only if markers are present
-    if (this.itemsMarkers.getLayers().length > 0) {
-      this.centerMap(); // Call centerMap after all markers are added
-    }
-  }, 100);
-}
-  
-
-centerMap() {
-  const bounds = this.itemsMarkers.getBounds();
-  this.map.fitBounds(bounds); // Fit map to bounds of markers
-  this.map.invalidateSize(); // Invalidate size to ensure correct rendering
-}
+  centerMap() {
+    const bounds = this.itemsMarkers.getBounds();
+    this.map.fitBounds(bounds); // Fit map to bounds of markers
+    this.map.invalidateSize(); // Invalidate size to ensure correct rendering
+  }
 
   onPageChange(event: PageEvent) {
     this.first = event.first;

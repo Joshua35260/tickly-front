@@ -24,7 +24,6 @@ import {
 } from 'rxjs';
 import { startWith, take } from 'rxjs/operators';
 import { UserInfoComponent } from '../components/user-info/user-info.component';
-import { jobType } from '@app/core/models/enums/job-type.enum';
 import { UserStructuresComponent } from '../components/user-structures/user-structures.component';
 import { WidgetTitleComponent } from '../../../shared/common/widget-title/widget-title.component';
 
@@ -46,7 +45,7 @@ import { WidgetTitleComponent } from '../../../shared/common/widget-title/widget
 export class UserViewComponent implements OnInit {
   displayStructureView = output<number>();
   sectionDisplayed = input<RightPanelSection>();
-  jobTypeOutputOnLoad = output<jobType>();
+
 
   userId = input<number>();
   userId$: Observable<number> = toObservable(this.userId);
@@ -96,17 +95,12 @@ export class UserViewComponent implements OnInit {
   }
   loadUser() {
     this.user$ = this.userId$.pipe(
-      startWith(this.userId()), // Utiliser la valeur initiale de userId
+      startWith(this.userId()),
       distinctUntilChanged(),
-      switchMap(() => this.reloadUser$), // Utiliser la BehaviorSubject pour déclencher le rechargement
+      switchMap(() => this.reloadUser$),
       takeUntilDestroyed(this.destroyRef),
       switchMap(() => this.userService.getById(this.userId())),
-      switchMap((user) => {
-        // Émettre le jobType après le chargement de l'utilisateur
-        this.jobTypeOutputOnLoad.emit(user.jobTypeId);
-        return [user]; // Transformer la réponse en tableau pour que shareReplay fonctionne
-      }),
-      shareReplay(1) // Partager la dernière valeur
+      shareReplay(),
     );
   }
 
@@ -121,43 +115,24 @@ export class UserViewComponent implements OnInit {
   onDelete() {
     this.userService.delete(this.userId()).subscribe(() => this.deleted.emit());
   }
-  archive() {
+  onArchive(isArchived: boolean) {
     this.confirmationService.confirm({
-      message: 'Voulez-vous archiver ce contact?',
+      message: isArchived ? 'Voulez-vous désarchiver cet utilisateur ?' : 'Voulez-vous archiver cet utilisateur?',
       icon: 'icon-warning',
-      header: 'Confirmation',
+      header:'Confirmation',
       dismissableMask: true,
       accept: () => {
-        this.user$
-          .pipe(
-            take(1),
-            switchMap((user: User) =>
-              this.userService.update({ ...user, archive: true })
-            )
-          )
-          .subscribe(() => {
-            this.reload();
-          });
-      },
+        this.user$.pipe(
+          take(1),
+          switchMap((user: User) => this.userService.update({
+            ...user,
+            archive: isArchived ? false : true,
+          })),
+        ).subscribe(() => {
+          this.reload();
+        });
+      }
     });
-  }
-  // onArchive(isArchived: boolean) {
-  //   this.confirmationService.confirm({
-  //     message: isArchived ? 'Voulez-vous désarchiver ce contact?' : 'Voulez-vous archiver ce contact?',
-  //     icon: 'icon-warning',
-  //     header:'Confirmation',
-  //     dismissableMask: true,
-  //     accept: () => {
-  //       this.user$.pipe(
-  //         take(1),
-  //         switchMap((user: User) => this.userService.updateUser(new User({
-  //           ...user,
-  //           archive: isArchived ? false : true,
-  //         }))),
-  //       ).subscribe(() => {
-  //         this.reload();
-  //       });
-  //     }
-  //   });
-  // };
+  };
 }
+

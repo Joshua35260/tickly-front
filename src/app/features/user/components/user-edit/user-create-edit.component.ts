@@ -18,7 +18,6 @@ import { ButtonModule } from 'primeng/button';
 import { PasswordModule } from 'primeng/password';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { CommonModule } from '@angular/common';
-import { jobType, JobTypeDropdown } from '@app/core/models/enums/job-type.enum';
 import { StructureService } from '@app/core/services/structure.service';
 import { Structure } from '@app/core/models/structure.class';
 import { StructureFormComponent } from '@app/features/structure/components/structure-form/structure-form.component';
@@ -29,8 +28,6 @@ import {
   AutoCompleteModule,
 } from 'primeng/autocomplete';
 import { PaginatedData } from '@app/core/models/paginated-data.class';
-import { Email } from '@app/core/models/email.class';
-import { Phone } from '@app/core/models/phone.class';
 import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-title.component';
 import { InputComponent } from '@app/shared/common/input/input.component';
 import { UserService } from '@app/core/services/user.service';
@@ -63,15 +60,11 @@ export class UserCreateEditComponent {
   user = signal<User>(null);
   saved = output<void>();
   userForm: FormGroup;
-  jobTypeId : jobType;
-  JobTypeDropdown = JobTypeDropdown;
   isAddStructureModalOpen = false;
   filteredStructures = signal<Structure[]>([]);
   structureLinked = signal<Structure>(null);
 
-  get isEmployee() {
-    return this.userForm.get('jobTypeId').value === jobType.EMPLOYEE;
-  }
+
   constructor(
     private userService: UserService,
     private structureService: StructureService,
@@ -82,7 +75,8 @@ export class UserCreateEditComponent {
       lastname: new FormControl('', [Validators.required]),
       login: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.minLength(4),]),
-      jobTypeId: new FormControl(jobType, [Validators.required]),
+      phone: new FormControl(''),
+      email: new FormControl('', [Validators.required]),
       address: new FormGroup({
         streetL1: new FormControl('', [Validators.required]),
         streetL2: new FormControl(''),
@@ -103,72 +97,18 @@ export class UserCreateEditComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((user: User) => {
               this.user.set(user);
-              console.log(this.user());
-              console.log('User ID:', this.userId(), 'Type:', typeof this.userId());
               this.userForm.patchValue(user);
             });
         }
       });
-
-    this.onJobTypeChange();
   }
 
 
 
-  onJobTypeChange() {
-    this.userForm
-      .get('jobTypeId')
-      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((value: jobType) => {
-        this.toggleAddressFields(value);
-      });
-  }
-
-
-  toggleAddressFields(job: jobType) {
-    const addressGroup = this.userForm.get('address') as FormGroup;
-
-    if (job === jobType.EMPLOYEE) {
-      this.userForm.get('structure')?.enable();
-
-      Object.keys(addressGroup.controls).forEach((key) => {
-        this.userForm.get('structure')?.enable();
-        const control = addressGroup.get(key);
-        control?.setValidators(null);
-        control?.updateValueAndValidity();
-      });
-    } else {
-      this.userForm.get('structure')?.disable();
-
-      Object.keys(addressGroup.controls).forEach((key) => {
-        const control = addressGroup.get(key);
-        control?.enable();
-        if (['streetL1', 'postcode', 'city', 'country'].includes(key)) {
-          control?.setValidators([Validators.required]);
-        }
-        control?.updateValueAndValidity();
-      });
-    }
-
-    addressGroup.updateValueAndValidity();
-    this.userForm.updateValueAndValidity();
-  }
 
   onSubmit() {
     if (this.userForm.valid) {
       const userData = { ...this.userForm.value };
-  
-      if (this.isEmployee) {
-        const linkedStructure = this.structureLinked();
-        if (linkedStructure) {
-          userData.structures = [linkedStructure.id]; // Si une structure est liée, l'ajoute à userData
-        } else {
-          console.error('No structure linked for employee.');
-          return; // Ne pas continuer si aucune structure n'est liée
-        }
-      } else {
-        delete userData.structures; // Supprime la propriété si ce n'est pas un employé
-      }
   
    // UPDATE
       if (this.userId()) {
