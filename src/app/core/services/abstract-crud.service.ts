@@ -39,11 +39,7 @@ export abstract class AbstractCrudService<T> {
     );
   }
 
-  update(data: Partial<T>, save: boolean = false): Observable<T> {
-    const id = (data as any).id;
-    if (!id) {
-      throw new Error('ID is required to update the entity.');
-    }
+  update(data: Partial<T>, id: number, save: boolean = false): Observable<T> {
     return this.http.patch<T>(`${this.apiUrl}/${id}`, data).pipe(
       tap((updatedEntity: T) => {
         if (save) this.activeEntity.next(updatedEntity); //!Save the updated entity in the behavior subject, it's false by default unlike create, but maybe you want to save it, so you can set it to true if needed.

@@ -100,7 +100,8 @@ export class StructureViewComponent implements OnInit {
           switchMap((structure: Structure) => this.structureService.update({
             ...structure,
             archive: isArchived ? false : true,
-          })),
+          },
+          this.structureId())),
         ).subscribe(() => {
           this.reload();
         });

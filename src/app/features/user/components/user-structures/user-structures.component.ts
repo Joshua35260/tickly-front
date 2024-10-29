@@ -208,7 +208,7 @@ export class UserStructuresComponent implements OnInit {
 
   openAddStructure() {
     this.router.navigate([{ outlets: { modal: ['structure', 'create'] } }], {
-      queryParamsHandling: 'preserve',
+      queryParamsHandling: 'merge',
       queryParams: { doNotOpenAfterCreate: true },
     });
   }

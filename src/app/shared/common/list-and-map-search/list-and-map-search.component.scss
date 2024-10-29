@@ -1,0 +1,82 @@
+@import "@assets/knacss/mixin.scss";
+
+:host {
+  ::ng-deep.p-overlaypanel {
+    position: absolute;
+    top:48px!important;
+    left:0!important;
+    width: 100%;
+  }
+}
+
+.searchbar {
+  height: fit-content;
+  position: relative;
+  width: 100%;
+  ::ng-deep .searchbar-input .p-inputtext {
+    padding-left: 2.4rem;
+    padding-right: 5rem;
+  }
+  ::ng-deep .searchbar-input .p-float-label > label {
+    left: 2.4rem;
+  }
+
+  .icon-magnifier {
+    position: absolute;
+    left: 10px;
+    bottom: 20px;
+    top: 12px;
+    color: var(--primary-color);
+    font-size: 24px;
+    @include md {
+      font-size: 20px;
+      top: 16px;
+    }
+    @include sm {
+      font-size: 20px;
+      top: 16px;
+    }
+  }
+
+  .icon-filters {
+    position: absolute;
+    right: 10px;
+    bottom: 20px;
+    top: 18px;
+    color: var(--surface-200);
+    font-size: 22px;
+    cursor: pointer;
+    @include md {
+      font-size: 18px;
+      top: 16px;
+    }
+    @include sm {
+      font-size: 18px;
+      top: 16px;
+    }
+  }
+
+  .active {
+    color: var(--primary-color);
+  }
+
+  .icon-close {
+    cursor: pointer;
+    font-size: 17px;
+    position: absolute;
+    right: 44px;
+    bottom: 22px;
+    top: 21px;
+    color: var(--surface-200);
+    @include md {
+      top: 18px;
+      font-size: 14px;
+    }
+    @include sm {
+      top: 18px;
+      font-size: 14px;
+    }
+  }
+}
+
+

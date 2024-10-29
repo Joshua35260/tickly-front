@@ -1,7 +1,5 @@
 @import "@assets/knacss/mixin.scss";
 
-$header-height: 110px;
-
 .main-layout {
   display: flex;
   width: 100%;
@@ -53,7 +51,6 @@ $header-height: 110px;
 
 
     app-page-header {
-      height: $header-height;
       flex-shrink: 0;
     }
 

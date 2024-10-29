@@ -112,9 +112,8 @@ export class UserCreateEditComponent {
   
    // UPDATE
       if (this.userId()) {
-        userData.id = this.userId();
         this.userService
-          .update(userData)
+          .update(userData, this.userId())
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => this.saved.emit(),

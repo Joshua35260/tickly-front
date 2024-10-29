@@ -1,0 +1,11 @@
+@if (searchType()) {
+  <form #searchbar class="searchbar" [formGroup]="searchForm"  (ngSubmit)="onSave()">
+    <app-input [label]="searchTypeLabels[searchType()]" class="searchbar-input" formControlName="search"></app-input>
+    <i class="icon-magnifier"></i>
+
+    @if (canClear()) {
+    <i (click)="onClear()" class="icon-close"></i>
+    }
+  </form>
+
+}

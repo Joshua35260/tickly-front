@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   OnInit,
   output,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { User } from '@app/core/models/user.class';
 import { UserRowComponent } from '../components/user-row/user-row.component';
@@ -15,27 +16,56 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { PaginatorModule } from 'primeng/paginator';
-
+import { ListAndMapSearchComponent } from '@app/shared/common/list-and-map-search/list-and-map-search.component';
+import {SearchType} from '@app/core/models/enums/search-type.enum';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { EmptyListComponent } from '@app/shared/common/layout/empty-list/empty-list.component';
+import { WidgetComponent } from '@app/shared/common/widget/widget.component';
 interface PageEvent {
   first?: number;
   rows?: number;
   page?: number;
   pageCount?: number;
 }
-
+export interface ListAndMapSortOption {
+  label: string;
+  order?: string;
+  filter: string;
+}
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, UserRowComponent, LeafletModule, PaginatorModule],
+  imports: [
+    CommonModule,
+    UserRowComponent,
+    LeafletModule,
+    PaginatorModule,
+    ListAndMapSearchComponent,
+    DropdownModule,
+    InputSwitchModule,
+    EmptyListComponent,
+    WidgetComponent,
+  ],
 })
 export class UserListComponent implements OnInit {
+  @ViewChild('scrollList') scrollList: ElementRef;
   displayUserView = output<number>();
-
-  users = signal<User[]>([]);
-
+  searchType = SearchType.USERS
+  items = signal<User[]>([]);
+  hideArchive = signal<boolean>(false);
+  showMap: boolean = true;
+  showCreateButton = signal<boolean>(true);
+  sortOptions = signal<ListAndMapSortOption[]>([
+    { label: 'Prenom (asc)', filter: 'user.first_name asc' },
+    { label: 'Prenom (desc)', filter: 'user.first_name desc' },
+    { label: 'Nom (asc)', filter: 'user.name asc' },
+    { label: 'Nom (desc)', filter: 'user.name desc' },
+  ]);
+  selectedOptions = signal(this.sortOptions()[0]);
   mapOptions = {
     layers: [
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -53,53 +83,66 @@ export class UserListComponent implements OnInit {
   itemCount: number;
   page: number = 1;
 
+
   constructor(
     private userService: UserService,
     private destroyRef: DestroyRef
   ) {
-    this.userService.entityChanged$ //reload users automatically on crud activity on this service
+    this.userService.entityChanged$ //reload items automatically on crud activity on this service
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
-        this.loadUsers();
+        this.loadItems();
       });
   }
 
   ngOnInit() {}
+  onSearch(){
 
+  }
+  onDisplayNewItem() {
+
+  }
+  onSortChange(event) {
+    
+  }
+  toggleShowArhive() {
+    this.hideArchive.set(!this.hideArchive());
+    this.loadItems();
+  }
   onMapReady(map: L.Map) {
     this.map = map; // Set the map reference
     this.itemsMarkers = L.featureGroup().addTo(this.map); // Initialize FeatureGroup and add to map
-    this.loadUsers(); // Load users after the map is ready
+    this.loadItems(); // Load items after the map is ready
   }
   get layers(): L.Layer[] {
     return this.itemsMarkers ? this.itemsMarkers.getLayers() : [];
   }
 
-  loadUsers() {
+  loadItems() {
     this.userService
       .getPaginated(this.page, this.rows)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        this.users.set(data.items);
+        this.items.set(data.items);
         this.itemCount = data.total; // Mettre à jour le nombre total d'items
         this.addMarkers(data.items); // Ajouter des marqueurs
       });
   }
-  addMarkers(users: User[]) {
+  addMarkers(items: User[]) {
     setTimeout(() => {
       // Clear existing markers first
       this.itemsMarkers.clearLayers();
 
-      if (users?.length === 0) {
+      if (items?.length === 0) {
         // Set a default position for the map
         this.map?.setView(L.latLng(48.864716, 2.349014), 5);
         return;
       }
 
-      users.forEach((user) => {
-        if (user.address && user.address.latitude && user.address.longitude) {
-          const latitude = parseFloat(user.address.latitude.toString());
-          const longitude = parseFloat(user.address.longitude.toString());
+      items.forEach((item) => {
+        if (item.address && item.address.latitude && item.address.longitude) {
+          const latitude = parseFloat(item.address.latitude.toString());
+          const longitude = parseFloat(item.address.longitude.toString());
 
           // Vérifiez si latitude et longitude sont valides
           if (!isNaN(latitude) && !isNaN(longitude)) {
@@ -116,18 +159,18 @@ export class UserListComponent implements OnInit {
 
             const marker = L.marker([latitude, longitude], { icon: customIcon })
               .bindPopup(`
-                        <strong>${user.firstname} ${user.lastname}</strong><br>
-                        ${user.address.streetL1 || ''}<br>
-                        ${user.address.city}, ${user.address.postcode}
+                        <strong>${item.firstname} ${item.lastname}</strong><br>
+                        ${item.address.streetL1 || ''}<br>
+                        ${item.address.city}, ${item.address.postcode}
                     `);
 
             this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
           } else {
             console.warn(
-              `Invalid coordinates for user: ${user.firstname} ${user.lastname}`
+              `Invalid coordinates for item: ${item.firstname} ${item.lastname}`
             );
           }
-        } 
+        }
       });
 
       // Center the map only if markers are present
@@ -147,6 +190,7 @@ export class UserListComponent implements OnInit {
     this.first = event.first;
     this.rows = event.rows;
     this.page = event.page + 1; // +1 parce que la pagination commence à 0
-    this.loadUsers(); // Recharger les utilisateurs lors du changement de page
+    this.loadItems(); // Recharger les utilisateurs lors du changement de page
+    this.scrollList.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 }

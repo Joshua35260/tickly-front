@@ -23,7 +23,7 @@ export class TicketInfoComponent implements OnInit {
   ticket = input<Ticket>();
   sectionDisplayed = input<RightPanelSection>();
   
-  edit = output<Ticket>();
+  edit = output<number>();
   get formattedCategories(): string {
     return this.ticket().category.map(cat => cat.category).join(', ');
   }
@@ -32,6 +32,6 @@ export class TicketInfoComponent implements OnInit {
   ngOnInit() {
   }
   update() {
-    this.edit.emit(this.ticket());
+    this.edit.emit(this.ticket().id);
   }
 }

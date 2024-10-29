@@ -97,8 +97,8 @@ export class TicketViewComponent implements OnInit {
     this.reloadTicket$.next();
   }
 
-  onEdit() {
-    this.edit.emit(this.ticketId());
+  onEdit(ticketId) {
+    this.edit.emit(ticketId);
   }
 
   onDelete() {
@@ -123,7 +123,9 @@ export class TicketViewComponent implements OnInit {
               this.ticketService.update({
                 ...ticket,
                 archive: isArchived ? false : true,
-              })
+              },
+              this.ticketId()
+              )
             )
           )
           .subscribe(() => {

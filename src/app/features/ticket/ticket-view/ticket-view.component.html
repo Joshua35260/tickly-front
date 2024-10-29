@@ -4,7 +4,7 @@
   <div class="main-grid gap-medium">
 
 
-    <app-ticket-info class="widget height-auto" [ticket]="ticket" [sectionDisplayed]="sectionDisplayed()"/>
+    <app-ticket-info class="widget height-auto" (edit)="onEdit(ticketId())" [ticket]="ticket" [sectionDisplayed]="sectionDisplayed()"/>
     @if(sectionActionsDisplayed) {
     
       <div class="widget height-auto">

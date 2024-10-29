@@ -124,15 +124,20 @@ export class UserViewComponent implements OnInit {
       accept: () => {
         this.user$.pipe(
           take(1),
-          switchMap((user: User) => this.userService.update({
-            ...user,
-            archive: isArchived ? false : true,
-          })),
+          switchMap((user: User) =>
+            this.userService.update(
+              {
+                ...user,
+                archive: isArchived ? false : true,
+              },
+              user.id
+            )
+          )
         ).subscribe(() => {
           this.reload();
         });
       }
     });
-  };
+  }
 }
 
