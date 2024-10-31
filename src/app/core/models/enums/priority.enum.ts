@@ -1,15 +1,15 @@
 export enum Priority {
-  Low = 'Low',
-  Medium = 'Medium',
-  High = 'High',
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
 
 }
 
 
 export const PriorityLabels: { [key in Priority]: string } = {
-  Low: 'Faible',
-  Medium: 'Moyenne',
-  High: 'Élevée',
+  LOW: 'Faible',
+  MEDIUM: 'Moyenne',
+  HIGH: 'Élevée',
 };
 
 

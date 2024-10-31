@@ -32,6 +32,12 @@ export class StructureViewContainerComponent {
       'iconSpan': 0
     },
     {
+      'panel': RightPanelSection.RIGHT_PANEL_SECTION_STRUCTURES,
+      'title': '',
+      'icon': 'icon-organization',
+      'iconSpan': 0
+    },
+    {
       'panel': RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS,
       'title': '',
       'icon': 'icon-choice',

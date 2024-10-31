@@ -2,16 +2,16 @@
 
 <div [ngClass]="user().archive ? 'card archive':'card'">
 
-  <div class="card-top only" (click)="openUser.emit(user().id)">
-    <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'">
-      <app-avatar class="avatar" [fullname]="user().firstname + user().lastname" [size]="60">
-      </app-avatar>
-
-      @if (withMenu()) {
+  <div class="card-top only">
+    @if (withMenu()) {
       <i class="icon-menu pi pi-ellipsis-v" (click)="menu.toggle($event); onMenuOpen()">
-        <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body"></p-menu>
+        <p-menu #menu [model]="menuItemsInput() || menuItems" [popup]="true" appendTo="body"></p-menu>
       </i>
       }
+
+    <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openUser.emit(user().id)">
+      <app-avatar class="avatar" [fullname]="user().firstname + user().lastname" [size]="60">
+      </app-avatar>
 
       <div class="card-main-info flex flex-col">
         <div class="card-top-title">

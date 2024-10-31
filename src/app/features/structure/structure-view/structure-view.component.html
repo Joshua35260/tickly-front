@@ -15,6 +15,9 @@
     </div>
     }
 
+    @if(sectionStructuresDisplayed) {
+      <app-structure-users [structure]="structure" (listUpdated)="reload()" class="widget"></app-structure-users>
+    }
 
   </div>
 

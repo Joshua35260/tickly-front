@@ -21,7 +21,16 @@
   </div>
 
   </fieldset>
+  
+  <fieldset class="sm:grid grid-cols-2 flex flex-col gap-medium">
+    <div class="small-title-c col-span-full">
+      <i class="icon-mail"></i>
+      <div>Coordonnées</div>
+    </div>
 
+    <app-input class="col-span-1" formControlName="email" label="Email *"></app-input>
+    <app-input class="col-span-1" formControlName="phone" label="Telephone"></app-input>
+  </fieldset>
 
   <fieldset formGroupName="address" class="card-body sm:grid grid-cols-2 flex flex-col">
     <div class="small-title-c col-span-full">

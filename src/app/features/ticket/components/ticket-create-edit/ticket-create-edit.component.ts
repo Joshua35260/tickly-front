@@ -75,6 +75,7 @@ loadTicket(ticketId: number) {
     .getById(ticketId)
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe((ticket) => {
+      console.log(ticket);
       this.ticketForm.patchValue(ticket);
     });
 }

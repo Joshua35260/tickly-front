@@ -34,14 +34,14 @@ export class StructureService extends AbstractCrudService<Structure> {
   
 // add structure to user
 
-addStructureToUser(userId: number, structureId: number,): Observable<User> {
+addUserToStructure(userId: number, structureId: number,): Observable<User> {
   return this.http.post<any>(`${environment.apiUrl}/user/${userId}/structures/${structureId}`, {
     userId: userId,
     structureId: structureId,
   })
 }
 
-deleteStructureFromUser(userId: number, structureId: number): Observable<User> {
+deleteUserFromStructure(userId: number, structureId: number): Observable<User> {
   return this.http.delete<any>(`${environment.apiUrl}/user/${userId}/structures/${structureId}`)
 }
 }

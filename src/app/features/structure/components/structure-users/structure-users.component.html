@@ -1,0 +1,115 @@
+<app-widget 
+[withFooter]="true"
+dialogTitle="Rattacher un utilisateur"
+dialogIcon="icon-profile"
+[(open)]="subFormOpened"
+(openChange)="openChange($event)"
+size="medium" >
+  <div header >
+    <app-widget-title header title="Utilisateurs reliées à la structure" icon="icon-profile"
+    subtitle="Ajouter ou retirer un utilisateur à la structure"></app-widget-title>
+
+    <form [formGroup]="userAttachedForm">
+      <div class="grid grid-cols-12">
+        <div class="col-span-full grid grid-cols-12 gap-small">
+          <div class="input-icon-left col-span-8">
+            <i class="icon-magnifier"></i>
+            <app-input
+              class="input-with-icon-left"
+              formControlName="user"
+              label="Rechercher un utilisateur"
+            ></app-input>
+          </div>
+          <div class="col-span-4 form-elem p-float-label">
+            <p-dropdown
+              class="dropdown-icon-sort"
+              [options]="sortOptions"
+              optionLabel="label"
+              (onChange)="onSortChanged($event.value)"
+              id="sort"
+              appendTo="body"
+            >
+              <ng-template let-selectedOption pTemplate="selectedItem">
+                <div class="selected-item">
+                  <i
+                    *ngIf="!!selectedOption?.filter"
+                    [class]="selectedOption.filter.includes('asc') ? 'icon-sort-up' : 'icon-sort-down'"></i>
+                  <span>{{ selectedOption.label }}</span>
+                </div>
+              </ng-template>
+              <ng-template let-sortOption pTemplate="item">
+                <div>{{ sortOption.label }} {{ sortOption.order }}</div>
+              </ng-template>
+              <ng-template pTemplate="dropdownicon">
+                <i class="icon-down"></i>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+        <span class="col-span-full form-elem input-switch">
+          <p-inputSwitch
+            formControlName="checked"
+            inputId="checked"
+          ></p-inputSwitch>
+          <label
+            for="checked"
+            [ngClass]="{ active: userAttachedForm.get('checked').value }"
+            >Masquer l'historique et les archives</label
+          >
+        </span>
+      </div>
+    </form>
+  </div>
+
+
+  <div body class="scroll-list">
+
+    @for (user of filteredAndSortedUsers(); track user.id) {
+    <app-user-row [user]="user" (menuOpened)="setEntityIdFromMenu($event)" [menuItemsInput]="menuItems" [withMenu]="true" (openUser)="displayUserView(user.id)"></app-user-row>
+    }
+
+  </div>
+
+  <div footer>
+    <i class="icon-add"></i>
+    Ajouter un utilisateur
+  </div>
+
+  <form form [formGroup]="newUserForm" *ngIf="subFormOpened">
+    <fieldset class="widget">
+      <div class="small-title-link">
+        Rechercher un utilisateur ou<a (click)="openAddUser()"
+          >créer un nouvel utilisateur</a
+        >
+      </div>
+      <span class="p-float-label form-elem">
+        <p-autoComplete
+          formControlName="selectedNewUser"
+          [suggestions]="filteredUsers()"
+          (completeMethod)="filterNewUser($event)"
+          field="fullName"
+          [minLength]="2"
+          [forceSelection]="true"
+          emptyMessage="Aucune suggestion"
+          appendTo="body"
+          (keydown.enter)="onAttach()"
+          [showClear]="true"
+          [dropdown]="true"
+        >
+        </p-autoComplete>
+        <label>Rattacher un nouvel utilisateur</label>
+      </span>
+    </fieldset>
+    <div class="actions">
+      <p-button
+        label="Ajouter l\'utilisateur"
+        severity="secondary"
+        icon="icon-add"
+        iconPos="left"
+        [disabled]="newUserForm.invalid"
+        (click)="onAttach()"
+      ></p-button>
+      <a class="cancel" (click)="openChange(false)">Annuler</a>
+    </div>
+  </form>
+</app-widget>

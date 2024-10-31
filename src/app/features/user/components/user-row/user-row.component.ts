@@ -20,13 +20,13 @@ import { MenuModule } from 'primeng/menu';
 export class UserRowComponent {
   delete = output<number>();
   user = input.required<User>();
+  menuItemsInput = input<MenuItem[]>();
   constructor() { }
 
   menuOpened = output<number>();
   openUser = output<number>();
 
   withMenu = input<boolean>();
-
   menuItems: MenuItem[] = [
     {
       label: 'Supprimer',

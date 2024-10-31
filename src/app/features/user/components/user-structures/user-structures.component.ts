@@ -65,7 +65,7 @@ export class UserStructuresComponent implements OnInit {
   menuItems: MenuItem[];
 
   filteredStructures = signal<Structure[]>([]);
-  structureAttachedToSite = signal<any[]>([]);
+  structureAttachedToUser = signal<any[]>([]);
 
   subFormOpened: boolean = false;
 
@@ -81,7 +81,7 @@ export class UserStructuresComponent implements OnInit {
 
   filteredAndSortedStructures = computed(() => {
     const searchTerm = this.structureAttachedForm?.get('structure').value || '';
-    const filtered = this.structureAttachedToSite()?.filter((data) =>
+    const filtered = this.structureAttachedToUser()?.filter((data) =>
       data.name.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
   
@@ -146,13 +146,13 @@ export class UserStructuresComponent implements OnInit {
   searchStructures() {
     const searchTerm = this.structureAttachedForm?.get('structure').value || '';
     if (searchTerm) {
-      this.structureAttachedToSite.set(
+      this.structureAttachedToUser.set(
         this.user().structures.filter((data) =>
           data.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
       );
     } else {
-      this.structureAttachedToSite.set(this.user().structures);
+      this.structureAttachedToUser.set(this.user().structures);
     }
   }
 
@@ -184,7 +184,7 @@ export class UserStructuresComponent implements OnInit {
     const selectedStructureId =
       this.newStructureForm.value.selectedNewStructure.id;
     this.structureService
-      .addStructureToUser(this.user().id, selectedStructureId)
+      .addUserToStructure(this.user().id, selectedStructureId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.listUpdated.emit();
@@ -195,7 +195,7 @@ export class UserStructuresComponent implements OnInit {
   }
   deleteAttachment() {
     this.structureService
-      .deleteStructureFromUser(this.user().id, this.entityIdFromMenu)
+      .deleteUserFromStructure(this.user().id, this.entityIdFromMenu)
       .pipe(take(1))
       .subscribe(() => {
         this.listUpdated.emit();

@@ -1,13 +1,13 @@
 export enum Category  {
-  Support = 'Support',
-  FeatureRequest = 'FeatureRequest',
+  SUPPORT = 'SUPPORT',
+  FEATURE_REQUEST = 'FEATURE_REQUEST',
 
 }
 
 
 export const CategoryLabels: { [key in Category]: string } = {
-  Support: 'Support',
-  FeatureRequest: 'Fonctionnalité',
+  SUPPORT: 'Support',
+  FEATURE_REQUEST: 'Fonctionnalité',
 };
 
 

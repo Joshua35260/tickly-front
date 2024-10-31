@@ -1,15 +1,15 @@
 export enum Status {
-  Open = 'Open',
-  InProgress = 'InProgress',
-  Closed = 'Closed',
+  OPEN = 'OPEN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  CLOSED = 'CLOSED',
 
 }
 
 
 export const StatusLabels: { [key in Status]: string } = {
-  Open: 'Ouvert',
-  InProgress: 'En cours',
-  Closed: 'Fermé',
+  OPEN: 'Ouvert',
+  IN_PROGRESS: 'En cours',
+  CLOSED: 'Fermé',
 };
 
 

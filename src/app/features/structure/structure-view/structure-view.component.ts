@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { BehaviorSubject, distinctUntilChanged, Observable, shareReplay, switchMap } from 'rxjs';
 import { startWith, take } from 'rxjs/operators';
 import { StructureInfoComponent } from '../components/structure-info/structure-info.component';
+import { StructureUsersComponent } from '../components/structure-users/structure-users.component';
 
 
 @Component({
@@ -23,6 +24,7 @@ import { StructureInfoComponent } from '../components/structure-info/structure-i
     ModalConfirmDeleteComponent,
     ButtonModule,
     StructureInfoComponent,
+    StructureUsersComponent,
   ]
 })
 export class StructureViewComponent implements OnInit {
@@ -46,6 +48,9 @@ export class StructureViewComponent implements OnInit {
 
   get sectionActionsDisplayed() {
     return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS;
+  }
+  get sectionStructuresDisplayed() {
+    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_STRUCTURES;
   }
 
   constructor(

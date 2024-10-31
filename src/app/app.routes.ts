@@ -94,6 +94,11 @@ export const routes: Routes = [
     loadComponent: () => import('./containers/modals/user-edit-container/user-edit.container.component').then(c => c.UserEditContainerComponent)
   },
   {
+    path: 'user/create',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/user-create-container/user-create-container.component').then(c => c.UserCreateContainerComponent)
+  },
+  {
     path: 'structure/edit/:id',
     outlet: 'modal',
     loadComponent: () => import('./containers/modals/structure-edit-container/structure-edit.container.component').then(c => c.StructureEditContainerComponent)
