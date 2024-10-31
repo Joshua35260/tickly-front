@@ -5,7 +5,7 @@
     <div class="ticket-info-name">
       <div class="ticket-head">
        <div class="fullname"> 
-          <div class="name">Ticket n° <span class="">{{ticket().id}}</span></div>
+          <div class="name">Ticket n° <span class="">{{ticket().id}}</span> {{ticket().title}}</div>
           <div class="">{{ticket().status.status}}</div>
           <div class="">{{ticket().priority.priority}}</div>
           <div class="">{{formattedCategories}}</div>
@@ -22,10 +22,16 @@
       <span class="name">{{ticket().author.firstname}}</span>&nbsp;
       <span class="lastname">{{ticket().author.lastname}}</span>
     </div>
+
     <app-widget-title title="Description" icon="icon-info"></app-widget-title>
-    {{ticket().description}}
+    @if (ticket().assignedUsers?.length > 0) {
+      @for (user of ticket().assignedUsers; track user.id) {
+        <app-user-row [user]="user" [withDelete]="true" (delete)="onDelete($event)"></app-user-row>
+      }
+    }
+    {{ticket().assignedUsers?.length > 0 ? 'Attribé aux utilisateurs suivants : ' : ''}}
 
-
+    <p-button label="S'attribuer le ticket" severity="secondary" icon="icon-check" iconPos="left" type="submit" (click)="onAssignTicket()"></p-button>
 
 
   </div>

@@ -39,10 +39,12 @@ import { TicketInfoComponent } from '../components/ticket-info/ticket-info.compo
   ],
 })
 export class TicketViewComponent implements OnInit {
-  sectionDisplayed = input<RightPanelSection>();
-  ticketId = input<number>();
 
+  sectionDisplayed = input<RightPanelSection>();
+
+  ticketId = input<number>();
   ticketId$: Observable<number> = toObservable(this.ticketId);
+  ticket = signal<Ticket>(null);
 
   edit = output<number>();
   deleted = output<void>();
@@ -72,6 +74,7 @@ export class TicketViewComponent implements OnInit {
     private confirmationService: ConfirmationService
   ) {
     this.ticketService.entityChanged$ //reload users automatically on crud activity on this service
+
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.loadTicket();
@@ -83,14 +86,11 @@ export class TicketViewComponent implements OnInit {
   }
 
   loadTicket() {
-    this.ticket$ = this.ticketId$.pipe(
-      startWith(this.ticketId()),
-      distinctUntilChanged(),
-      switchMap(() => this.reloadTicket$),
-      takeUntilDestroyed(this.destroyRef),
-      switchMap(() => this.ticketService.getById(this.ticketId())),
-      shareReplay()
-    );
+  this.ticketService.getById(this.ticketId())
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe((ticket) => {
+      this.ticket.set(ticket);
+    })
   }
 
   reload() {

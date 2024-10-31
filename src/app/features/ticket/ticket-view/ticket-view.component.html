@@ -1,16 +1,16 @@
-<div class="panel-content" *ngIf="ticket$ | async as ticket">
+<div class="panel-content" *ngIf="ticket()">
   
 
   <div class="main-grid gap-medium">
 
 
-    <app-ticket-info class="widget height-auto" (edit)="onEdit(ticketId())" [ticket]="ticket" [sectionDisplayed]="sectionDisplayed()"/>
+    <app-ticket-info class="widget height-auto" (edit)="onEdit(ticketId())" [ticket]="ticket()" [sectionDisplayed]="sectionDisplayed()" (saved)="reload()"/>
     @if(sectionActionsDisplayed) {
     
       <div class="widget height-auto">
 
         <div class="actions">
-          <p-button severity="warning" icon="icon-archive" [label]="ticket.archivedAt ? 'Désarchiver' : 'Archiver'" (click)="onArchive(ticket?.archive)"></p-button>
+          <p-button severity="warning" icon="icon-archive" [label]="ticket().archivedAt ? 'Désarchiver' : 'Archiver'" (click)="onArchive(ticket()?.archive)"></p-button>
           <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
             (click)="showDeleteModal.set(true)"></p-button>
         </div>

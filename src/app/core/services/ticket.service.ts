@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
  // Assurez-vous d'importer le modèle Ticket
 import { environment } from '../../../environments/environment';
 import { PaginatedData } from '../models/paginated-data.class';
@@ -27,5 +27,28 @@ export class TicketService extends AbstractCrudService<Ticket> {
       })
     );
   }
+  assignUserToTicket(ticketId: number, userId: number): Observable<Ticket> {
+    return this.http.post<Ticket>(`${environment.apiUrl}/ticket/${ticketId}/assign-user`, { userId }).pipe(
+      tap((ticket) => {
+        this.entityChanged.next();
+      }),
+      catchError((error) => {
+        console.error('Error assigning user to ticket', error);
+        return throwError(() => new Error('Error assigning user to ticket'));
+      })
+    );
+  }
   
+
+  removeUserFromTicket(ticketId: number, userId: number): Observable<Ticket> {
+    return this.http.post<Ticket>(`${environment.apiUrl}/ticket/${ticketId}/remove-user`, { userId }).pipe(
+      tap((ticket) => {
+        this.entityChanged.next();
+      }),
+      catchError((error) => {
+        console.error('Error removing user from ticket', error);
+        return throwError(() => new Error('Error removing user from ticket'));
+      })
+    );
+  }
 }

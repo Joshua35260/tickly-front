@@ -4,11 +4,13 @@
 
   <div class="card-top only">
     @if (withMenu()) {
-      <i class="icon-menu pi pi-ellipsis-v" (click)="menu.toggle($event); onMenuOpen()">
-        <p-menu #menu [model]="menuItemsInput() || menuItems" [popup]="true" appendTo="body"></p-menu>
-      </i>
-      }
-
+    <i class="icon-menu pi pi-ellipsis-v" (click)="menu.toggle($event); onMenuOpen()">
+      <p-menu #menu [model]="menuItemsInput() || menuItems" [popup]="true" appendTo="body"></p-menu>
+    </i>
+    }
+    @if (withDelete()) {
+    <i class="con-menu icon-trashcan" (click)="delete.emit(user().id)"></i>
+    }
     <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openUser.emit(user().id)">
       <app-avatar class="avatar" [fullname]="user().firstname + user().lastname" [size]="60">
       </app-avatar>

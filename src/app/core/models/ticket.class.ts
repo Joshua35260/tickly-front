@@ -7,6 +7,8 @@ import { User } from './user.class';
 export class Ticket {
   id?: number;
 
+  title: string;
+
   author: User;
 
   description: string;
@@ -24,4 +26,6 @@ export class Ticket {
   category: Category[];
 
   archive?: boolean;
+
+  assignedUsers?: User[];
 }
