@@ -23,12 +23,7 @@ export class StructureService extends AbstractCrudService<Structure> {
         'name': name,
         'pageSize': 1000,
       },
-    }).pipe(
-      catchError((error) => {
-        console.error('Error fetching structures', error);
-        return throwError(() => new Error('Error fetching structures'));
-      })
-    );
+    })
   }
 
   

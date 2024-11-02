@@ -20,23 +20,14 @@ export class TicketService extends AbstractCrudService<Ticket> {
       params: {
         'name': name,
       },
-    }).pipe(
-      catchError((error) => {
-        console.error('Error fetching tickets', error);
-        return throwError(() => new Error('Error fetching tickets'));
-      })
-    );
+    })
   }
+  
   assignUserToTicket(ticketId: number, userId: number): Observable<Ticket> {
     return this.http.post<Ticket>(`${environment.apiUrl}/ticket/${ticketId}/assign-user`, { userId }).pipe(
       tap((ticket) => {
         this.entityChanged.next();
-      }),
-      catchError((error) => {
-        console.error('Error assigning user to ticket', error);
-        return throwError(() => new Error('Error assigning user to ticket'));
-      })
-    );
+      }));
   }
   
 
@@ -44,10 +35,6 @@ export class TicketService extends AbstractCrudService<Ticket> {
     return this.http.post<Ticket>(`${environment.apiUrl}/ticket/${ticketId}/remove-user`, { userId }).pipe(
       tap((ticket) => {
         this.entityChanged.next();
-      }),
-      catchError((error) => {
-        console.error('Error removing user from ticket', error);
-        return throwError(() => new Error('Error removing user from ticket'));
       })
     );
   }

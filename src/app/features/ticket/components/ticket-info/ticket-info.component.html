@@ -1,38 +1,57 @@
 <app-widget class="ticket-info user-info">
-  <div header class="widget-top">
+  <div header [ngClass]="ticket().archivedAt ? 'widget-top ticket-info archived' : 'widget-top ticket-info'">
     <i type="button" (click)="update()" class="icon-edit"></i>
 
     <div class="ticket-info-name">
-      <div class="ticket-head">
-       <div class="fullname"> 
-          <div class="name">Ticket n° <span class="">{{ticket().id}}</span> {{ticket().title}}</div>
-          <div class="">{{ticket().status.status}}</div>
-          <div class="">{{ticket().priority.priority}}</div>
-          <div class="">{{formattedCategories}}</div>
-        </div>
+      <div class="fullname">
+        Ticket <span class="name">n°{{ ticket().id }} :</span><span class="name" *ngIf="ticket().title">{{
+          ticket().title }}</span>
       </div>
     </div>
-  </div>
-  
-  <div body>
+
     <div class="fullname">
       <app-avatar class="avatar" [avatarUrl]="ticket().author.avatarUrl"
-        [fullname]="ticket().author.firstname + ' ' + ticket().author.lastname"></app-avatar>
+        [fullname]="ticket().author.firstname + ticket().author.lastname"></app-avatar>
       Auteur:
-      <span class="name">{{ticket().author.firstname}}</span>&nbsp;
-      <span class="lastname">{{ticket().author.lastname}}</span>
+      <span class="name">{{ ticket().author.firstname }}</span>
+      <span class="lastname">{{ ticket().author.lastname }}</span>
     </div>
 
-    <app-widget-title title="Description" icon="icon-info"></app-widget-title>
-    @if (ticket().assignedUsers?.length > 0) {
-      @for (user of ticket().assignedUsers; track user.id) {
-        <app-user-row [user]="user" [withDelete]="true" (delete)="onDelete($event)"></app-user-row>
+
+    <div class="infos">
+      <div class="statuses">
+        <div><span>Status : </span><span [ngClass]="getStatusClass(ticket().status)">{{ StatusLabels[ticket().status] }}
+            <i [ngClass]="getStatusIcon(ticket().status)"></i></span> </div>
+        <div><span>Priorité : </span>{{ PriorityLabels[ticket().priority]}}</div>
+        <div><span>Catégorie{{ ticket().category.length > 1 ? "s" : "" }} : </span>{{CategoryLabels}}</div>
+      </div>
+      @if(ticket().archivedAt) {
+      <div class="archive-info no-text-decoration">
+        Archivé le <span>{{ ticket().archivedAt | date }}</span> <i class="icon-archive"></i>
+      </div>
       }
-    }
-    {{ticket().assignedUsers?.length > 0 ? 'Attribé aux utilisateurs suivants : ' : ''}}
-
-    <p-button label="S'attribuer le ticket" severity="secondary" icon="icon-check" iconPos="left" type="submit" (click)="onAssignTicket()"></p-button>
-
-
+    </div>
   </div>
+
+  <div body>
+
+    <div class="small-title"><i class="pi pi-align-left"></i>Description</div>
+    <p>{{ ticket().description }}</p>
+
+    <div class="small-title"><i class="pi pi-users"></i>Utilisateurs attribués</div>
+
+    @if (ticket().assignedUsers?.length > 0) { @for (user of
+    ticket().assignedUsers; track user.id) {
+    <app-user-row [user]="user" [withDelete]="true" (delete)="onDelete($event)"
+      (openUser)="displayUserView(user.id)"></app-user-row>
+    } }
+
+    @if(!isAssigned) {
+    <div class="actions">
+      <p-button label="S'attribuer le ticket" severity="secondary" icon="icon-check" iconPos="left" type="submit"
+        (click)="onAssignTicket()"></p-button>
+    </div>
+    }
+  </div>
+
 </app-widget>

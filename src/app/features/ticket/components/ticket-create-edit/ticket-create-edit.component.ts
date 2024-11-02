@@ -1,4 +1,3 @@
-import { Category } from './../../../../core/models/category.class';
 import { TicketService } from '@app/core/services/ticket.service';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, input, OnInit, output } from '@angular/core';
@@ -10,10 +9,8 @@ import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-tit
 import { WidgetComponent } from '@app/shared/common/widget/widget.component';
 import { ButtonModule } from 'primeng/button';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { distinct, distinctUntilChanged, filter, startWith, switchMap, take } from 'rxjs';
-import { Priority } from '@app/core/models/priority.class';
+import { distinct, distinctUntilChanged, filter, startWith} from 'rxjs';
 import { PriorityDropdownLabels } from '@app/core/models/enums/priority.enum';
-import { Status } from '@app/core/models/status.class';
 import { StatusDropdownLabels } from '@app/core/models/enums/status.enum';
 import { CategoryDropdownLabels } from '@app/core/models/enums/category.enum';
 import { DropdownModule } from 'primeng/dropdown';
@@ -91,7 +88,6 @@ loadTicket(ticketId: number) {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => this.saved.emit(),
-            error: (error) => console.error('Ticket update failed', error),
           });
       } else {
         this.ticketService
@@ -99,7 +95,6 @@ loadTicket(ticketId: number) {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => this.saved.emit(),
-            error: (error) => console.error('Ticket registration failed', error),
           });
       }
     }

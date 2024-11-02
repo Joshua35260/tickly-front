@@ -1,28 +1,17 @@
 .card-icon {
   small {
     font-size: 14px;
-    color: var(--primary-text-color);
     margin-right: 10px;
   }
   i {
     font-size: 22px;
   }
 }
-.progress {
-  color: rgb(216, 216, 2);
-}
 
-.closed {
-  color: rgb(21, 147, 21);
-}
-
-.open {
-  color: rgba(255, 166, 0, 0.637);
-}
 .date-limit-or-currency {
-  
   margin-left: auto;
 }
+
 small span {
   font-weight: 400;
 }

@@ -79,7 +79,6 @@ export class RegisterComponent {
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: () => this.switchView.emit(),
-          error: (error) => console.error('User registration failed', error),
         });
     }
   }

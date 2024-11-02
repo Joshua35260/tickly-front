@@ -1,0 +1,93 @@
+@import "@assets/knacss/mixin.scss";
+
+.historical-card {
+  position: relative;
+  width: 100%;
+  background-color: white;
+  box-shadow: var(--box-shadow-card);
+  border-radius: var(--border-radius-card);
+}
+
+.user-avatar {
+  margin: 4px 6px auto 10px;
+  
+}
+.author {
+  font-size: 17px;
+  line-height: 1.25;
+  @include md {
+    font-size: 15px;
+  }
+  @include sm {
+    font-size: 14px;
+  }
+}
+
+.date {
+  font-size: 15px;
+  font-style: italic;
+  line-height: 1.25;
+  color: var(--primary-text-color);
+  font-weight: 400;
+  margin: 0;
+  @include md {
+    font-size: 14px;
+  }
+  @include sm {
+    font-size: 13px;
+  }
+}
+
+.comment {
+  font-size: 16px;
+  line-height: 1.25;
+  @include md {
+    font-size: 15px;
+  }
+  @include sm {
+    font-size: 14px;
+  }
+  .chip {
+    display: inline-block;
+    border-radius: 5px;
+    padding: 1px 3px;
+    &.chip-action {
+      background-color: var(--gray-50);
+    }
+    &.chip-old-val {
+      text-decoration: line-through;
+      background-color: rgba(191, 38, 10, 0.15);
+    }
+    &.chip-new-val {
+      background-color: rgba(41, 199, 111, 0.15);
+    }
+  }
+  .icon-next {
+    margin: 0 5px;
+    font-size: 10px;
+  }
+}
+.msg-system {
+  position: absolute;
+  top:6px;
+  right: 6px;
+  font-size: 15px;
+  border-radius: 5px;
+  padding: 0px 8px;
+  background-color: var(--shade-000);
+  color: var(--shade-000);
+  @include md {
+    font-size: 14px;
+  }
+  @include sm {
+    font-size: 13px;
+  }
+}
+.main-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px;
+}
+.line {
+  padding: 0 10px 5px 0;
+}

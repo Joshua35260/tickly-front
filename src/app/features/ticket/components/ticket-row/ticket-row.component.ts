@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, input, output, signal, ViewChild } from '@angular/core';
+import { CategoryLabels } from '@app/core/models/enums/category.enum';
+import { PriorityLabels } from '@app/core/models/enums/priority.enum';
+import { getStatusClass, getStatusIcon, Status, StatusLabels } from '@app/core/models/enums/status.enum';
 import { Ticket } from '@app/core/models/ticket.class';
 import { AvatarComponent } from '@app/shared/common/avatar/avatar.component';
-import { IconComponent } from '@app/shared/common/icon/icon.component';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 
@@ -30,6 +32,15 @@ export class TicketRowComponent  implements AfterViewInit {
   avatarBottomHeight = signal<number>(undefined);
   avatarBottomWidth = signal<number>(undefined);
   iconColor = signal<string>('');
+  get CategoryLabels() {
+    return this.ticket()
+      .category.map((cat) => CategoryLabels[cat])
+      .join(', ');
+  }
+  PriorityLabels = PriorityLabels;
+  StatusLabels = StatusLabels;
+  getStatusIcon = getStatusIcon;
+  getStatusClass = getStatusClass;
   constructor() { }
 
   ngAfterViewInit() {
@@ -45,19 +56,17 @@ export class TicketRowComponent  implements AfterViewInit {
 
   withMenu = input<boolean>();
   menuItems = input<MenuItem[]>();
-  get formattedCategories(): string {
-    return this.ticket().category.map(cat => cat.category).join(', ');
-  }
+
   onMenuOpen() {
     this.menuOpened.emit(this.ticket().id);
   }
   
   loadInfoBasedOnStatus() {
-    if (this.ticket().status.status === 'In Progress') {
+    if (this.ticket().status === Status.IN_PROGRESS) {
       this.iconColor.set('progress');
-    } else if (this.ticket().status.status === 'Closed') {
+    } else if (this.ticket().status === Status.CLOSED) {
       this.iconColor.set('closed');
-    } else if (this.ticket().status.status === 'Open') {
+    } else if (this.ticket().status === Status.OPEN) {
       this.iconColor.set('open');
     }
   }

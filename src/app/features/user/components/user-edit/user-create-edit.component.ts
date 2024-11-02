@@ -117,7 +117,6 @@ export class UserCreateEditComponent {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => this.saved.emit(),
-            error: (error) => console.error('User update failed', error),
           });
       } else {
         // ADD
@@ -126,7 +125,6 @@ export class UserCreateEditComponent {
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: () => this.saved.emit(),
-            error: (error) => console.error('User registration failed', error),
           });
       }
     } else {

@@ -1,7 +1,15 @@
 @import "@assets/knacss/mixin.scss";
 
-.ticket-info {
 
+::ng-deep .widget .widget-header {
+  padding-top:6px ;
+}
+
+.ticket-info {
+  .archived {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
   .avatar {
     margin-right: 10px;
   }
@@ -16,14 +24,6 @@
   }
   .dashed-hr {
     margin: 5px 0 10px 0;
-  }
-  .roles {
-    display: flex;
-    flex-wrap: wrap;
-    padding-top: 4px;
-    line-height: 1;
-    width: 100%;
-    gap: 4px;
   }
 
   .localisation {
@@ -60,6 +60,24 @@
     }
 
   }
+  .infos {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
+  .archive-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: auto;
+    i {
+      font-size: 22px;
+    }
+  }
+  .statuses {
+    margin-top: 4px;
+   
+  }
 
   .names {
     display: flex;
@@ -75,6 +93,8 @@
     line-height: 1;
     margin: 0;
     padding-right: 10px;
+    display: flex;
+    gap: 6px;
     @include md {
       font-size: 24px;
     }
@@ -86,6 +106,7 @@
 
   .name {
     font-weight: bold;
+
   }
  
   .coordinates {
@@ -141,6 +162,5 @@
     background-color: var(--yellow-color);
     color: var(--shade-000);
   }
-
 
 }

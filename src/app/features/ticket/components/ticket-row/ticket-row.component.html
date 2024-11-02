@@ -1,4 +1,4 @@
-<div class="card">
+<div [ngClass]="ticket().archivedAt ? 'card archive':'card'">
 
   <div #cardTop class="card-top">
     
@@ -10,9 +10,8 @@
     
     <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openTicket.emit(ticket().id)">
 
-    <div class="card-icon">
-      <small>{{ticket().status.status}}</small>
-    <i class="pi pi-bookmark-fill" [ngClass]="iconColor()"></i>
+    <div class="card-icon"  [ngClass]="getStatusClass(ticket().status)">
+    <i [ngClass]="getStatusIcon(ticket().status)" ></i>
 
     </div>
 
@@ -25,8 +24,8 @@
 
     <div class="card-trigram date-limit-or-currency">
 
-      <small><span>Priorité: </span>{{ticket().priority.priority}}</small>
-        <small><span>Catégorie: </span>{{formattedCategories}}</small>
+      <small><span>Priorité: </span>{{PriorityLabels[ticket().priority] }}</small>
+      <small><span>Catégorie{{ticket().category.length > 1 ? "s" : ""}}: </span>{{CategoryLabels}}</small>
       
     </div>
     @if(ticket().archivedAt) {
@@ -53,7 +52,7 @@
 
       <div class="card-bottom-title">
         <div class="flex flex-col">
-         {{ticket().author.firstname}} {{ticket().author.lastname}}
+          {{ticket().author.firstname}} {{ticket().author.lastname}}
         </div>
       </div>
     </div>

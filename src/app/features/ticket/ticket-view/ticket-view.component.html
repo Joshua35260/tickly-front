@@ -1,26 +1,41 @@
-<div class="panel-content" *ngIf="ticket()">
-  
 
-  <div class="main-grid gap-medium">
+<section class="main-grid gap-medium" *ngIf="ticket()">
 
+    <app-ticket-info class="widget height-auto" (edit)="onEdit(ticket().id)" [ticket]="ticket()"
+      [sectionDisplayed]="sectionDisplayed()" />
 
-    <app-ticket-info class="widget height-auto" (edit)="onEdit(ticketId())" [ticket]="ticket()" [sectionDisplayed]="sectionDisplayed()" (saved)="reload()"/>
     @if(sectionActionsDisplayed) {
-    
-      <div class="widget height-auto">
+    <div class="widget widget-padding height-auto">
 
-        <div class="actions">
-          <p-button severity="warning" icon="icon-archive" [label]="ticket().archivedAt ? 'Désarchiver' : 'Archiver'" (click)="onArchive(ticket()?.archive)"></p-button>
-          <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
-            (click)="showDeleteModal.set(true)"></p-button>
-        </div>
+      <app-widget-title title="Actions d'administrations"
+        subtitle="Ces actions peuvent avoir des répercussions sur l'intégralité des données"
+        icon="icon-gears"></app-widget-title>
+
+      <div class="actions">
+        <p-button
+        severity="warning"
+        icon="icon-archive"
+        [label]="ticket()?.archivedAt ? 'Désarchiver' : 'Archiver'"
+        (click)="onArchive(ticket()?.archivedAt ? true : false)">
+      </p-button>
+      
+        <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
+          (click)="showDeleteModal.set(true)"></p-button>
       </div>
+    </div>
     }
-  </div>
+
+    @if (sectionChatDisplayed) {
+    <app-ticket-chat class="widget" [ticket]="ticket()"></app-ticket-chat>
+    }
+
+    @if (sectionHistoricalDisplayed) {
+      <app-audit-log class="widget" widgetTitleTitle="Historique du ticket" [linkedId]="ticket().id" [linkedTable]="LinkedTable.TICKET"></app-audit-log>
+    }
+  </section>
 
 
-</div>
 
-<app-modal-confirm-delete (delete)="onDelete()"
-  title="Voulez-vous supprimer cet utilisateur de façon permanente ?" (closeDialog)="showDeleteModal.set(false)"
-  [visible]="showDeleteModal()"></app-modal-confirm-delete>
+
+<app-modal-confirm-delete (delete)="onDelete()" title="Voulez-vous supprimer cet utilisateur de façon permanente ?"
+  (closeDialog)="showDeleteModal.set(false)" [visible]="showDeleteModal()"></app-modal-confirm-delete>

@@ -170,10 +170,13 @@
     }
 
 .card-contact {
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100%;
+  .card-small-icon {margin-right: 20px;}
+ 
 }
 
   //card with bottom, bottom section
@@ -535,11 +538,13 @@ a {
 
   .title,
   .card-bottom-title,
+  .card-text,
   .card-top-title,
   .card-top-text,
   .card-contact,
+  .date-limit-or-currency,
   .card-address {
-    text-decoration: line-through;
+    text-decoration: line-through; /* Ajoutez une virgule ici pour séparer les sélecteurs */
   }
 
   .card-bottom {
