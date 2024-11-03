@@ -750,9 +750,12 @@ a {
 
 //COMMENT ROW//
 //override style of card.scss
+.card.comment-row .avatar {
+  margin-left: 0!important;
+}
 .card.comment-row {
-  padding-top: 6px;
-  padding-bottom: 4px;
+
+  padding-left: 0px;
   padding-right: 8px;
 
   &:hover {

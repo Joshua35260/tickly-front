@@ -26,7 +26,7 @@
     }
 
     @if (sectionChatDisplayed) {
-    <app-ticket-chat class="widget" [ticket]="ticket()"></app-ticket-chat>
+    <app-comment-list class="widget" [ticketId]="ticket().id"></app-comment-list>
     }
 
     @if (sectionHistoricalDisplayed) {

@@ -1,0 +1,17 @@
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+
+  <app-text-area formControlName="content" label="Contenu du commentaire"></app-text-area>
+
+  <!-- Submit button -->
+  <div class="actions">
+    <p-button
+      [label]="selectedComment() ? 'Modifier le commentaire' : 'Ajouter le commentaire'"
+      severity="secondary"
+      [icon]="selectedComment() ? 'icon-check' : 'icon-add'"
+      iconPos="left"
+      [disabled]="commentForm.invalid"
+      (click)="onSubmit()"
+    ></p-button>
+    <a class="cancel" (click)="cancel.emit()">Annuler</a>
+  </div>
+</form>

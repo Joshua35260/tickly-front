@@ -14,9 +14,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { TicketInfoComponent } from '../components/ticket-info/ticket-info.component';
 import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-title.component';
-import { TicketChatComponent } from '../components/ticket-chat/ticket-chat.component';
 import { AuditLogComponent } from '@app/shared/audit-log/audit-log.component';
 import { LinkedTable } from '@app/core/models/enums/linked-table.enum';
+import { CommentListComponent } from '@app/shared/comment/comment-list/comment-list.component';
 
 @Component({
   selector: 'app-ticket-view',
@@ -30,8 +30,9 @@ import { LinkedTable } from '@app/core/models/enums/linked-table.enum';
     ButtonModule,
     TicketInfoComponent,
     WidgetTitleComponent,
-    TicketChatComponent,
     AuditLogComponent,
+    CommentListComponent,
+
   ],
 })
 export class TicketViewComponent {

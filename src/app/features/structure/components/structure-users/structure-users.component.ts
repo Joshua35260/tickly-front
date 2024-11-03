@@ -90,7 +90,7 @@ export class StructureUsersComponent implements OnInit {
       data.firstname.toLowerCase().includes(searchTerm.toLowerCase()) || 
       data.lastname.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
-    console.log(filtered);
+
     // Tri en fonction de l'option sélectionnée
     return filtered.sort((a, b) => {
       // Normalisation des champs pour comparaison
@@ -211,7 +211,6 @@ export class StructureUsersComponent implements OnInit {
       .addUserToStructure(selectedUserId, this.structure().id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        console.log(data);
         this.listUpdated.emit();
         this.userAttachedForm.reset();
         this.newUserForm.reset();

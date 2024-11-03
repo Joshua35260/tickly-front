@@ -1,0 +1,25 @@
+@if(!!comment()) {
+<div class="card comment-row">
+
+  <div #cardTop class="card-top only">
+    <i type="button" (click)="menu.toggle($event)" class="icon-menu" *ngIf="canEdit()">
+      <p-menu #menu (onShow)="getMenuItems(comment())" [model]="menuItems$ | async" [popup]="true"
+        appendTo="body"></p-menu>
+    </i>
+    <app-avatar class="avatar" *ngIf="!!avatarSize()" [fullname]="comment().author?.firstname + ' ' + comment().author?.lastname"
+    [avatarUrl]="comment().author?.avatarUrl" [size]="avatarSize()">
+  </app-avatar>
+    <div class="flex flex-col grid">
+      <div class="user-info">
+      
+        <div class="flex flex-col">
+          <div class="comment-author">{{ comment().author?.firstname }} {{ comment()?.author?.lastname }}</div>
+          <div class="comment-date">{{ comment().createdAt | date:"dd/MM/yy 'à' H:mm" }}</div>
+        </div>
+      </div>
+      <div class="card-main-info comment">{{ comment().content }}</div>
+    </div>
+  </div>
+</div>
+
+}

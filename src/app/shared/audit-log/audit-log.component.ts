@@ -18,6 +18,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AuditLog } from '@app/core/models/audit-log.class';
 import { AuditLogService } from '@app/core/services/audit-log.service';
 import { TicketService } from '@app/core/services/ticket.service';
+import { AuditLogLabels } from '@app/core/models/enums/audit-log.enum';
 
 @Component({
   selector: 'app-audit-log',
@@ -34,6 +35,7 @@ import { TicketService } from '@app/core/services/ticket.service';
   ],
 })
 export class AuditLogComponent implements OnInit {
+  AuditLogLabels = AuditLogLabels;
   linkedTable = input<LinkedTable>();
   linkedId = input<number>();
 

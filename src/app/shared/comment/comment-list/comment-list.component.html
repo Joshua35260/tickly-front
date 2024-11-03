@@ -1,0 +1,36 @@
+<app-widget
+  class="widget"
+  [withFooter]="true"
+  [dialogTitle]="selectedComment() ? 'Modifier le commentaire' : 'Ajouter un commentaire'"
+  dialogIcon="icon-talk"
+  [(open)]="subFormOpened"
+  (openChange)="openChange($event)"
+>
+
+  <app-widget-title header title="Commentaires" icon="icon-talk"></app-widget-title>
+
+  @if (commentsComputed().length > 0) {
+    <div body class="scroll-list">
+    @for (comment of commentsComputed(); track comment.id) {
+      <app-comment-row [comment]="comment" [canEdit]="userConnectedId() === comment.authorId" (edit)="onEdit($event)" (delete)="onDelete($event)"></app-comment-row>
+    }
+  </div>
+  }
+  
+  <div footer>
+    <i class="icon-add"></i>
+    Ajouter un commentaire
+  </div>
+
+
+  <app-comment-create-edit
+    form
+    *ngIf="subFormOpened"
+    [ticketId]="ticketId()"
+    [selectedComment]="selectedComment()"
+    [userConnectedId]="userConnectedId()"
+    (cancel)="openChange(false)"
+    (saved)="openChange(false)"
+  ></app-comment-create-edit>
+
+</app-widget>

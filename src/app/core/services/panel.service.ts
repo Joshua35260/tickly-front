@@ -86,7 +86,6 @@ export class PanelService {
     const index = this.urlStack.indexOf(currentUrl);
     if (index !== -1) {
       this.urlStack.splice(index, 1);
-      console.log('Removed from URL stack:', currentUrl);
     }
   }
 
