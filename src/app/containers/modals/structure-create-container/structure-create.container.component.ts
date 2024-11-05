@@ -33,6 +33,10 @@ export class StructureCreateContainerComponent {
     if (this.route.snapshot.queryParams['doNotOpenAfterCreate']) {
       this.close();
     }
-    this.router.navigate([{ outlets: { panel: ['structure', 'view', structureId] } }], { queryParamsHandling: 'preserve' });
+    if (structureId) {
+      this.router.navigate([{ outlets: { panel: ['structure', 'view', structureId] } }], { queryParamsHandling: 'preserve' });
+    } else {
+      this.close();
+    }
   }
 }

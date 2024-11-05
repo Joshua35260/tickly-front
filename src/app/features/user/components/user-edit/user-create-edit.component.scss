@@ -11,7 +11,11 @@
   align-items: center;
 }
 
-.signature{
-  display: grid;
-  justify-content: center;
+.avatar-c {
+  @include sm {
+    margin-bottom:  20px;
+  }
+  @include md {
+    margin-bottom:  20px;
+  }
 }

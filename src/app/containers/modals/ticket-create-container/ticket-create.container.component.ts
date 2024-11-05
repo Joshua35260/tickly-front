@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RightPanelSection } from '@app/core/models/enums/right-panel-section.enum';
 import { TicketCreateEditComponent } from '@app/features/ticket/components/ticket-create-edit/ticket-create-edit.component';
 
 
@@ -30,6 +31,20 @@ export class TicketCreateContainerComponent {
   }
 
   openTicket(ticketId: number) {
-    this.router.navigate([{ outlets: { panel: ['ticket', 'view', ticketId] } }], { queryParamsHandling: 'preserve' });
+    if (this.route.snapshot.queryParams['doNotOpenAfterCreate']) {
+      this.close();
+    }
+    if (ticketId) {
+      this.router.navigate([{
+        outlets: {
+            modal: null,  // Clear the modal outlet
+            panel: ['ticket', 'view', ticketId, RightPanelSection.RIGHT_PANEL_SECTION_INFO]  // Define the panel outlet
+        }
+    }], { queryParamsHandling: 'preserve' });
+    
+    } else {
+      this.close();
+    }
   }
+  
 }

@@ -30,7 +30,7 @@ export abstract class AbstractCrudService<T> {
   }
 
   // The entity that is created is automatically added to the behavior subject, so if you want to patch something after creation, just use the observable entityState$.
-  create(data: Partial<T>, save: boolean = true): Observable<T> {
+  create(data: any, save: boolean = true): Observable<T> {
     return this.http.post<T>(this.apiUrl, data).pipe(
       tap((createdEntity: T) => {
         if (save) this.activeEntity.next(createdEntity); // !Save the created entity in the behavior subject, it's true by default, but maybe you don't want to save it, so you can set it to false if needed.

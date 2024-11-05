@@ -62,7 +62,7 @@ $boxShadowBtn: -5px -5px 10px #FFFFFF, 5px 5px 10px rgba(0,0,0,0.16);
 
 
 //logos and images
-$logoMini:"/images/logo-mini.png";
+
 $splash:"/images/splash.jpg";
 $navMask:"/images/nav-mask.svg";
 $navCorner:"/images/round.svg";
@@ -989,7 +989,6 @@ $surface50 : #F9F9F9 !default;
     /*Background*/
     --gradian-background: linear-gradient(to bottom, #eff1f5 0%,#e4e5e9 100%);
     /*Logo*/
-    --logo-mini: url(#{$logoMini});
     /*Splash screen*/
     --splash: url(#{$splash});
     /*Nav*/

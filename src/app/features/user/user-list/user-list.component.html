@@ -35,7 +35,7 @@
         </div>
     
         @if (!!searchType) {
-          <app-list-and-map-search class="search-input" [searchType]="searchType"></app-list-and-map-search>
+          <app-list-and-map-search class="search-input"  (searchOutput)="onSearch($event)" [searchType]="searchType"></app-list-and-map-search>
         }
         <div class="input-switch">
           <p-inputSwitch inputId="showArchive" [ngModel]="hideArchive()" (ngModelChange)="toggleShowArhive()"></p-inputSwitch>

@@ -38,4 +38,8 @@ export function getStatusIcon(status: string): string {
 }
 
 // function to get the right advanced search type according to the search typ
-export const StatusDropdownLabels: {label: string, value: string}[] = Object.entries(Status).map(([value, label]) => ({label, value}));
+
+export const StatusDropdownLabels: {label: string, value: string}[] = Object.entries(Status).map(([value, key]) => ({
+  label: StatusLabels[value], 
+  value: value
+}));

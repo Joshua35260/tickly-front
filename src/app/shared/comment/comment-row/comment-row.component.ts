@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, input, output, signal, ViewChild } from '@angular/core';
 import { MenuModule } from 'primeng/menu';
@@ -5,7 +6,7 @@ import { MenuItem } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { AvatarComponent } from '@app/shared/common/avatar/avatar.component';
 import { Comment } from '@app/core/models/comment.class';
-
+import { ImageModule } from 'primeng/image';
 @Component({
   selector: 'app-comment-row',
   templateUrl: './comment-row.component.html',
@@ -16,11 +17,12 @@ import { Comment } from '@app/core/models/comment.class';
     CommonModule,
     AvatarComponent,
     MenuModule,
+    ImageModule,
 ],
 })
 export class CommentRowComponent implements AfterViewInit {
 @ViewChild('cardTop') cardTopElement: ElementRef;
-
+baseUrl = environment.baseUrl;
 menuItems$= new Subject<MenuItem[]>();
 
 comment = input.required<Comment>();

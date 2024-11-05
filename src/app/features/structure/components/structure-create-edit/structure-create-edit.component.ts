@@ -6,6 +6,7 @@ import {
   Component,
   DestroyRef,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { StructureFormComponent } from '../structure-form/structure-form.component';
@@ -21,6 +22,8 @@ import { distinctUntilChanged, startWith, take } from 'rxjs';
   imports: [CommonModule, StructureFormComponent, WidgetTitleComponent],
 })
 export class StructureCreateEditComponent {
+  saved = output<void>();
+  
   structureId = input<number>();
   structureId$ = toObservable(this.structureId);
   structure = signal<Structure>(null);

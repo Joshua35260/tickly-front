@@ -135,4 +135,9 @@ export class TicketInfoComponent implements OnInit {
   displayUserView(userId: number) {
     this.router.navigate([{ outlets: { panel: [ 'user', 'view', userId, RightPanelSection.RIGHT_PANEL_SECTION_INFO ] } }], { queryParamsHandling: 'preserve' });
   }
+
+  displayStructureView(structureId: number) {
+    this.router.navigate([{ outlets: { panel: [ 'structure', 'view', structureId, RightPanelSection.RIGHT_PANEL_SECTION_INFO ] } }], { queryParamsHandling: 'preserve' });
+  }
+  
 }

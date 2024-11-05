@@ -1,6 +1,6 @@
 <!--! don't forget to use the _card.scss file for the css !-->
 
-<div [ngClass]="user().archive ? 'card archive':'card'">
+<div [ngClass]="user().archivedAt ? 'card archive':'card'">
 
   <div class="card-top only">
     @if (withMenu()) {
@@ -12,7 +12,7 @@
     <i class="con-menu icon-trashcan" (click)="delete.emit(user().id)"></i>
     }
     <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openUser.emit(user().id)">
-      <app-avatar class="avatar" [fullname]="user().firstname + user().lastname" [size]="60">
+      <app-avatar class="avatar" [avatarUrl]="user().avatarUrl" [fullname]="user().firstname + user().lastname" [size]="60">
       </app-avatar>
 
       <div class="card-main-info flex flex-col">
@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      @if(user().archive) {
+      @if(user().archivedAt) {
       <div class="archive-info">
         Archivé<i class="icon-archive"></i>
       </div>

@@ -1,9 +1,10 @@
-<div [ngClass]="structure().archive ? 'card archive':'card'">
+<div [ngClass]="structure().archivedAt ? 'card archive':'card'">
   <div #cardTop class="card-top only">
 
 
       <app-avatar
         class="avatar"
+        [avatarUrl]="structure().avatarUrl"
         [fullname]="structure().name"
         [size]="60"
       ></app-avatar>
@@ -37,7 +38,7 @@
           </div>
         </div>
 
-        @if(structure().archive) {
+        @if(structure().archivedAt) {
         <div class="archive-info">Archivée<i class="icon-archive"></i></div>
         }
       </div>

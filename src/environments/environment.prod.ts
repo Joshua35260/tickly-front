@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   apiUrl: "/api",
-  fileDownloadUrl: "https://tickly.cloud/media",
+  fileDownloadUrl: "https://tickly.cloud/uploads",
   baseUrl: 'https://tickly.cloud',
 };

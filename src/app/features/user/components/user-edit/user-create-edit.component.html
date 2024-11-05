@@ -2,25 +2,32 @@
 
 <form class="card-body sm:grid grid-cols-1 flex flex-col gap-medium" [formGroup]="userForm" (ngSubmit)="onSubmit()">
 
-  <fieldset class="sm:grid grid-cols-12 gap-medium">
+  <fieldset class="lg:grid lg:grid-cols-12 lg:gap-medium gap-small flex flex-col">
     <div class="small-title-c col-span-full">
       <i class="icon-idcard"></i>
       <div>Identifiants</div>
     </div>
 
+      <span class="avatar-c form-elem p-float-label lg:col-span-2 lg:row-span-3">
+        <app-avatar-upload  [avatarUrlFromParent]="user()?.avatarUrl??''" 
+                            (fileSelected)="onFileSelected($event)"
+                            (deleteAvatar)="onDeleteAvatar()">
+        </app-avatar-upload> 
+      </span>
 
-    <app-input class="col-span-6" formControlName="firstname" label="Prénom *"></app-input>
-    <app-input class="col-span-6" formControlName="lastname" label="Nom *"></app-input>
-    
+
+    <app-input class="col-span-10" formControlName="firstname" label="Prénom *"></app-input>
+    <app-input class="col-span-10" formControlName="lastname" label="Nom *"></app-input>
+    <div class="grid col-span-10 grid-cols-12 gap-small">
     <app-input class="col-span-6" formControlName="login" label="Login *"></app-input>
     <p-floatLabel class="col-span-6 form-elem">
-      <p-password formControlName="password" type="password"></p-password>
-      <label>Mot de passe *</label>
+      <p-password formControlName="password" type="password" autocomplete="current-password"></p-password>
+      <label>Mot de passe</label>
     </p-floatLabel>
-
+  </div>
 
   </fieldset>
-  <fieldset class="sm:grid grid-cols-2 flex flex-col gap-medium">
+  <fieldset class="sm:grid grid-cols-2 flex flex-col lg:gap-medium gap-small">
     <div class="small-title-c col-span-full">
       <i class="icon-mail"></i>
       <div>Coordonnées</div>
@@ -30,7 +37,7 @@
     <app-input class="col-span-1" formControlName="phone" label="Telephone"></app-input>
   </fieldset>
 
-  <fieldset formGroupName="address" class="sm:grid grid-cols-12 flex flex-col gap-medium">
+  <fieldset formGroupName="address" class="sm:grid grid-cols-12 flex flex-col lg:gap-medium gap-small">
     <div class="small-title-c col-span-full">
       <i class="icon-location"></i>
       <div>Localisation</div>

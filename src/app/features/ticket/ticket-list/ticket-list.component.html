@@ -31,17 +31,16 @@
               </ng-template>
   
             </p-dropdown>
+
             @if(showCreateButton()) {
             <a class="action-add" leaveToClass="hidden" leaveActiveClass="fadeoutright"
               (click)="onDisplayNewItem()"><span>Ajouter un ticket</span></a>
             }
-  
-  
+
           </div>
       
-          @if (!!searchType) {
-            <app-list-and-map-search class="search-input" [searchType]="searchType"></app-list-and-map-search>
-          }
+            <app-list-and-map-search class="search-input" [searchType]="searchType" (searchOutput)="onSearch($event)"></app-list-and-map-search>
+          
           <div class="input-switch">
             <p-inputSwitch inputId="showArchive" [ngModel]="hideArchive()" (ngModelChange)="toggleShowArhive()"></p-inputSwitch>
             <label [ngClass]="hideArchive() ? 'active' : ''" for="showArchive">Exclure les archives</label>

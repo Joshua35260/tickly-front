@@ -6,6 +6,7 @@ export enum RightPanelSection {
   RIGHT_PANEL_SECTION_ACTIONS = 'actions',
   RIGHT_PANEL_SECTION_CHAT = 'chat',
   RIGHT_PANEL_SECTION_HISTORICAL = 'historical',
+  RIGHT_PANEL_SECTION_TICKETS = 'tickets',
 }
 
 
@@ -16,4 +17,5 @@ export const RightPanelSectionLabel: {[key in RightPanelSection]: string} = {
   [RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS]: 'Actions',
   [RightPanelSection.RIGHT_PANEL_SECTION_CHAT]: 'Chat',
   [RightPanelSection.RIGHT_PANEL_SECTION_HISTORICAL]: 'Historical',
+  [RightPanelSection.RIGHT_PANEL_SECTION_TICKETS]: 'Tickets',
 }

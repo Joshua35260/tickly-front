@@ -6,6 +6,7 @@ export class Ticket {
 
   title: string;
 
+  authorId: number;
   author: User;
 
   description: string;
@@ -23,4 +24,8 @@ export class Ticket {
   category: string[];
 
   assignedUsers?: User[];
+
+  structureId?: number;
+  
+  structure?: Structure;
 }

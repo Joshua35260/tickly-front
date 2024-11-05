@@ -1,7 +1,15 @@
+@import "@assets/knacss/mixin.scss";
 .primary-navbar {
   --mask-height: 95px;
   &:before {
     width: 75px;
+    @include md {
+      width: 50px;
+    }
+    @include sm {
+      width: 40px;
+    }
+    
     background-color: #1E1E1E;
     content: '';
     display: block;
@@ -25,15 +33,15 @@
 
 
   .logo {
-    // position: absolute;
-    // bottom: 0;
-    // z-index: 10;
-    // margin: 10px auto;
-    // background: var(--logo-mini);
-    // display: block;
-    // height: 120px;
-    // width: 60px;
-    // left: 8px;
+    position: absolute;
+    bottom: 0;
+    z-index: 10;
+    margin: 10px auto;
+    background: var(--logo-mini);
+    display: block;
+    height: 120px;
+    width: 60px;
+    left: 8px;
   }
 
 
@@ -62,6 +70,12 @@
 
       i:before {
         font-size: 35px;
+        @include md {
+          font-size: 28px;
+        }
+        @include sm {
+          font-size: 20px;
+        }
       }
 
       .with-sub.active {

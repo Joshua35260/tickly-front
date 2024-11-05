@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, DestroyRef, input, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, OnInit, DestroyRef, input, ViewChild, ChangeDetectionStrategy, signal, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputComponent } from '../input/input.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -27,7 +27,7 @@ export class ListAndMapSearchComponent implements OnInit {
 
   searchForm: FormGroup;
   canClear = signal<boolean>(false);
-  
+  searchOutput =output<string>();
   constructor(
     private destroyRef: DestroyRef,
 
@@ -49,13 +49,12 @@ export class ListAndMapSearchComponent implements OnInit {
       )
       .subscribe((value) => {
         this.canClear.set(!!value);
-        
+        this.searchOutput.emit(value);
       });
   }
 
   onSave() {
-    const searchvalue = this.searchForm.get('search').value;
-
+    this.searchOutput.emit(this.searchForm.get('search').value);
   }
 
 

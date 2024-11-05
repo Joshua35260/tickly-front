@@ -47,8 +47,9 @@ export class AuditLogComponent implements OnInit {
     private destroyRef: DestroyRef,
     private auditLogService: AuditLogService,
     private ticketService: TicketService,
-    private UserService: UserService,
-    private structureService : StructureService
+    private userService: UserService,
+    private structureService : StructureService,
+    private mediaService: UserService
   ) {
     this.ticketService.entityChanged$
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -56,7 +57,7 @@ export class AuditLogComponent implements OnInit {
         this.getLogs(this.linkedTable(), this.linkedId());
       })
 
-    this.UserService.entityChanged$
+    this.userService.entityChanged$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.getLogs(this.linkedTable(), this.linkedId());
@@ -67,6 +68,12 @@ export class AuditLogComponent implements OnInit {
       .subscribe(() => {
         this.getLogs(this.linkedTable(), this.linkedId());
       })
+
+      this.mediaService.entityChanged$ //reload items automatically on crud activity on this service
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.getLogs(this.linkedTable(), this.linkedId());
+      });
   }
 
   ngOnInit() {

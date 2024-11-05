@@ -18,7 +18,7 @@ import { Observable} from 'rxjs';
   ],
 })
 export class AvatarComponent implements OnInit {
-  fileDownloadUrl: string = environment.fileDownloadUrl;
+  fileDownloadUrl: string = environment.baseUrl;
   fullname = input<string>();
   size = model<number>(64);
   height = input<number>(0);
@@ -29,7 +29,7 @@ export class AvatarComponent implements OnInit {
   baseSize: number;
 constructor(
   private resizeService: ResizeService,
-  private destroyRef: DestroyRef,  
+  private destroyRef: DestroyRef,
 ) {}
 
 

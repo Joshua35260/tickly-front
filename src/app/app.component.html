@@ -1,18 +1,13 @@
-<div class="main-layout" [class.no-navbar]="!showNavbar()">
+<div class="main-layout" [ngClass]="!showNavbar() ? 'no-navbar' : ''">
 
-  @if (showNavbar()) {
-  <app-primary-navbar></app-primary-navbar>
-  }
-
-  <div class="main-content">
-    @if(showHeader()) {
-      <app-page-header></app-page-header>
-    }
-    <div class="content">
-      <router-outlet />
-    </div>
+  <div *ngIf="showNavbar()" class="main-nav">
+    <app-primary-navbar class="main-nav"></app-primary-navbar>
   </div>
 
+  <div class="main-content">
+    <app-page-header *ngIf="showHeader()"></app-page-header>
+    <router-outlet></router-outlet>
+  </div>
 </div>
 
 <app-form-dialog [visible]="modalAuxiliaryRoute()" [size]="modalSize() || 'xxlarge'" (closeDialog)="closeDialog()">

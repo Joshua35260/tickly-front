@@ -1,0 +1,24 @@
+<div class="avatar-container" [ngClass]="{'has-avatar': avatarUrlFromParent()}">
+ 
+ @if(avatarUrlFromParent() && !fileToUpload()) {
+   <div class="avatar-c">
+     <img [src]="imageUrl()" alt="Avatar" class="avatar-image">
+     <i class="icon-remove" (click)="onDeleteAvatar()"></i>
+   </div>
+ }
+ 
+ @if(!avatarUrlFromParent() && !fileToUpload()) {
+   <div class="avatar-c" >
+     <div class="choose" (click)="onFileInputClick()">Choisir une photo</div>
+   </div>
+ }
+
+ @if(fileToUpload() !== null) {
+   <div class="avatar-c">
+     <img [src]="getImagePreviewFromUpload()" alt="Avatar" class="avatar-image">
+     <i class="icon-remove" (click)="onDeleteAvatar()"></i>
+   </div>
+ }
+
+  <input #fileInput type="file" class="fileInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;">
+</div>

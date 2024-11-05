@@ -4,7 +4,6 @@ import {
   Component,
   DestroyRef,
   ElementRef,
-  OnInit,
   output,
   signal,
   ViewChild,
@@ -51,7 +50,7 @@ export interface ListAndMapSortOption {
     WidgetComponent,
   ],
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent {
   @ViewChild('scrollList') scrollList: ElementRef;
   displayUserView = output<number>();
   searchType = SearchType.USERS
@@ -60,10 +59,10 @@ export class UserListComponent implements OnInit {
   showMap: boolean = true;
   showCreateButton = signal<boolean>(true);
   sortOptions = signal<ListAndMapSortOption[]>([
-    { label: 'Prenom (asc)', filter: 'user.first_name asc' },
-    { label: 'Prenom (desc)', filter: 'user.first_name desc' },
-    { label: 'Nom (asc)', filter: 'user.name asc' },
-    { label: 'Nom (desc)', filter: 'user.name desc' },
+    { label: 'Prenom (asc)', filter: 'firstname asc' },
+    { label: 'Prenom (desc)', filter: 'firstname desc' },
+    { label: 'Nom (asc)', filter: 'lastname asc' },
+    { label: 'Nom (desc)', filter: 'lastname desc' },
   ]);
   selectedOptions = signal(this.sortOptions()[0]);
   mapOptions = {
@@ -83,28 +82,40 @@ export class UserListComponent implements OnInit {
   itemCount: number;
   page: number = 1;
 
-
+  search = signal<string>('');
   constructor(
     private userService: UserService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private mediaService: UserService
   ) {
     this.userService.entityChanged$ //reload items automatically on crud activity on this service
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.loadItems();
       });
+      this.mediaService.entityChanged$ //reload items automatically on crud activity on this service
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadItems();
+      });
   }
 
-  ngOnInit() {}
-  onSearch(){
 
+  onSearch(search: string) {
+    this.search.set(search);
+    this.loadItems();
   }
-  onDisplayNewItem() {
 
+  onSortChange(value: string) {
+    const selectedOption = this.sortOptions().find(
+      (option) => option.filter === value
+    );
+    if (selectedOption) {
+      this.selectedOptions.set(selectedOption);
+      this.loadItems();
+    }
   }
-  onSortChange(event) {
-    
-  }
+
   toggleShowArhive() {
     this.hideArchive.set(!this.hideArchive());
     this.loadItems();
@@ -119,8 +130,14 @@ export class UserListComponent implements OnInit {
   }
 
   loadItems() {
+    const filter = {
+      search: this.search(), 
+      sort: this.selectedOptions().filter,
+      hideArchive: this.hideArchive(),
+    };
+
     this.userService
-      .getPaginated(this.page, this.rows)
+      .getPaginatedWithFilter(this.page, this.rows, filter)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         this.items.set(data.items);

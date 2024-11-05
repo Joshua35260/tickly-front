@@ -12,7 +12,7 @@ size="medium" >
     <form [formGroup]="structureAttachedForm">
       <div class="grid grid-cols-12">
         <div class="col-span-full grid grid-cols-12 gap-small">
-          <div class="input-icon-left col-span-8">
+          <div class="input-icon-left md:col-span-8 col-span-7">
             <i class="icon-magnifier"></i>
             <app-input
               class="input-with-icon-left"
@@ -20,7 +20,7 @@ size="medium" >
               label="Rechercher une structure"
             ></app-input>
           </div>
-          <div class="col-span-4 form-elem p-float-label">
+          <div class="col-span-5 md:col-span-4 form-elem p-float-label">
             <p-dropdown
               class="dropdown-icon-sort"
               [options]="sortOptions"
@@ -54,7 +54,7 @@ size="medium" >
           <label
             for="checked"
             [ngClass]="{ active: structureAttachedForm.get('checked').value }"
-            >Masquer l'historique et les archives</label
+            >Masquer les archives</label
           >
         </span>
       </div>

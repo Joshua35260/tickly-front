@@ -1,8 +1,30 @@
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
-
   <app-text-area formControlName="content" label="Contenu du commentaire"></app-text-area>
 
-  <!-- Submit button -->
+  <p-fileUpload
+    #fileUpload
+    [customUpload]="true"
+    [showCancelButton]="false"
+    [showUploadButton]="false"
+    [multiple]="false"
+    class="widget height-auto"
+    accept="image/*, application/*"
+    maxFileSize="10240000"
+    (onSelect)="onFileSelected($event)"
+  >
+  </p-fileUpload>
+
+  @if(selectedComment()?.mediaUrl) {
+    <p-button
+    label="Supprimer le document lié à ce commentaire"
+    severity="secondary"
+    icon="icon-trashcan'"
+    iconPos="left"
+    [disabled]="commentForm.invalid"
+    (click)="onDeleteDoc(selectedComment())"
+  ></p-button>
+  }
+  
   <div class="actions">
     <p-button
       [label]="selectedComment() ? 'Modifier le commentaire' : 'Ajouter le commentaire'"

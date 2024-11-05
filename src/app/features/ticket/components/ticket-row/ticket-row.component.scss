@@ -15,3 +15,18 @@
 small span {
   font-weight: 400;
 }
+.card-bottom {
+  padding-right: 0;
+}
+.card-content-2 {
+  padding-right: 0;
+  .avatar {
+    order:5;
+  }
+  .card-icon {
+    order: 1
+  }
+  .card-bottom-title {
+    order: 2;
+  }
+}

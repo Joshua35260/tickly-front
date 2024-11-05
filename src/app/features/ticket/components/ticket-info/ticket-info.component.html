@@ -6,7 +6,9 @@
       <div class="fullname">
         Ticket <span class="name">n°{{ ticket().id }}</span><span class="name" *ngIf="ticket().title">{{
           ticket().title }}</span>
+          
       </div>
+    
     </div>
 
     <div class="fullname">
@@ -15,7 +17,16 @@
       Auteur:
       <span class="name">{{ ticket().author.firstname }}</span>
       <span class="lastname">{{ ticket().author.lastname }}</span>
+      <a class="show-link" (click)="displayUserView(ticket()?.authorId)">Voir la fiche</a>
     </div>
+   
+    @if(ticket().structure) {
+    <div class="fullname-2">
+      Structure:
+      <span class="name">{{ ticket().structure.name }}</span>
+      <a class="show-link" (click)="displayStructureView(ticket()?.structureId)">Voir la fiche</a>
+    </div>
+  }
 
 
     <div class="infos">

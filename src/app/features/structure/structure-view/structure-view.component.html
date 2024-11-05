@@ -1,13 +1,18 @@
-<div class="main-grid gap-medium" *ngIf="structure$ | async as structure">
+<div class="main-grid gap-medium" *ngIf="structure()">
   
 
-    <app-structure-info class="widget height-auto" [structure]="structure" [sectionDisplayed]="sectionDisplayed()" (edit)="onEdit()"/>
+    <app-structure-info class="widget height-auto" [structure]="structure()" [sectionDisplayed]="sectionDisplayed()" (edit)="onEdit()"/>
     @if(sectionActionsDisplayed) {
     
       <div class="widget widget-padding height-auto">
         <div class="flex flex-col gap-medium">
         <div class="actions">
-          <p-button severity="warning" icon="icon-archive" [label]="structure?.archive ? 'Désarchiver' : 'Archiver'" (click)="onArchive(structure?.archive)"></p-button>
+          <p-button
+          severity="warning"
+          icon="icon-archive"
+          [label]="structure()?.archivedAt ? 'Désarchiver' : 'Archiver'"
+          (click)="onArchive(structure()?.archivedAt ? true : false)">
+        </p-button>
           <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
             (click)="showDeleteModal.set(true)"></p-button>
         </div>
@@ -16,7 +21,13 @@
     }
 
     @if(sectionStructuresDisplayed) {
-      <app-structure-users [structure]="structure" (listUpdated)="reload()" class="widget"></app-structure-users>
+      <app-structure-users [structure]="structure()" (listUpdated)="reload()" class="widget"></app-structure-users>
+    }
+    @if(sectionHistoricalDisplayed) {
+      <app-audit-log class="widget" widgetTitleTitle="Historique de la structure" [linkedId]="structure().id" [linkedTable]="LinkedTable.STRUCTURE"></app-audit-log>
+    }
+    @if (sectionTicketsDisplayed) {
+      <app-ticket-linked-list class="widget" [entityId]="structure().id" [fromEntity]="LinkedTable.STRUCTURE"></app-ticket-linked-list>
     }
 
   </div>

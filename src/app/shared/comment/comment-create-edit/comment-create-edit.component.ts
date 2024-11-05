@@ -4,6 +4,7 @@ import {
   Component,
   DestroyRef,
   OnInit,
+  ViewChild,
   input,
   output,
 } from '@angular/core';
@@ -21,6 +22,10 @@ import { InputComponent } from '@app/shared/common/input/input.component';
 import { TextAreaComponent } from '@app/shared/common/text-area/text-area.component';
 import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-title.component';
 import { Comment } from '@app/core/models/comment.class';
+import { MediaService } from '@app/core/services/media.service';
+import { FileUpload, FileUploadModule } from 'primeng/fileupload';
+import { FilesizePipe } from '../../pipes/filesize.pipe';
+import { switchMap, take } from 'rxjs';
 @Component({
   selector: 'app-comment-create-edit',
   templateUrl: './comment-create-edit.component.html',
@@ -35,9 +40,12 @@ import { Comment } from '@app/core/models/comment.class';
     TextAreaComponent,
     AvatarComponent,
     ButtonModule,
+    FileUploadModule,
+    FilesizePipe,
   ],
 })
 export class CommentCreateEditComponent implements OnInit {
+  @ViewChild(FileUpload) fileUpload: FileUpload;
   commentForm: FormGroup;
   ticketId = input.required<number>();
 
@@ -46,9 +54,14 @@ export class CommentCreateEditComponent implements OnInit {
   saved = output<void>();
   selectedComment = input<Comment>(null);
   selectedComment$ = toObservable(this.selectedComment);
+
+  // Propriétés pour l'image
+  selectedFile: File | null = null;
+
   constructor(
     private commentService: CommentService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private mediaService: MediaService
   ) {
     this.selectedComment$
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -65,39 +78,72 @@ export class CommentCreateEditComponent implements OnInit {
 
   initForm() {
     this.commentForm = new FormGroup({
-      content: new FormControl('', [
-        Validators.required,
-        Validators.maxLength(2000),
-      ]),
+      content: new FormControl('', [Validators.required, Validators.maxLength(2000)]),
       ticketId: new FormControl(this.ticketId(), Validators.required),
       authorId: new FormControl(this.userConnectedId(), Validators.required),
     });
   }
+
+  onFileSelected(event: any) {
+    if (event.files && event.files.length > 0) {
+      this.selectedFile = event.files[0];
+    }
+  }
+  
+  onDeleteDoc(comment: Comment) {
+    if (comment.mediaId) {
+      this.mediaService.delete(comment.mediaId).pipe(
+      ).subscribe({
+        next: () => {
+          this.saved.emit();
+        },  
+      });
+    } else {
+      console.warn('Aucun média associé au commentaire pour la suppression.');
+    }
+  }
+  
+  
   onSubmit() {
     if (this.commentForm.valid) {
       const commentData = {
         ...this.selectedComment(),
         ...this.commentForm.value,
       };
-      if (!this.selectedComment()) {
-        this.commentService
-          .create(commentData)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe({
-            next: () => {
-              this.saved.emit();
-            },
-          });
-      } else {
-        this.commentService
-          .update(commentData, this.selectedComment()?.id)
-          .pipe(takeUntilDestroyed(this.destroyRef))
-          .subscribe({
-            next: () => {
-              this.saved.emit();
-            },
-          });
-      }
+
+      const commentObservable = !this.selectedComment()
+        ? this.commentService.create(commentData) // Création
+        : this.commentService.update(commentData, this.selectedComment().id); // Mise à jour
+
+      commentObservable.pipe(take(1)).subscribe({
+        next: (commentUpdated: Comment) => {
+          if (this.selectedFile) {
+            this.uploadFile(commentUpdated.id);
+          } else {
+            this.saved.emit(); // Émet l'événement si aucun fichier
+          }
+        },
+        error: (err) => console.error("Erreur lors de la soumission :", err),
+      });
     }
+  }
+
+  uploadFile(commentId: number) {
+    if (this.selectedFile) {
+      const dto = { commentId: commentId };
+
+      this.mediaService.uploadSingleFile(this.selectedFile, dto).subscribe({
+        next: () => {
+          this.saved.emit(); // Émet l'événement de sauvegarde après le téléchargement
+          this.removeSelectedFile(); // Réinitialise le fichier sélectionné
+        },
+        error: (err) => console.error("Erreur lors de l'envoi du fichier :", err),
+      });
+    }
+  }
+
+  removeSelectedFile() {
+    this.selectedFile = null;
+    this.fileUpload.clear(); // Réinitialise l'interface de téléchargement
   }
 }

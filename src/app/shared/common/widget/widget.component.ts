@@ -24,5 +24,7 @@ export class WidgetComponent {
   withFooter = input<boolean>(false);
   withoutDialog = input<boolean>(false);
   withTopFooter = input<boolean>(false);
+
+  noPadding = input<boolean>(false);
   constructor() {}  
 }

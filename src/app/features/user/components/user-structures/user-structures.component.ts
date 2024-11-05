@@ -18,7 +18,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RightPanelSection } from '@app/core/models/enums/right-panel-section.enum';
 import { Structure } from '@app/core/models/structure.class';
 import { User } from '@app/core/models/user.class';
 import { StructureService } from '@app/core/services/structure.service';
@@ -27,11 +26,15 @@ import { InputComponent } from '@app/shared/common/input/input.component';
 import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-title.component';
 import { WidgetComponent } from '@app/shared/common/widget/widget.component';
 import { MenuItem } from 'primeng/api';
-import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+} from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
-import { merge, Observable, startWith, take } from 'rxjs';
+import {  Observable, startWith, take } from 'rxjs';
+import { UserService } from '@app/core/services/user.service';
 interface SortOption {
   label: string;
   filter: string;
@@ -78,18 +81,26 @@ export class UserStructuresComponent implements OnInit {
 
   structureAttachedForm: FormGroup;
   newStructureForm: FormGroup;
+  showArchived = signal<boolean>(false);
 
   filteredAndSortedStructures = computed(() => {
     const searchTerm = this.structureAttachedForm?.get('structure').value || '';
-    const filtered = this.structureAttachedToUser()?.filter((data) =>
-      data.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
-  
+    const filtered =
+      this.structureAttachedToUser()?.filter((data) => {
+        const matchesSearchTerm = data.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+        const matchesArchived = this.showArchived()
+          ? data.archivedAt === null
+          : true;
+        return matchesSearchTerm && matchesArchived;
+      }) || [];
+
     // Tri en fonction de l'option sélectionnée
     return filtered.sort((a, b) => {
-      const nameA = a.name ? a.name.toLowerCase() : '';  // Normalisation des noms pour comparaison
+      const nameA = a.name ? a.name.toLowerCase() : '';
       const nameB = b.name ? b.name.toLowerCase() : '';
-  
+
       switch (this.selectedOption().filter) {
         case 'name asc':
           return nameA.localeCompare(nameB);
@@ -100,9 +111,10 @@ export class UserStructuresComponent implements OnInit {
       }
     });
   });
-  
+
   constructor(
     private destroyRef: DestroyRef,
+    private userService: UserService,
     private structureService: StructureService,
     private router: Router
   ) {
@@ -113,6 +125,21 @@ export class UserStructuresComponent implements OnInit {
         command: () => this.deleteAttachment(),
       },
     ];
+    this.structureService.activeEntity$
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe((entity: Structure) => {
+      // Vérifiez que l'entité n'est pas undefined ou null
+      if (entity) {
+        // Assurez-vous que 'selectedNewStructure' existe dans le formulaire
+        if (this.newStructureForm.get('selectedNewStructure')) {
+          this.newStructureForm.get('selectedNewStructure').setValue(entity);
+        }
+  
+        // Mettre à jour les structures filtrées
+        this.filteredStructures.set([entity]);
+      }
+    });
+  
   }
 
   ngOnInit() {
@@ -135,12 +162,17 @@ export class UserStructuresComponent implements OnInit {
       structure: new FormControl(null),
       checked: new FormControl(false),
     });
-    merge(
-      this.structureAttachedForm.get('structure').valueChanges,
-      this.structureAttachedForm.get('checked').valueChanges
-    )
-      .pipe(takeUntilDestroyed(this.destroyRef))
+
+    this.structureAttachedForm
+      .get('structure')
+      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.searchStructures());
+
+    // Écoute des changements de valeur sur le champ 'checked'
+    this.structureAttachedForm
+      .get('checked')
+      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => this.showArchived.set(value)); // Utiliser value directement
   }
 
   searchStructures() {
@@ -183,8 +215,8 @@ export class UserStructuresComponent implements OnInit {
   onAttach() {
     const selectedStructureId =
       this.newStructureForm.value.selectedNewStructure.id;
-    this.structureService
-      .addUserToStructure(this.user().id, selectedStructureId)
+    this.userService
+      .addStructureToUser(this.user().id, selectedStructureId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.listUpdated.emit();
@@ -194,8 +226,8 @@ export class UserStructuresComponent implements OnInit {
       });
   }
   deleteAttachment() {
-    this.structureService
-      .deleteUserFromStructure(this.user().id, this.entityIdFromMenu)
+    this.userService
+      .deleteStructureFromUser(this.user().id, this.entityIdFromMenu)
       .pipe(take(1))
       .subscribe(() => {
         this.listUpdated.emit();

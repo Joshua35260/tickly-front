@@ -10,6 +10,7 @@ export class Structure {
   phone: string;
   users?: User[];
   address: Address;
-  archive?: boolean;
+  archivedAt?: Date;
+  avatarId?: number;
   avatarUrl?: string;
 }

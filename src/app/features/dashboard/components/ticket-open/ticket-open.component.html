@@ -1,0 +1,28 @@
+@if (tickets()) {
+
+<app-widget class="widget" [withFooter]="false" [withoutDialog]="true">
+  <ng-container header>
+    <app-widget-title
+      title="Tickets ouverts"
+      icon="icon-bell"
+      subtitle="Liste des tickets pas encore assignés"
+    >
+  </app-widget-title>
+  <div class="small-title">
+    <div class="title">
+      Nombre de Tickets ouverts : <span>{{ numberOfTickets() }}</span>
+    </div>
+  </div>
+  </ng-container>
+
+    <div body class="scroll-list">
+      @for (ticket of tickets(); track ticket.id) {
+      <app-ticket-row
+        [ticket]="ticket"
+        (openTicket)="displayTicketView(ticket.id)"
+      ></app-ticket-row>
+      }
+    </div>
+
+</app-widget>
+}

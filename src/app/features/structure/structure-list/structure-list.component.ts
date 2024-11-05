@@ -4,7 +4,6 @@ import {
   Component,
   DestroyRef,
   ElementRef,
-  OnInit,
   output,
   signal,
   ViewChild,
@@ -51,19 +50,17 @@ export interface ListAndMapSortOption {
     WidgetComponent,
   ],
 })
-export class StructureListComponent implements OnInit {
+export class StructureListComponent {
   @ViewChild('scrollList') scrollList: ElementRef;
   displayStructureView = output<number>();
-  searchType = SearchType.USERS
+  searchType = SearchType.STRUCTURES
   items = signal<Structure[]>([]);
   hideArchive = signal<boolean>(false);
   showMap: boolean = true;
   showCreateButton = signal<boolean>(true);
   sortOptions = signal<ListAndMapSortOption[]>([
-    { label: 'Prenom (asc)', filter: 'structure.first_name asc' },
-    { label: 'Prenom (desc)', filter: 'structure.first_name desc' },
-    { label: 'Nom (asc)', filter: 'structure.name asc' },
-    { label: 'Nom (desc)', filter: 'structure.name desc' },
+    { label: 'Nom (asc)', filter: 'name asc' },
+    { label: 'Nom (desc)', filter: 'name desc' },
   ]);
   selectedOptions = signal(this.sortOptions()[0]);
   mapOptions = {
@@ -83,7 +80,7 @@ export class StructureListComponent implements OnInit {
   itemCount: number;
   page: number = 1;
 
-
+  search = signal<string>('');
   constructor(
     private structureService: StructureService,
     private destroyRef: DestroyRef
@@ -95,15 +92,19 @@ export class StructureListComponent implements OnInit {
       });
   }
 
-  ngOnInit() {}
-  onSearch(){
-
+  onSearch(search: string) {
+    this.search.set(search);
+    this.loadItems();
   }
-  onDisplayNewItem() {
 
-  }
-  onSortChange(event) {
-    
+  onSortChange(value: string) {
+    const selectedOption = this.sortOptions().find(
+      (option) => option.filter === value
+    );
+    if (selectedOption) {
+      this.selectedOptions.set(selectedOption);
+      this.loadItems();
+    }
   }
   toggleShowArhive() {
     this.hideArchive.set(!this.hideArchive());
@@ -119,8 +120,14 @@ export class StructureListComponent implements OnInit {
   }
 
   loadItems() {
+    const filter = {
+      search: this.search(), // Utilise la recherche
+      sort: this.selectedOptions().filter, // Utilise l'option de tri sélectionnée
+      hideArchive: this.hideArchive(),
+    };
+
     this.structureService
-      .getPaginated(this.page, this.rows)
+      .getPaginatedWithFilter(this.page, this.rows, filter)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         this.items.set(data.items);

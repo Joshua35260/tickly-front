@@ -1,11 +1,13 @@
 .p-dialog {
   background: #ffffff;
-  padding: 20px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
 }
+
 .p-dialog.no-header {
   
   .p-dialog-content {
     // padding: $dialogContentNoHeaderPadding;
+    padding: 10px 20px;
     width: 100vw;
     max-width: 1100px;
     overflow-y: auto;

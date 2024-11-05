@@ -14,4 +14,8 @@ export class Comment {
   authorId: number;
 
   author: User;
+
+  mediaId?: number;
+
+  mediaUrl?: string;
 }

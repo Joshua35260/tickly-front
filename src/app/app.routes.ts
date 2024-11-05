@@ -24,8 +24,8 @@ export const routes: Routes = [
       showHeader: true,
       title: 'Tableau de bord',
       header: {
-        title: 'Outil de planification',
-        description: 'Planifier les interventions',
+        title: 'Dashboard',
+        description: 'Tableau de bord de la plateforme',
       },
     },
   },
@@ -97,6 +97,11 @@ export const routes: Routes = [
     path: 'user/create',
     outlet: 'modal',
     loadComponent: () => import('./containers/modals/user-create-container/user-create-container.component').then(c => c.UserCreateContainerComponent)
+  },
+  {
+    path: 'profil/edit/:id',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/profil-edit-container/profil-edit.container.component').then(c => c.ProfilEditContainerComponent)
   },
   {
     path: 'structure/edit/:id',

@@ -1,7 +1,8 @@
+import { StructureService } from '@app/core/services/structure.service';
 import { TicketService } from '@app/core/services/ticket.service';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, input, OnInit, output } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DestroyRef, input, OnInit, output, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { InputComponent } from '@app/shared/common/input/input.component';
 import { TextAreaComponent } from '@app/shared/common/text-area/text-area.component';
@@ -15,6 +16,8 @@ import { StatusDropdownLabels } from '@app/core/models/enums/status.enum';
 import { CategoryDropdownLabels } from '@app/core/models/enums/category.enum';
 import { DropdownModule } from 'primeng/dropdown';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { Structure } from '@app/core/models/structure.class';
+import { Ticket } from '@app/core/models/ticket.class';
 
 @Component({
   selector: 'app-ticket-create-edit',
@@ -38,22 +41,25 @@ export class TicketCreateEditComponent implements OnInit {
 ticketId = input<number>();
 ticketId$ = toObservable(this.ticketId);
 
-saved = output<void>();
+saved = output<number>();
 ticketForm: FormGroup;
 priorityOption = PriorityDropdownLabels;
 statusOption = StatusDropdownLabels;
 categoryOption = CategoryDropdownLabels;
+structureOption = signal<Structure[]>([]);
   constructor(
     private router: Router,
     private ticketService : TicketService,
     private destroyRef: DestroyRef,
+    private structureService: StructureService
   ) {
     this.ticketForm = new FormGroup({
-      title: new FormControl(''),
-      description: new FormControl(''),
-      priority: new FormControl(''),
-      category: new FormControl([]),
-      status: new FormControl(''),
+      title: new FormControl(null),
+      description: new FormControl(null, [Validators.required]),
+      priority: new FormControl(null, [Validators.required]),
+      category: new FormControl([], [Validators.required]),
+      status: new FormControl({ value: '', disabled: this.isCreating() }),
+      structureId: new FormControl(null),
     });
     this.ticketId$
     .pipe(
@@ -63,10 +69,15 @@ categoryOption = CategoryDropdownLabels;
       takeUntilDestroyed(this.destroyRef) // Destroy the observable when the component is destroyed
     )
     .subscribe((ticketId) => {
+
       this.loadTicket(ticketId);
+      this.ticketForm.get('status')?.enable();
+      this.ticketForm.updateValueAndValidity();
     });
 }
-
+isCreating(): boolean {
+  return !this.ticketId();
+}
 loadTicket(ticketId: number) {
   this.ticketService
     .getById(ticketId)
@@ -76,28 +87,39 @@ loadTicket(ticketId: number) {
     });
 }
   ngOnInit() {
+    this.structureService.getStructureByUser(1)
+    .pipe(takeUntilDestroyed(this.destroyRef))
+    .subscribe((structures: Structure[]) => {
+      this.structureOption.set(structures);
+    })
   }
-  onSubmit() {
 
+  
+  onSubmit() {
     if (this.ticketForm.valid) {
-      const ticketData = {...this.ticketForm.value};
+      const ticketData = { ...this.ticketForm.value };
       if (this.ticketId()) {
         this.ticketService
           .update(ticketData, this.ticketId())
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
-            next: () => this.saved.emit(),
+            next: (updatedTicket: Ticket) => {
+              this.saved.emit(updatedTicket.id); // Emit the ID of the updated ticket
+            },
           });
       } else {
         this.ticketService
           .create(ticketData)
           .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
-            next: () => this.saved.emit(),
+            next: (createdTicket: Ticket) => {
+              this.saved.emit(createdTicket.id); // Emit the ID of the created ticket
+            },
           });
       }
     }
   }
+  
   onCancel() {
     this.ticketForm.reset();
     this.router.navigate([{ outlets: { modal: null } }], { queryParamsHandling: 'preserve' });

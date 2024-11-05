@@ -233,28 +233,6 @@ i.disabled {
   filter: (grayscale(100%));
 }
 
-// Remove min-height of filedset inherit from class widget
-.grid {
-  fieldset {
-    height: fit-content;
-    .widget {
-      display: grid;
-    }
-  }
-}
-
-fieldset.grid {
-  display: grid;
-}
-
-fieldset {
-  height: fit-content;
-}
-
-fieldset.widget {
- min-height: fit-content;
-}
-
 .autocomplete-with-address {
   font-weight: 600;
   font-size: 15px;
@@ -281,7 +259,7 @@ app-scrollbar-overlay  {
     font-size: 19px;
   }
   @include sm {
-    font-size: 8px;
+    font-size: 15px;
   }
   .pi {
     font-size: 26px;
@@ -588,30 +566,32 @@ fieldset {
   cursor: pointer;
   text-decoration: none;
   font-size: 16px;
-
+@include lg {
+  top: -3px
+}
+@media (max-width: 620px) {
+  font-size: 13px;
+    top: 14px;
+    gap: 4px;
+}
 
   @include md {
     font-size: 15px;
-    top: -6px;
+    top: 2px;
   }
 
   @include sm {
     font-size: 13px;
-    top: -10px;
-    gap: 4px;
+    top: 17px;
+
   }
 
-  @media screen and (max-width: 480px) {
-    font-size: 12px;
-    top: 14px;
-    gap: 4px;
-  }
 
   &:after {
     content: "";
     display: block;
-    height: 80px;
-    width: 80px;
+    height: 70px;
+    width: 70px;
     margin-left: -13px;
     margin-right: -20px;
     background: var(--button-add) no-repeat;
@@ -620,20 +600,17 @@ fieldset {
 
 
     @include md {
-      height: 65px;
-      width: 65px;
+      height: 55px;
+      width: 55px;
 
     }
 
     @include sm {
-      height: 54px;
-      width: 54px;
+      height: 44px;
+      width: 44px;
     }
 
-    @media screen and (max-width: 480px) {
-      height: 48px;
-      width: 48px;
-    }
+   
 
   }
 

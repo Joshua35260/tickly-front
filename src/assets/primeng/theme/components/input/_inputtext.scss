@@ -280,14 +280,16 @@
     i {
     position: absolute;
     left: 10px;
-    top:15px;
+    top:10px;
     z-index: 1;
     font-size: 28px;
     @include md {
       font-size: 20px;
+      top:8px;
     }
     @include sm {
-      font-size: 20px;
+      font-size: 10px;
+      top:6px;
     }
   }
 

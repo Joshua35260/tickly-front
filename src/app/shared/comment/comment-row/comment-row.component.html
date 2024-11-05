@@ -20,6 +20,15 @@
       <div class="card-main-info comment">{{ comment().content }}</div>
     </div>
   </div>
+  @if(comment().mediaUrl) {
+    <p-image 
+    src="{{this.baseUrl + comment().mediaUrl}}" 
+    alt="Image" 
+    width="250" 
+    [preview]="true"
+    appendTo="body"
+    />
+  }
 </div>
 
 }

@@ -22,7 +22,9 @@ export class UserRowComponent {
   withDelete = input<boolean>(false);
   user = input.required<User>();
   menuItemsInput = input<MenuItem[]>();
-  constructor() { }
+  constructor() {
+
+  }
 
   menuOpened = output<number>();
   openUser = output<number>();

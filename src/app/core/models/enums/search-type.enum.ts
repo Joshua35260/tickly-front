@@ -7,9 +7,9 @@ export enum SearchType {
 
 
 export const SearchTypeLabels: { [key in SearchType]: string } = {
-  USERS: 'Rechercher un utilisateur',
-  STRUCTURES: 'Rechercher une structure',
-  TICKETS: 'Rechercher un ticket',
+  USERS: 'Rechercher un utilisateur par son nom, prénom, email, téléphone ...',
+  STRUCTURES: 'Rechercher une structure par nom, adresse, téléphone, email ...',
+  TICKETS: 'Rechercher un ticket par numéro, titre, auteur ...',
 };
 
 

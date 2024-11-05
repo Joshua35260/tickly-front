@@ -1,63 +1,55 @@
 @import "@assets/knacss/mixin.scss";
-
 .main-layout {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr; /* Barre de navigation et contenu principal */
   overflow: hidden;
-
+  width: 100vw;
+  height: 100vh;
+  position: relative;    
 
   &.no-navbar {
+  //  display: block;
+  grid-template-columns: 1fr;
+  height: 100vh;
     .main-content {
-      padding: 0;
-    } 
-
-    .content {
-      height: 100%;
+      padding: 0; /* Pas de remplissage si pas de navbar */
+      display: block;
     }
   }
 
-  app-primary-navbar {
-    flex-shrink: 0;
-    height: 100%;
-    display: block;
-    color: white;
-    z-index: 10;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 75px;
+  .main-nav {
+    min-width: 75px; /* Largeur minimale de la barre de navigation */
+    @include md {
+      min-width: 50px;
+    }
+    @include sm {
+      min-width: 40px;
+    }
+    height: 100vh;
   }
 
   .main-content {
-    padding: 20px 50px; 
-    height: 100%;
+    padding: 20px 50px;
+    height: 100vh; /* Hauteur totale */
+    display: grid; /* Utilisation de la grille pour le contenu */
     width: 100%;
-    display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    row-gap: 10px;
+    grid-template-rows: auto auto minmax(0, 1fr); /* Adaptation des lignes */
+    position: relative;
+    overflow: auto; /* Autorise le défilement si nécessaire */
+
+    /* Ajustements selon les tailles d'écran */
     @include lg {
-      padding: 10px 25px;
+      padding: 15px 30px;
     }
 
     @include md {
-      padding: 10px;
+      padding: 10px 25px;
     }
-
+    
     @include sm {
       padding: 10px;
-    }
-
-
-    app-page-header {
-      flex-shrink: 0;
-    }
-
-    .content {
-      height: 100%;
-      width: 100%;
-      overflow: auto;
     }
   }
 }

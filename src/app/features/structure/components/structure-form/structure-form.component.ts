@@ -6,17 +6,27 @@ import {
   output,
   DestroyRef,
   input,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormGroup,
+  FormControl,
+  Validators,
+  FormArray,
+} from '@angular/forms';
 import { Structure } from '@app/core/models/structure.class';
+import { User } from '@app/core/models/user.class';
+import { MediaService } from '@app/core/services/media.service';
 import { StructureService } from '@app/core/services/structure.service';
+import { AvatarUploadComponent } from '@app/shared/common/avatar-upload/avatar-upload.component';
 import { InputComponent } from '@app/shared/common/input/input.component';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { distinctUntilChanged, startWith } from 'rxjs';
+import { distinctUntilChanged, of, startWith, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-structure-form',
@@ -32,21 +42,23 @@ import { distinctUntilChanged, startWith } from 'rxjs';
     InputComponent,
     InputSwitchModule,
     DropdownModule,
+    AvatarUploadComponent,
   ],
 })
-export class StructureFormComponent implements OnInit {saved = output<Structure>();
+export class StructureFormComponent implements OnInit {
+  saved = output<number>();
   cancel = output<void>();
-
   structure = input<Structure>();
   structure$ = toObservable(this.structure);
   structureForm: FormGroup;
 
-
-
+  avatarToUpload = signal<File>(null);
+  deleteAvatar: boolean = false;
 
   constructor(
     private destroyRef: DestroyRef,
-    private structureService: StructureService
+    private structureService: StructureService,
+    private mediaService: MediaService
   ) {
     this.structure$
       .pipe(
@@ -84,21 +96,53 @@ export class StructureFormComponent implements OnInit {saved = output<Structure>
 
   onSave() {
     if (this.structureForm.valid) {
-      const structure: Structure = {
-        ...this.structureForm.value,
-      };
-
-      this.structureService
-        .create(structure)
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe((structureCreated: Structure) => {
-          this.saved.emit(structureCreated);
-        });
+      const structureData: Structure = { ...this.structureForm.value };
+      if (this.structure()?.id) {
+        this.structureService
+          .update(structureData, this.structure().id)
+          .pipe(
+            takeUntilDestroyed(this.destroyRef),
+            switchMap((updatedStructure: Structure) => {
+              if (this.avatarToUpload()) {
+                return this.mediaService.uploadSingleFile(
+                  this.avatarToUpload(),
+                  { structureId: updatedStructure.id }
+                );
+              } else if (this.deleteAvatar) {
+                return this.mediaService.delete(updatedStructure.avatarId);
+              } else {
+                return of(updatedStructure);
+              }
+            })
+          )
+          .subscribe((structureUpdated: Structure) => {
+            this.saved.emit(structureUpdated.id);
+          });
+      } else {
+        this.structureService
+          .create(structureData)
+          .pipe(takeUntilDestroyed(this.destroyRef))
+          .subscribe((structureCreated: Structure) => {
+            this.saved.emit(structureCreated.id);
+          });
+      }
     }
   }
 
   onCancel() {
     this.structureForm.reset();
     this.cancel.emit();
+  }
+  onFileSelected(file: File) {
+    if (file) {
+      this.avatarToUpload.set(file);
+    } else {
+      this.avatarToUpload.set(null);
+    }
+  }
+
+  onDeleteAvatar() {
+    this.avatarToUpload.set(null);
+    this.deleteAvatar = true;
   }
 }

@@ -4,7 +4,6 @@ import {
   Component,
   DestroyRef,
   ElementRef,
-  OnInit,
   output,
   signal,
   ViewChild,
@@ -17,7 +16,7 @@ import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { PaginatorModule } from 'primeng/paginator';
 import { ListAndMapSearchComponent } from '@app/shared/common/list-and-map-search/list-and-map-search.component';
-import {SearchType} from '@app/core/models/enums/search-type.enum';
+import { SearchType } from '@app/core/models/enums/search-type.enum';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { EmptyListComponent } from '@app/shared/common/layout/empty-list/empty-list.component';
@@ -34,6 +33,7 @@ export interface ListAndMapSortOption {
   order?: string;
   filter: string;
 }
+
 @Component({
   selector: 'app-ticket-list',
   templateUrl: './ticket-list.component.html',
@@ -52,19 +52,19 @@ export interface ListAndMapSortOption {
     WidgetComponent,
   ],
 })
-export class TicketListComponent implements OnInit {
+export class TicketListComponent {
   @ViewChild('scrollList') scrollList: ElementRef;
   displayTicketView = output<number>();
-  searchType = SearchType.USERS
+  searchType = SearchType.TICKETS;
   items = signal<Ticket[]>([]);
   hideArchive = signal<boolean>(false);
   showMap: boolean = true;
   showCreateButton = signal<boolean>(true);
   sortOptions = signal<ListAndMapSortOption[]>([
-    { label: 'Numéro (asc)', filter: 'ticket.id asc' },
-    { label: 'Numéro (desc)', filter: 'ticket.id desc' },
+    { label: 'Numéro (asc)', filter: 'id asc' },
+    { label: 'Numéro (desc)', filter: 'id desc' },
   ]);
-  selectedOptions = signal(this.sortOptions()[0]);
+  selectedOptions = signal(this.sortOptions()[1]);
   mapOptions = {
     layers: [
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -82,11 +82,12 @@ export class TicketListComponent implements OnInit {
   itemCount: number;
   page: number = 1;
 
+  search = signal<string>('');
 
   constructor(
     private ticketService: TicketService,
     private destroyRef: DestroyRef,
-    private router: Router,
+    private router: Router
   ) {
     this.ticketService.entityChanged$ //reload items automatically on crud activity on this service
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -95,37 +96,53 @@ export class TicketListComponent implements OnInit {
       });
   }
 
-  ngOnInit() {}
-  onSearch(){
-
-  }
   onDisplayNewItem() {
     this.router.navigate([{ outlets: { modal: ['ticket', 'create'] } }], { queryParamsHandling: 'preserve' });
   }
-  onSortChange(event) {
-    
+
+  onSortChange(value: string) {
+    const selectedOption = this.sortOptions().find(
+      (option) => option.filter === value
+    );
+    if (selectedOption) {
+      this.selectedOptions.set(selectedOption);
+      this.loadItems();
+    }
   }
+  onSearch(search: string) {
+    this.search.set(search);
+    this.loadItems();
+  }
+
   toggleShowArhive() {
     this.hideArchive.set(!this.hideArchive());
     this.loadItems();
   }
+
   onMapReady(map: L.Map) {
     this.map = map; // Set the map reference
     this.itemsMarkers = L.featureGroup().addTo(this.map); // Initialize FeatureGroup and add to map
     this.loadItems(); // Load items after the map is ready
   }
+
   get layers(): L.Layer[] {
     return this.itemsMarkers ? this.itemsMarkers.getLayers() : [];
   }
 
   loadItems() {
+    const filter = {
+      search: this.search(), // Utilise la recherche
+      sort: this.selectedOptions().filter, // Utilise l'option de tri sélectionnée
+      hideArchive: this.hideArchive(),
+    };
+
     this.ticketService
-      .getPaginated(this.page, this.rows)
+      .getPaginatedWithFilter(this.page, this.rows, filter)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        this.items.set(data.items);
-        this.itemCount = data.total; // Mettre à jour le nombre total d'items
-        this.addMarkers(data.items); // Ajouter des marqueurs
+        this.items.set(data.items); // Met à jour les items
+        this.itemCount = data.total; // Met à jour le nombre total d'items
+        this.addMarkers(data.items); // Ajoute des marqueurs sur la carte
       });
   }
   addMarkers(items: Ticket[]) {
@@ -140,9 +157,15 @@ export class TicketListComponent implements OnInit {
       }
 
       items.forEach((item) => {
-        if (item.author?.address && item.author?.address.latitude && item.author?.address.longitude) {
+        if (
+          item.author?.address &&
+          item.author?.address.latitude &&
+          item.author?.address.longitude
+        ) {
           const latitude = parseFloat(item.author?.address.latitude.toString());
-          const longitude = parseFloat(item.author?.address.longitude.toString());
+          const longitude = parseFloat(
+            item.author?.address.longitude.toString()
+          );
 
           // Vérifiez si latitude et longitude sont valides
           if (!isNaN(latitude) && !isNaN(longitude)) {
@@ -159,9 +182,13 @@ export class TicketListComponent implements OnInit {
 
             const marker = L.marker([latitude, longitude], { icon: customIcon })
               .bindPopup(`
-                        <strong>${item.author?.firstname} ${item.author?.lastname}</strong><br>
+                        <strong>${item.author?.firstname} ${
+              item.author?.lastname
+            }</strong><br>
                         ${item.author?.address.streetL1 || ''}<br>
-                        ${item.author?.address.city}, ${item.author?.address.postcode}
+                        ${item.author?.address.city}, ${
+              item.author?.address.postcode
+            }
                     `);
 
             this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup

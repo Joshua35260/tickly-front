@@ -1,31 +1,40 @@
-<app-widget class="widget" [withFooter]="false" [withoutDialog]="true">
+<app-widget [withFooter]="false" [withoutDialog]="true" [noPadding]="true">
   <app-widget-title header [title]="ticketId() ? 'Modifier le ticket' : 'Créer un ticket'"
     icon="pi pi-tag"></app-widget-title>
   <ng-container body>
 
     <form [formGroup]="ticketForm">
-      <fieldset class="grid grid-cols-12 gap-small">
-        <app-input class="col-span-12" formControlName="title" label="Titre"></app-input>
-        <span class="form-elem p-float-label col-span-4">
-          <p-dropdown inputId="title" formControlName="priority" appendTo="body" [options]="priorityOption"
-          optionLabel="value" optionValue="value"></p-dropdown>
-          <label>Priorité</label>
-        </span>
-        <span class="form-elem p-float-label col-span-4">
-          <p-multiSelect  inputId="title" formControlName="category" appendTo="body" [options]="categoryOption"
-          optionLabel="label" optionValue="value" display="chip" ></p-multiSelect>
-          <label>Catégorie</label>
+      <fieldset class="md:grid md:grid-cols-12 gap-small flex flex-col  ">
+        <app-input class="col-span-4" formControlName="title" label="Titre"></app-input>
+
+    
+        <span class="form-elem p-float-label col-span-8">
+          <p-dropdown inputId="structure" formControlName="structureId"  [options]="structureOption()"
+          optionLabel="name" optionValue="id" emptyMessage="Aucune structure n'est reliée à votre profil"></p-dropdown>
+          <label>Structure pour laquelle le ticket est créé (facultatif)</label>
         </span>
 
         <span class="form-elem p-float-label col-span-4">
-          <p-dropdown inputId="title" formControlName="status" appendTo="body" [options]="statusOption"
-          optionLabel="value" optionValue="value"></p-dropdown>
+          <p-dropdown inputId="title" formControlName="priority" [options]="priorityOption"
+          optionLabel="label" optionValue="value"></p-dropdown>
+          <label>Priorité *</label>
+        </span>
+        <span class="form-elem p-float-label col-span-4">
+          <p-multiSelect  inputId="title" formControlName="category" [options]="categoryOption"
+          optionLabel="label" optionValue="value" display="chip" [showHeader]="false" ></p-multiSelect>
+          <label>Catégorie *</label>
+        </span>
+
+        <span class="form-elem p-float-label col-span-4">
+          <p-dropdown inputId="title" formControlName="status" [options]="statusOption"
+          optionLabel="label" optionValue="value"></p-dropdown>
           <label>Statut</label>
         </span>
 
-        <app-text-area class="col-span-12" formControlName="description" label="Description"></app-text-area>
+        <app-text-area class="col-span-12" formControlName="description" label="Description *"></app-text-area>
       </fieldset>
     </form>
+    
     <div class="actions">
       <p-button [label]="ticketId() ? 'Modifier le ticket' : 'Ajouter le ticket'" [icon]="ticketId() ? 'icon-check' : 'icon-add'" [disabled]="!ticketForm.valid" (onClick)="onSubmit()"></p-button>
 

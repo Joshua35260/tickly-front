@@ -17,7 +17,6 @@ import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-tit
 import { AuditLogComponent } from '@app/shared/audit-log/audit-log.component';
 import { LinkedTable } from '@app/core/models/enums/linked-table.enum';
 import { CommentListComponent } from '@app/shared/comment/comment-list/comment-list.component';
-
 @Component({
   selector: 'app-ticket-view',
   templateUrl: './ticket-view.component.html',
@@ -32,7 +31,6 @@ import { CommentListComponent } from '@app/shared/comment/comment-list/comment-l
     WidgetTitleComponent,
     AuditLogComponent,
     CommentListComponent,
-
   ],
 })
 export class TicketViewComponent {

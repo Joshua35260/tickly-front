@@ -23,7 +23,10 @@ import { InputComponent } from '@app/shared/common/input/input.component';
 import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-title.component';
 import { WidgetComponent } from '@app/shared/common/widget/widget.component';
 import { MenuItem } from 'primeng/api';
-import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+} from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -81,15 +84,26 @@ export class StructureUsersComponent implements OnInit {
 
   userAttachedForm: FormGroup;
   newUserForm: FormGroup;
+  showArchived = signal<boolean>(false);
 
   filteredAndSortedUsers = computed(() => {
     const searchTerm = this.userAttachedForm?.get('user').value || '';
-    
+
     // Filtrage des utilisateurs par prénom ou nom
-    const filtered = this.usersAttachedToStructure()?.filter((data) =>
-      data.firstname.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      data.lastname.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
+    const filtered =
+      this.usersAttachedToStructure()?.filter((data) => {
+        const matchesSearchTerm =
+          data.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          data.lastname.toLowerCase().includes(searchTerm.toLowerCase());
+
+        // Vérifier si l'utilisateur est archivé
+        const matchesArchived = this.showArchived()
+          ? data.archivedAt === null
+          : true;
+
+        // Retourner vrai si les deux conditions sont remplies
+        return matchesSearchTerm && matchesArchived;
+      }) || [];
 
     // Tri en fonction de l'option sélectionnée
     return filtered.sort((a, b) => {
@@ -98,7 +112,7 @@ export class StructureUsersComponent implements OnInit {
       const firstnameB = b.firstname ? b.firstname.toLowerCase() : '';
       const lastnameA = a.lastname ? a.lastname.toLowerCase() : '';
       const lastnameB = b.lastname ? b.lastname.toLowerCase() : '';
-  
+
       switch (this.selectedOption().filter) {
         case 'firstname asc':
           return firstnameA.localeCompare(firstnameB);
@@ -113,7 +127,7 @@ export class StructureUsersComponent implements OnInit {
       }
     });
   });
-  
+
   constructor(
     private destroyRef: DestroyRef,
     private structureService: StructureService,
@@ -127,6 +141,15 @@ export class StructureUsersComponent implements OnInit {
         command: () => this.deleteAttachment(),
       },
     ];
+    this.userService.activeEntity$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((entity: User) => {
+        if (entity) {
+          const newUser = new User(entity)
+          this.newUserForm.get('selectedNewUser')?.setValue(newUser);
+          this.filteredUsers.set([newUser]);
+        }
+      })
   }
 
   ngOnInit() {
@@ -149,21 +172,26 @@ export class StructureUsersComponent implements OnInit {
       user: new FormControl(null),
       checked: new FormControl(false),
     });
-    merge(
-      this.userAttachedForm.get('user').valueChanges,
-      this.userAttachedForm.get('checked').valueChanges
-    )
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.searchUsers());
-  }
 
+    this.userAttachedForm
+      .get('user')
+      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.searchUsers());
+
+    this.userAttachedForm
+      .get('checked')
+      .valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((value) => this.showArchived.set(value));
+  }
 
   searchUsers() {
     const searchTerm = this.userAttachedForm?.get('user').value || '';
     if (searchTerm) {
       this.usersAttachedToStructure.set(
-        this.structure().users.filter((data) =>
-          data.firstname.toLowerCase().includes(searchTerm.toLowerCase()) || data.lastname.toLowerCase().includes(searchTerm.toLowerCase())
+        this.structure().users.filter(
+          (data) =>
+            data.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            data.lastname.toLowerCase().includes(searchTerm.toLowerCase())
         )
       );
     } else {
@@ -186,29 +214,29 @@ export class StructureUsersComponent implements OnInit {
       .getAutocompleteUserByName(query.length >= 2 ? query : '')
       .subscribe((data: PaginatedData<User>) => {
         // Ajout de la propriété fullName dans chaque utilisateur
-        const usersWithFullName = data.items.map(user => ({
+        const usersWithFullName = data.items.map((user) => ({
           ...user,
           fullName: `${user.firstname} ${user.lastname}`,
         }));
-  
+
         // Mise à jour de `filteredUsers` avec `set` pour inclure fullName
         this.filteredUsers.set(usersWithFullName);
-  
+
         // Patch pour garder la valeur de recherche
         this.newUserForm.patchValue({
           selectedNewUser: query || '',
         });
       });
   }
-  
+
   setEntityIdFromMenu(id: number) {
     this.entityIdFromMenu = id;
   }
+
   onAttach() {
-    const selectedUserId =
-      this.newUserForm.value.selectedNewUser.id;
+    const selectedUserId = this.newUserForm.value.selectedNewUser.id;
     this.structureService
-      .addUserToStructure(selectedUserId, this.structure().id)
+      .addUserToStructure(this.structure().id, selectedUserId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
         this.listUpdated.emit();
@@ -217,10 +245,10 @@ export class StructureUsersComponent implements OnInit {
         this.subFormOpened = false;
       });
   }
-  deleteAttachment() {
 
+  deleteAttachment() {
     this.structureService
-      .deleteUserFromStructure(this.entityIdFromMenu, this.structure().id)
+      .deleteUserFromStructure(this.structure().id, this.entityIdFromMenu)
       .pipe(take(1))
       .subscribe(() => {
         this.listUpdated.emit();
@@ -237,7 +265,22 @@ export class StructureUsersComponent implements OnInit {
       queryParams: { doNotOpenAfterCreate: true },
     });
   }
+
   displayUserView(userId: number) {
-    this.router.navigate([{ outlets: { panel: [ 'user', 'view', userId, RightPanelSection.RIGHT_PANEL_SECTION_INFO ] } }], { queryParamsHandling: 'preserve' });
+    this.router.navigate(
+      [
+        {
+          outlets: {
+            panel: [
+              'user',
+              'view',
+              userId,
+              RightPanelSection.RIGHT_PANEL_SECTION_INFO,
+            ],
+          },
+        },
+      ],
+      { queryParamsHandling: 'preserve' }
+    );
   }
 }

@@ -32,7 +32,9 @@ import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-tit
 import { InputComponent } from '@app/shared/common/input/input.component';
 import { UserService } from '@app/core/services/user.service';
 import { User } from '@app/core/models/user.class';
-import { startWith } from 'rxjs';
+import { of, startWith, switchMap } from 'rxjs';
+import { AvatarUploadComponent } from '@app/shared/common/avatar-upload/avatar-upload.component';
+import { MediaService } from '@app/core/services/media.service';
 
 @Component({
   selector: 'app-user-create-edit',
@@ -52,6 +54,7 @@ import { startWith } from 'rxjs';
     FormDialogComponent,
     AutoCompleteModule,
     WidgetTitleComponent,
+    AvatarUploadComponent,
   ],
 })
 export class UserCreateEditComponent {
@@ -64,17 +67,19 @@ export class UserCreateEditComponent {
   filteredStructures = signal<Structure[]>([]);
   structureLinked = signal<Structure>(null);
 
-
+  avatarToUpload = signal<File>(null);
+  deleteAvatar: boolean = false;
   constructor(
     private userService: UserService,
     private structureService: StructureService,
+    private mediaService: MediaService,
     private destroyRef: DestroyRef
   ) {
     this.userForm = new FormGroup({
       firstname: new FormControl('', [Validators.required]),
       lastname: new FormControl('', [Validators.required]),
       login: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.minLength(4),]),
+      password: new FormControl('', [Validators.minLength(4)]),
       phone: new FormControl(''),
       email: new FormControl('', [Validators.required]),
       address: new FormGroup({
@@ -86,10 +91,7 @@ export class UserCreateEditComponent {
       }),
     });
     this.userId$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        startWith(this.userId()),
-      )
+      .pipe(takeUntilDestroyed(this.destroyRef), startWith(this.userId()))
       .subscribe((id: number) => {
         if (id) {
           this.userService
@@ -97,24 +99,36 @@ export class UserCreateEditComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((user: User) => {
               this.user.set(user);
-              this.userForm.patchValue(user);
+              const { password, ...userWithoutPassword } = user;
+              this.userForm.patchValue(userWithoutPassword);
             });
         }
       });
   }
 
-
-
-
   onSubmit() {
     if (this.userForm.valid) {
-      const userData = { ...this.userForm.value };
-  
-   // UPDATE
+      const userData: User = { ...this.userForm.value };
+
       if (this.userId()) {
+        // UPDATE
         this.userService
           .update(userData, this.userId())
-          .pipe(takeUntilDestroyed(this.destroyRef))
+          .pipe(
+            takeUntilDestroyed(this.destroyRef),
+            switchMap((updatedUser: User) => {
+              if (this.avatarToUpload()) {
+                return this.mediaService.uploadSingleFile(
+                  this.avatarToUpload(),
+                  { userId: updatedUser.id }
+                );
+              } else if (this.deleteAvatar) {
+                return this.mediaService.delete(updatedUser.avatarId);
+              } else {
+                return of(updatedUser);
+              }
+            })
+          )
           .subscribe({
             next: () => this.saved.emit(),
           });
@@ -131,9 +145,19 @@ export class UserCreateEditComponent {
       console.error('Form is invalid'); // Log si le formulaire est invalide
     }
   }
-  
 
+  onFileSelected(file: File) {
+    if (file) {
+      this.avatarToUpload.set(file);
+    } else {
+      this.avatarToUpload.set(null);
+    }
+  }
 
+  onDeleteAvatar() {
+    this.avatarToUpload.set(null);
+    this.deleteAvatar = true;
+  }
   resetForm() {
     this.userForm.reset();
   }

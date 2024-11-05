@@ -6,9 +6,15 @@
         <i class="icon-organization"></i>
         <div>Structure</div>
       </div>
-    <app-input class="sm:col-span-12" formControlName="name" label="Nom de l'entreprise"></app-input>
-    <app-input class="sm:col-span-6" formControlName="service" label="Service"></app-input>
-    <app-input class="sm:col-span-6" formControlName="type" label="Type d'entreprise"></app-input>
+      <span class="col-span-2 row-span-3 form-elem p-float-label avatar-structure-form">
+        <app-avatar-upload  [avatarUrlFromParent]="structure()?.avatarUrl" 
+                            (fileSelected)="onFileSelected($event)"
+                            (deleteAvatar)="onDeleteAvatar()">
+        </app-avatar-upload> 
+      </span>
+    <app-input class="sm:col-span-10" formControlName="name" label="Nom de l'entreprise"></app-input>
+    <app-input class="sm:col-span-10" formControlName="service" label="Service"></app-input>
+    <app-input class="sm:col-span-10" formControlName="type" label="Type d'entreprise"></app-input>
   </fieldset>
 
     <fieldset class="sm:grid grid-cols-12 gap-small">

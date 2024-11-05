@@ -1,7 +1,7 @@
-<div class="main-grid gap-medium" *ngIf="user$ | async as user">
+<div class="main-grid gap-medium" *ngIf="user()">
 
 
-  <app-user-info class="widget height-auto" (saved)="reload()" [user]="user" [sectionDisplayed]="sectionDisplayed()"
+  <app-user-info class="widget height-auto" [user]="user()" [sectionDisplayed]="sectionDisplayed()"
     (edit)="onEdit($event)" />
   @if(sectionActionsDisplayed) {
 
@@ -10,7 +10,12 @@
     <div class="flex flex-col gap-medium">
       <app-widget-title title="Actions d'administrations" subtitle="Ces actions peuvent avoir des répercussions sur l'intégralité des données" icon="icon-gears"></app-widget-title>
       <div class="actions">
-        <p-button severity="warning" icon="icon-archive" [label]="user.archive ? 'Désarchiver' : 'Archiver'" (click)="onArchive(user?.archive)"></p-button>
+        <p-button
+        severity="warning"
+        icon="icon-archive"
+        [label]="user()?.archivedAt ? 'Désarchiver' : 'Archiver'"
+        (click)="onArchive(user()?.archivedAt ? true : false)">
+      </p-button>
         <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
           (click)="showDeleteModal.set(true)"></p-button>
       </div>
@@ -19,10 +24,16 @@
   }
 
   @if (sectionStructuresDisplayed) {
-  <app-user-structures class="widget" [user]="user" (listUpdated)="reload()"
+  <app-user-structures class="widget" [user]="user()"
     (displayStructureView)="displayStructureView.emit($event)"></app-user-structures>
   }
+  @if(sectionHistoricalDisplayed) {
+    <app-audit-log class="widget" widgetTitleTitle="Historique de l'utilisateur" [linkedId]="user().id" [linkedTable]="LinkedTable.USER"></app-audit-log>
+  }
 
+  @if (sectionTicketsDisplayed) {
+    <app-ticket-linked-list class="widget" [entityId]="user().id" [fromEntity]="LinkedTable.USER"></app-ticket-linked-list>
+  }
 </div>
 
 

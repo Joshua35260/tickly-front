@@ -1,74 +1,79 @@
 .p-tabmenu {
-    .p-tabmenu-nav {
-        background: $tabviewNavBg;
-        border: $tabviewNavBorder;
-        border-width: $tabviewNavBorderWidth;
-        
 
-        .p-menuitem-badge {
-            @include menuitem-badge();
-        }
+  .p-tabmenu-nav {
+      // background: $tabviewNavBg;
+      // border: $tabviewNavBorder;
+      border-width: $tabviewNavBorderWidth;
+      border-bottom: 2px solid rgb(220, 220, 220);
+    
+      .p-menuitem-badge {
+          @include menuitem-badge();
+      }
 
-        .p-tabmenuitem {
-            margin-right: $tabviewHeaderSpacing;
+      .p-tabmenuitem {
+          margin-right: $tabviewHeaderSpacing;
 
-            .p-menuitem-link {
-                border: $tabviewHeaderBorder;
-                border-width: $tabviewHeaderBorderWidth;
-                border-color: $tabviewHeaderBorderColor;
-                background: $tabviewHeaderBg;
-                color: $tabviewHeaderTextColor;
-                padding: $tabviewHeaderPadding;
-                font-weight: $tabviewHeaderFontWeight;
-                border-top-right-radius: $borderRadius;
-                border-top-left-radius: $borderRadius;
-                transition: $listItemTransition;
-                margin: $tabviewHeaderMargin;
+          .p-menuitem-link {
+              // background: $tabviewHeaderBg;
+              // border: $tabviewHeaderBorder;
+              // border-width: $tabviewHeaderBorderWidth;
+              // border-color: $tabviewHeaderBorderColor;
+              border-bottom: 2px solid rgb(220, 220, 220);
+              color: $tabviewHeaderTextColor;
+              // padding: $tabviewHeaderPadding;
+              padding: 10px 20px;
+              font-weight: $tabviewHeaderFontWeight;
+              border-top-right-radius: $borderRadius;
+              border-top-left-radius: $borderRadius;
+              transition: $listItemTransition;
+              margin: $tabviewHeaderMargin;
+              text-decoration: none;
+              font-weight: 500;
+              .p-menuitem-icon {
+                  margin-right: $inlineSpacing;
+              }
 
-                .p-menuitem-icon {
-                    margin-right: $inlineSpacing;
-                }
+              &:not(.p-disabled):focus {
+                  // @include focused-inset();
+              }
+          }
 
-                &:not(.p-disabled):focus {
-                    @include focused-inset();
-                }
-            }
+          &:not(.p-highlight):not(.p-disabled):hover {
+              .p-menuitem-link {
+                  // background: $tabviewHeaderHoverBg;
+                  border-color: $tabviewHeaderHoverBorderColor;
+                  color: $tabviewHeaderTextHoverColor;
+                  box-shadow: none;
+              }
+          }
 
-            &:not(.p-highlight):not(.p-disabled):hover {
-                .p-menuitem-link {
-                    background: $tabviewHeaderHoverBg;
-                    border-color: $tabviewHeaderHoverBorderColor;
-                    color: $tabviewHeaderTextHoverColor;
-                }
-            }
+          &.p-highlight {
+              .p-menuitem-link {
+                  // background: $tabviewHeaderActiveBg;
+                  border-color: $tabviewHeaderActiveBorderColor;
+                  color: $tabviewHeaderTextActiveColor;
+              }
+          }
+      }
+  }
 
-            &.p-highlight {
-                .p-menuitem-link {
-                    background: $tabviewHeaderActiveBg;
-                    border-color: $tabviewHeaderActiveBorderColor;
-                    color: $tabviewHeaderTextActiveColor;
-                }
-            }
-        }
-    }
+  .p-tabmenu-left-icon {
+      margin-right: $inlineSpacing;
+  }
 
-    .p-tabmenu-left-icon {
-        margin-right: $inlineSpacing;
-    }
+  .p-tabmenu-right-icon {
+      margin-left: $inlineSpacing;
+  }
 
-    .p-tabmenu-right-icon {
-        margin-left: $inlineSpacing;
-    }
+  .p-tabmenu-nav-btn.p-link {
+      background: $tabviewHeaderActiveBg;
+      color: $tabviewHeaderTextActiveColor;
+      width: $buttonIconOnlyWidth;
+      box-shadow: $raisedButtonShadow;
+      border-radius: 0;
 
-    .p-tabmenu-nav-btn.p-link {
-        background: $tabviewHeaderActiveBg;
-        color: $tabviewHeaderTextActiveColor;
-        width: $buttonIconOnlyWidth;
-        box-shadow: $raisedButtonShadow;
-        border-radius: 0;
-
-        &:focus {
-            @include focused-inset();
-        }
-    }
+      &:focus {
+          @include focused-inset();
+      }
+  }
 }

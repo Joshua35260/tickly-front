@@ -79,7 +79,7 @@ export class PageHeaderComponent {
   // Rediriger vers le profil de l'utilisateur
   showProfil() {
     this.router.navigate(
-      [{ outlets: { panel: ['profil', 'view', this.userConnected().id] } }],
+      [{ outlets: { modal: ['profil', 'edit', this.userConnected().id] } }],
       { queryParamsHandling: 'preserve' }
     );
   }

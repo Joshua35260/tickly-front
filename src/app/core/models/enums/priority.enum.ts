@@ -25,4 +25,8 @@ export function getClass(priority: Priority): string {
 }
 
 // function to get the right advanced search type according to the search typ
-export const PriorityDropdownLabels: {label: string, value: string}[] = Object.entries(Priority).map(([value, label]) => ({label, value}));
+
+export const PriorityDropdownLabels: {label: string, value: string}[] = Object.entries(Priority).map(([value, key]) => ({
+  label: PriorityLabels[value], 
+  value: value
+}));
