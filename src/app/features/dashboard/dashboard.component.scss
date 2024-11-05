@@ -12,6 +12,10 @@
     ::ng-deep .card-small-icon {
         margin-right: 0;
     }
+    @include lg {
+      display: flex;
+      flex-direction: column;
+    }
     @include md {
       display: flex;
       flex-direction: column;
@@ -28,18 +32,23 @@
   min-height: 0px;
 }
 
-.grid-row {
-  display: grid;
-  align-items: center;
-  grid-template-columns: 1fr auto;
-  gap: 5px; 
-  width: 100%; 
-}
+
 
 app-user-row {
   width: 100%;
 }
+.grid-row {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  gap: 5px; 
+  width: 100%;
 
+  app-user-row,app-structure-row {
+    width: 100%;
+  }
+}
 .title {
   text-align: right;
   width: 100px;

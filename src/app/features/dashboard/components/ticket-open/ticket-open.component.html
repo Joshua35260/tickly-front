@@ -18,6 +18,7 @@
     <div body class="scroll-list">
       @for (ticket of tickets(); track ticket.id) {
       <app-ticket-row
+      class="sm-display"
         [ticket]="ticket"
         (openTicket)="displayTicketView(ticket.id)"
       ></app-ticket-row>
