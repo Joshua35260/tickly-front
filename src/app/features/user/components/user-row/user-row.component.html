@@ -1,19 +1,19 @@
 <!--! don't forget to use the _card.scss file for the css !-->
 
-<div class="card">
+<div [ngClass]="user().archivedAt ? 'card archive':'card'">
 
-  <div class="card-top only" (click)="openUser.emit(user().id)">
-    <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'">
-
-
-      <app-avatar class="avatar" [fullname]="user().firstname + user().lastname" [size]="60">
+  <div class="card-top only">
+    @if (withMenu()) {
+    <i class="icon-menu pi pi-ellipsis-v" (click)="menu.toggle($event); onMenuOpen()">
+      <p-menu #menu [model]="menuItemsInput() || menuItems" [popup]="true" appendTo="body"></p-menu>
+    </i>
+    }
+    @if (withDelete()) {
+    <i class="con-menu icon-trashcan" (click)="delete.emit(user().id)"></i>
+    }
+    <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openUser.emit(user().id)">
+      <app-avatar class="avatar" [avatarUrl]="user().avatarUrl" [fullname]="user().firstname + user().lastname" [size]="60">
       </app-avatar>
-
-      @if (withMenu()) {
-      <i class="icon-menu pi pi-ellipsis-v" (click)="menu.toggle($event); onMenuOpen()">
-        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body"></p-menu>
-      </i>
-      }
 
       <div class="card-main-info flex flex-col">
         <div class="card-top-title">
@@ -24,14 +24,14 @@
         </div>
 
         <div class="card-contact">
-          <div class="card-small-icon" *ngIf="user().phones && user().phones.length > 0"><i class="icon-phone"></i>
-            {{user().phones?.[0].phone}}</div>
-          <div class="card-small-icon" *ngIf="user().emails && user().emails.length > 0"><i class="icon-mail"></i>
-            {{user().emails?.[0].email}}</div>
+          <div class="card-small-icon" *ngIf="user().phone"><i class="icon-phone"></i>
+            {{user().phone}}</div>
+          <div class="card-small-icon" *ngIf="user().email"><i class="icon-mail"></i>
+            {{user().email}}</div>
         </div>
       </div>
 
-      @if(user().archive) {
+      @if(user().archivedAt) {
       <div class="archive-info">
         Archivé<i class="icon-archive"></i>
       </div>

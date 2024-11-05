@@ -1,3 +1,4 @@
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { ApplicationConfig, importProvidersFrom, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -31,7 +32,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(
-      withInterceptors([authInterceptor])
+      withInterceptors([authInterceptor, errorInterceptor]) 
     ),
     ConfirmationService,
     MessageService,

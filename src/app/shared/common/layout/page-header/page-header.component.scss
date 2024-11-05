@@ -4,41 +4,55 @@
   display: flex;
   align-items: center;
   color: var(--primary-text-color);
+
+  
     .header-title{
+    color: var(--primary-text-color);
     font-size: 50px;
     font-weight: 500;
     margin-top: 0;
-    margin-bottom: 24px;
-    line-height: 1.25;
+    margin-bottom: 0;
+    line-height: 0.8;
     padding-left: 10px;
+
     @include lg {
-      font-size: 40px;
-      padding-left: 44px;
+      font-size: 48px;
       margin-bottom: 15px;
+      line-height: 0.8;
+      padding-left: 20px;
+
     }
     @include md {
-      font-size: 28px;
-      padding-left: 44px;
-      line-height: 1.15;
-      margin-bottom: 0px;
+      font-size: 36px;
+      line-height: 0.8;
+      margin-bottom: auto;
+      padding-left: 10px;
+      padding-right: 40px;
+
     }
     @include sm {
-      font-size: 22px;
-      padding-left: 44px;
-      line-height: 1.15;
-      margin-bottom: 0px;
+      font-size: 28px;
+      line-height: 0.8;
+      margin-bottom: auto;
+      padding-left: 10px;
+      padding-right: 60px;
     }
     small{
       display: block;
       font-size: 17px;
+      line-height: 2;
       @include lg {
         font-size: 16px;
+        line-height: 1.8;
       }
       @include md {
         font-size: 15px;
+        line-height: 1.8;
       }
       @include sm {
         font-size: 14px;
+        line-height: 1.6;
+        
       }
       font-weight: 300;
       color:var(--surface-300)
@@ -46,12 +60,13 @@
   }
 
   .header-avatar {
-    z-index: 11;
     position: absolute;
-    top:0;
-    right: 0;
+    top:0px;
+    right: 0px;
     cursor: pointer;
     background-color: transparent;
+    flex-shrink: 0;
+    width: fit-content;
   }
   
   .header-avatar-menu-open {
@@ -63,8 +78,10 @@
   }
 
   .avatar {
-    overflow: hidden;
-    border-radius: 5px 0 0 5px;
+    img {
+      border-radius: 5px 0 0 5px;
+      border: none;
+    }
   }
 
 }

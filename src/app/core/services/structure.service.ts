@@ -1,85 +1,85 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
- // Assurez-vous d'importer le modèle Structure
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { PaginatedData } from '../models/paginated-data.class';
 import { Structure } from '../models/structure.class';
+import { User } from '../models/user.class';
+import { AbstractCrudService } from './abstract-crud.service';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class StructureService {
-  private apiUrl = environment.apiUrl;
-
-  constructor(private http: HttpClient) {}
-
-  addStructure(structure: Structure): Observable<Structure> {
-    return this.http.post<Structure>(`${this.apiUrl}/structure`, structure);
+export class StructureService extends AbstractCrudService<Structure> {
+  constructor() {
+    super(`${environment.apiUrl}/structure`);
   }
 
-  getAllStructures(): Observable<Structure[]> {
-    return this.http.get<Structure[]>(`${this.apiUrl}/structure`).pipe(
-      catchError((error) => {
-        console.error('Erreur lors de la récupération des structures', error);
-        return throwError(() => new Error('Erreur lors de la récupération des structures'));
-      })
+  getAutocompleteStructureByName(
+    name: string
+  ): Observable<PaginatedData<Structure>> {
+    return this.http.get<PaginatedData<Structure>>(
+      `${environment.apiUrl}/structure`,
+      {
+        params: {
+          name: name,
+          pageSize: 1000,
+        },
+      }
     );
   }
- 
-  getPaginatedStructures(page: number = 1, pagesize: number = 20): Observable<PaginatedData<Structure>> {
-    const params = new HttpParams()
+
+  getStructureByUser(id: number): Observable<Structure[]> {
+    return this.http.get<Structure[]>(
+      `${environment.apiUrl}/structure/user/${id}`
+    );
+  }
+
+  getPaginatedWithFilter(
+    page: number = 1,
+    pageSize: number = 20,
+    filter: any = {}
+  ): Observable<PaginatedData<Structure>> {
+    let params = new HttpParams()
       .set('page', page.toString())
-      .set('pageSize', pagesize.toString());
+      .set('pageSize', pageSize.toString())
+      .set('search', filter.search || '') // Ajout du paramètre de recherche
+      .set('sort', filter.sort || '') // Ajout du paramètre de tri
+      .set('hideArchive', filter.hideArchive ? 'true' : 'false');
 
-    return this.http.get<PaginatedData<Structure>>(`${this.apiUrl}/structure`, { params }).pipe(
-      catchError((error) => {
-        console.error('Error fetching paginated structures', error);
-        return throwError(() => new Error('Error fetching paginated structures'));
-      })
-    );
-  }
-  
-  getStructure(structureId: number): Observable<Structure> {
-    return this.http.get<Structure>(`${this.apiUrl}/structure/${structureId}`).pipe(
-      catchError((error) => {
-        console.error('Error fetching structure', error);
-        return throwError(() => new Error('Error fetching structure'));
-      })
+    // Vérification et ajout des filtres s'ils existent
+
+    return this.http.get<PaginatedData<Structure>>(
+      `${environment.apiUrl}/structure`,
+      { params }
     );
   }
 
-  updateStructure(structure: Partial<Structure>): Observable<Structure> {
-    return this.http.patch<Structure>(`${this.apiUrl}/structure/${structure.id}`, structure).pipe(
-      catchError((error) => {
-        console.error('Error updating structure', error);
-        return throwError(() => new Error('Error updating structure'));
+  // add structure to user
+
+  addUserToStructure(structureId: number, userId: number): Observable<User> {
+    return this.http
+      .post<any>(`${environment.apiUrl}/structure/${structureId}/users/${userId}`, {
+        structureId: structureId,
+        userId: userId,
       })
-    );
-  }
-  
-  deleteStructure(structureId: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/structure/${structureId}`).pipe(
-      catchError((error) => {
-        console.error('Error deleting structure', error);
-        return throwError(() => new Error('Error deleting structure'));
-      })
-    );
+      .pipe(
+        tap(() => {
+          this.entityChanged.next();
+        })
+      );
   }
 
-  getAutocompleteStructureByName(name: string): Observable<PaginatedData<Structure>> {
-    return this.http.get<PaginatedData<Structure>>(`${environment.apiUrl}/structure`, {
-      params: {
-        'name': name,
-      },
-    }).pipe(
-      catchError((error) => {
-        console.error('Error fetching structures', error);
-        return throwError(() => new Error('Error fetching structures'));
-      })
-    );
+  deleteUserFromStructure(
+    structureId: number,
+    userId: number
+  ): Observable<User> {
+    return this.http
+      .delete<any>(`${environment.apiUrl}/structure/${structureId}/users/${userId}`)
+      .pipe(
+        tap(() => {
+          this.entityChanged.next();
+        })
+      );
   }
-  
-  
-
 }

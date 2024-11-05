@@ -1,24 +1,71 @@
-@if (!!structures()) {
-<div class="structure-list">
-  <div class="list-and-map">
-    <div class="scroll-list">
-      @for  (structure of structures(); track structure.id) {
-        <app-structure-row [structure]="structure" (click)="displayStructureView.emit(structure.id)"></app-structure-row>
-      }
+@if (!!items()) {
+  <div class="layout">
+    <div class="l-content" [ngClass]="showMap ? 'widget-map' : 'widget-no-map'">
+      <app-widget class="widget" [withFooter]="true" [withoutDialog]="true">
+  
+        <header header>
+          <div class="flex">
+            <div class="input-switch map-switch">
+              <p-inputSwitch inputId="mapSwitch" [(ngModel)]="showMap"></p-inputSwitch>
+              <label [ngClass]="{ 'active': showMap }" for="mapSwitch">Voir la carte</label>
+            </div>
+            <p-dropdown class="dropdown-sorting-list" [options]="sortOptions()" placeholder="Trier par ..."
+              optionLabel="label" [(ngModel)]="selectedOptions" (onChange)="onSortChange($event?.value?.filter)">
+  
+              <ng-template pTemplate="selectedItem">
+                <ng-container *ngIf="selectedOptions()?.filter">
+                  <i *ngIf="selectedOptions()?.filter.includes('desc'); else ascIcon" class="icon-sort-down"></i>
+                  <ng-template #ascIcon>
+                    <i class="icon-sort-up"></i>
+                  </ng-template>
+                  {{ selectedOptions()?.label }}
+                </ng-container>
+              </ng-template>
+  
+              <ng-template let-sortOption pTemplate="item">
+                <div>{{ sortOption.label }}</div>
+              </ng-template>
+  
+              <ng-template pTemplate="dropdownicon">
+                <i class="icon-down"></i>
+              </ng-template>
+  
+            </p-dropdown>
+  
+          </div>
+      
+          @if (!!searchType) {
+            <app-list-and-map-search class="search-input"  (searchOutput)="onSearch($event)" [searchType]="searchType"></app-list-and-map-search>
+          }
+          <div class="input-switch">
+            <p-inputSwitch inputId="showArchive" [ngModel]="hideArchive()" (ngModelChange)="toggleShowArhive()"></p-inputSwitch>
+            <label [ngClass]="hideArchive() ? 'active' : ''" for="showArchive">Exclure les archives</label>
+          </div>
+          
+        </header>
+
+
+        <div body #scrollList class="scroll-list">
+          @if (itemCount > 0) {
+          @for (item of items(); track item.id) {
+          <app-structure-row [structure]="item" (click)="displayStructureView.emit(item.id)"></app-structure-row>
+          }
+          }
+          @else {
+          <app-empty-list message="Aucun résultat à afficher"></app-empty-list>
+          }
+        
+        </div>
+  
+        <p-paginator footer #paginator class="paginator" (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
+        [totalRecords]="itemCount" [showCurrentPageReport]="!!itemCount" [rowsPerPageOptions]="[20, 50, 100]"
+        currentPageReportTemplate="{first} - {last} sur {totalRecords}" appendTo="body" />
+  
+      </app-widget>
+  
+      <div id="mapId" class="map" leaflet [leafletOptions]="mapOptions" (leafletMapReady)="onMapReady($event)"></div>
+  
+  
     </div>
-    <div id="mapId" leaflet [leafletOptions]="mapOptions" (leafletMapReady)="onMapReady($event)"></div>
-
-    <p-paginator #paginator class="paginator" 
-    (onPageChange)="onPageChange($event)"
-    [first]="first"
-    [rows]="rows"
-    [totalRecords]="itemCount"
-    [showCurrentPageReport]="!!itemCount"
-    [rowsPerPageOptions]="[20, 50, 100]"
-    currentPageReportTemplate="{first} - {last} sur {totalRecords}"
-    appendTo="body"
-    />
-</div>
-
-</div>
-}
+  </div>
+  }

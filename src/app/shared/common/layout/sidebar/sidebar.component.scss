@@ -90,7 +90,7 @@
         scrollbar-width: thin;
       }
 
-      @media screen and (min-height: 600px) {
+    
         &:before {
           background-color: #3F3F3F;
           content: "";
@@ -112,7 +112,7 @@
           transform-style: preserve-3d;
           transform: translate3d(0px, 0px, 0px);
         }
-      }
+      
 
 
       ul {
@@ -181,17 +181,6 @@
     z-index: 110;
     padding: 15px 0px 10px 0;
 
-    @include md {
-      height: 50px;
-      font-size: 22px;
-      line-height: 50px;
-    }
-
-    @include sm {
-      height: 40px;
-      font-size: 18px;
-      line-height: 40px;
-    }
 
     span {
       cursor: default;

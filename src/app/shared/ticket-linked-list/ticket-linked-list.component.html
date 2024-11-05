@@ -1,0 +1,66 @@
+<app-widget>
+  <ng-container header>
+    <app-widget-title header [title]="title()" icon="pi pi-tags"></app-widget-title>
+
+    <form [formGroup]="searchForm">
+      <div class="grid grid-cols-12">
+        <div class="col-span-full grid grid-cols-12 gap-small">
+          <div class="input-icon-left col-span-8">
+            <i class="icon-magnifier"></i>
+            <app-input
+              class="input-with-icon-left"
+              formControlName="ticket"
+              label="Rechercher un ticket"
+            ></app-input>
+          </div>
+          <div class="col-span-4 form-elem p-float-label">
+            <p-dropdown
+              class="dropdown-icon-sort"
+              [options]="sortOptions"
+              optionLabel="label"
+              (onChange)="onSortChanged($event)"
+              id="sort"
+              appendTo="body"
+            >
+              <ng-template let-selectedOption pTemplate="selectedItem">
+                <div class="selected-item">
+                  <i
+                    *ngIf="!!selectedOption?.filter"
+                    [class]="selectedOption.filter.includes('asc') ? 'icon-sort-up' : 'icon-sort-down'"></i>
+                  <span>{{ selectedOption.label }}</span>
+                </div>
+              </ng-template>
+              <ng-template let-sortOption pTemplate="item">
+                <div>{{ sortOption.label }} {{ sortOption.order }}</div>
+              </ng-template>
+              <ng-template pTemplate="dropdownicon">
+                <i class="icon-down"></i>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+        <span class="col-span-full form-elem input-switch">
+          <p-inputSwitch
+            formControlName="checked"
+            inputId="checked"
+          ></p-inputSwitch>
+          <label
+            for="checked"
+            [ngClass]="{ active: searchForm.get('checked').value }"
+            >Masquer les archives</label
+          >
+        </span>
+      </div>
+    </form>
+  </ng-container>
+
+
+  <div class="scroll-list" body>
+    @if(filteredAndSortedTickets()?.length > 0) {
+      @for(ticket of filteredAndSortedTickets(); track ticket.id) {
+        <app-ticket-row [ticket]="ticket" (openTicket)="displayTicketView(ticket.id)"></app-ticket-row>
+      }
+    }
+  </div>
+
+</app-widget>

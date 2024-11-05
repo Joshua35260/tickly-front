@@ -1,0 +1,86 @@
+@import "@assets/knacss/mixin.scss";
+.avatar-container {
+ max-width: 135px;
+ max-height: 135px;
+}
+
+.avatar-c {
+  position: relative;
+  width: 100%;
+  @include md {
+    width: 90%;
+  }
+  @include sm {
+    width: 80%;
+  }
+  height: auto;
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  .icon-remove {
+    position: absolute;
+    bottom: -12px;
+    font-size: 32px;
+    text-align: center;
+    left: calc(50% - 16px);
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+  
+    &:after {
+      content: '';
+      display: block;
+      height: 30px;
+      width: 30px;
+      aspect-ratio: 1/1;
+    
+      background-color: white;
+      border-radius: 50%;
+      position: absolute;
+      top: calc(50% - 15px);
+      left:calc(50% - 15px);
+      z-index: 1;
+      
+      }
+      &:before {
+        position: relative;
+        z-index: 2;
+      }
+  }
+  .icon-remove:hover {
+    &:after {
+      transition: all 0.5s ease-in-out;
+      background-color: var(--surface-500);
+     
+      
+      }
+  }
+ 
+}
+
+.choose  {
+  color: var(--primary-color);
+  font-size: 13px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  &:before{
+    content:"";
+    display: block;
+    width: 130px;
+    height: 130px;
+    background:var(--dummy-thumb);
+    margin: auto;
+}
+
+}
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+
+}
+
+

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">tickly</string>
+    <string name="title_activity_main">tickly</string>
+    <string name="package_name">cloud.tickly.app</string>
+    <string name="custom_url_scheme">cloud.tickly.app</string>
+</resources>

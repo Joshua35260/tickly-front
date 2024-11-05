@@ -1,20 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { RightPanelSection } from '@app/core/models/enums/right-panel-section.enum';
 import { Ticket } from '@app/core/models/ticket.class';
 import { TicketService } from '@app/core/services/ticket.service';
 import { ModalConfirmDeleteComponent } from '@app/shared/common/modal-confirm-delete/modal-confirm-delete.component';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { BehaviorSubject, distinctUntilChanged, Observable, shareReplay, switchMap } from 'rxjs';
-import { startWith, take } from 'rxjs/operators';
 import { TicketInfoComponent } from '../components/ticket-info/ticket-info.component';
-
+import { WidgetTitleComponent } from '@app/shared/common/widget-title/widget-title.component';
+import { AuditLogComponent } from '@app/shared/audit-log/audit-log.component';
+import { LinkedTable } from '@app/core/models/enums/linked-table.enum';
+import { CommentListComponent } from '@app/shared/comment/comment-list/comment-list.component';
 @Component({
   selector: 'app-ticket-view',
   templateUrl: './ticket-view.component.html',
-  styleUrls: [ './ticket-view.component.scss' ],
+  styleUrls: ['./ticket-view.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -22,83 +28,95 @@ import { TicketInfoComponent } from '../components/ticket-info/ticket-info.compo
     ModalConfirmDeleteComponent,
     ButtonModule,
     TicketInfoComponent,
-  ]
+    WidgetTitleComponent,
+    AuditLogComponent,
+    CommentListComponent,
+  ],
 })
-export class TicketViewComponent implements OnInit {
-
+export class TicketViewComponent {
+  LinkedTable = LinkedTable;
+  
   sectionDisplayed = input<RightPanelSection>();
-  ticketId = input<number>();
-
-  ticketId$: Observable<number> = toObservable(this.ticketId);
+  ticket = input<Ticket>(null);
 
   edit = output<number>();
   deleted = output<void>();
-
-  ticket$: Observable<Ticket>;
-  private reloadTicket$: BehaviorSubject<void> = new BehaviorSubject<void>(void 0);
-
   showDeleteModal = signal<boolean>(false);
 
   get sectionInfoDisplayed() {
-    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_INFO;
-  }
-
-  get sectionActionsDisplayed() {
-    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS;
-  }
-
-  constructor(
-    private destroyRef: DestroyRef,
-    private ticketService: TicketService,
-    private confirmationService: ConfirmationService,
-  ) {
-    }
-
-  ngOnInit() {
-    this.loadTicket();
-  }
-
-
-  loadTicket() {
-    this.ticket$ = this.ticketId$.pipe(
-      startWith(this.ticketId),
-      distinctUntilChanged(),
-      switchMap(() => this.reloadTicket$),
-      takeUntilDestroyed(this.destroyRef),
-      switchMap(() => this.ticketService.getTicket(this.ticketId())),
-      shareReplay(),
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_INFO
     );
   }
 
-  reload() {
-    this.reloadTicket$.next();
+  get sectionActionsDisplayed() {
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS
+    );
   }
 
-  onEdit() {
-    this.edit.emit(this.ticketId());
+  get sectionChatDisplayed() {
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_CHAT
+    );
+  }
+
+  get sectionHistoricalDisplayed() {
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_HISTORICAL
+    );
+  }
+
+  constructor(
+    private ticketService: TicketService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
+
+  onEdit(ticketId: number) {
+    this.edit.emit(ticketId);
   }
 
   onDelete() {
-        this.ticketService.deleteTicket(this.ticketId()).subscribe(() => this.deleted.emit());
+    this.ticketService.delete(this.ticket().id).subscribe(() => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success',
+        detail: 'Le ticket a été supprimé avec succès',
+      });
+      this.deleted.emit();
+    });
   }
 
-  // onArchive(isArchived: boolean) {
-  //   this.confirmationService.confirm({
-  //     message: isArchived ? 'Voulez-vous désarchiver ce contact?' : 'Voulez-vous archiver ce contact?',
-  //     icon: 'icon-warning',
-  //     header:'Confirmation',
-  //     dismissableMask: true,
-  //     accept: () => {
-  //       this.ticket$.pipe(
-  //         take(1),
-  //         switchMap((ticket: Ticket) => this.ticketService.updateTicket(new Ticket({
-  //           ...ticket,
-  //           archive: isArchived ? false : true,
-  //         }))),
-  //       ).subscribe(() => {
-  //         this.reload();
-  //       });
-  //     }
-  //   });
-  // };
+  onArchive(isArchived: boolean) {
+    this.confirmationService.confirm({
+      message: isArchived
+        ? 'Voulez-vous désarchiver ce ticket?'
+        : 'Voulez-vous archiver ce ticket?',
+      icon: 'icon-warning',
+      header: 'Confirmation',
+      dismissableMask: true,
+      accept: () => {
+        this.ticketService
+          .update(
+            {
+              ...this.ticket(),
+              archivedAt: isArchived ? null : new Date(), // Met à jour en fonction de isArchived
+            },
+            this.ticket().id
+          )
+          .subscribe({
+            next: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Succes',
+                detail: `Le ticket est ${
+                  isArchived ? 'désarchivé' : 'archivé'
+                }`,
+              });
+            },
+          });
+      },
+    });
+  }
 }

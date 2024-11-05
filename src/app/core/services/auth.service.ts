@@ -144,5 +144,13 @@ private getTokenInfo(): Observable<User | null> {
       });
   }
   
-  
+  getUserConnectedId(): Observable<number | null> {
+    return this.user$.pipe(
+      map(user => user ? user.id : null), // Retourne l'ID de l'utilisateur ou null s'il n'est pas connecté
+      catchError(error => {
+        console.error('Error fetching user ID:', error); // Gérer les erreurs
+        return of(null); // Retourne null en cas d'erreur
+      })
+    );
+  }
 }

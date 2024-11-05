@@ -1,20 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { RightPanelSection } from '@app/core/models/enums/right-panel-section.enum';
 import { User } from '@app/core/models/user.class';
 import { UserService } from '@app/core/services/user.service';
 import { ModalConfirmDeleteComponent } from '@app/shared/common/modal-confirm-delete/modal-confirm-delete.component';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { BehaviorSubject, distinctUntilChanged, Observable, shareReplay, switchMap } from 'rxjs';
-import { startWith, take } from 'rxjs/operators';
+
 import { UserInfoComponent } from '../components/user-info/user-info.component';
+import { UserStructuresComponent } from '../components/user-structures/user-structures.component';
+import { WidgetTitleComponent } from '../../../shared/common/widget-title/widget-title.component';
+import { LinkedTable } from '@app/core/models/enums/linked-table.enum';
+import { AuditLogComponent } from '@app/shared/audit-log/audit-log.component';
+import { TicketLinkedListComponent } from '@app/shared/ticket-linked-list/ticket-linked-list.component';
 
 @Component({
   selector: 'app-user-view',
   templateUrl: './user-view.component.html',
-  styleUrls: [ './user-view.component.scss' ],
+  styleUrls: ['./user-view.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -22,83 +31,101 @@ import { UserInfoComponent } from '../components/user-info/user-info.component';
     ModalConfirmDeleteComponent,
     ButtonModule,
     UserInfoComponent,
-  ]
+    UserStructuresComponent,
+    WidgetTitleComponent,
+    AuditLogComponent,
+    TicketLinkedListComponent,
+  ],
 })
-export class UserViewComponent implements OnInit {
+export class UserViewComponent {
+  LinkedTable = LinkedTable;
+
+  displayStructureView = output<number>();
 
   sectionDisplayed = input<RightPanelSection>();
-  userId = input<number>();
-
-  userId$: Observable<number> = toObservable(this.userId);
-
+  user = input<User>(null);
   edit = output<number>();
   deleted = output<void>();
-
-  user$: Observable<User>;
-  private reloadUser$: BehaviorSubject<void> = new BehaviorSubject<void>(void 0);
-
+  
+  
   showDeleteModal = signal<boolean>(false);
 
   get sectionInfoDisplayed() {
-    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_INFO;
-  }
-
-  get sectionActionsDisplayed() {
-    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS;
-  }
-
-  constructor(
-    private destroyRef: DestroyRef,
-    private userService: UserService,
-    private confirmationService: ConfirmationService,
-  ) {
-    }
-
-  ngOnInit() {
-    this.loadUser();
-  }
-
-
-  loadUser() {
-    this.user$ = this.userId$.pipe(
-      startWith(this.userId),
-      distinctUntilChanged(),
-      switchMap(() => this.reloadUser$),
-      takeUntilDestroyed(this.destroyRef),
-      switchMap(() => this.userService.getUser(this.userId())),
-      shareReplay(),
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_INFO
     );
   }
 
-  reload() {
-    this.reloadUser$.next();
+  get sectionActionsDisplayed() {
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS
+    );
   }
 
-  onEdit() {
-    this.edit.emit(this.userId());
+  get sectionStructuresDisplayed() {
+    return (
+      this.sectionDisplayed() ===
+      RightPanelSection.RIGHT_PANEL_SECTION_STRUCTURES
+    );
+  }
+
+  get sectionHistoricalDisplayed() {
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_HISTORICAL
+    );
+  }
+  
+  get sectionTicketsDisplayed() {
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_TICKETS
+    );
+  }
+
+  constructor(
+    private userService: UserService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
+  ) {}
+
+
+ 
+  onEdit(user: User) {
+    this.edit.emit(user.id);
   }
 
   onDelete() {
-        this.userService.deleteUser(this.userId()).subscribe(() => this.deleted.emit());
+    this.userService.delete(this.user().id).subscribe(() => this.deleted.emit());
   }
 
-  // onArchive(isArchived: boolean) {
-  //   this.confirmationService.confirm({
-  //     message: isArchived ? 'Voulez-vous désarchiver ce contact?' : 'Voulez-vous archiver ce contact?',
-  //     icon: 'icon-warning',
-  //     header:'Confirmation',
-  //     dismissableMask: true,
-  //     accept: () => {
-  //       this.user$.pipe(
-  //         take(1),
-  //         switchMap((user: User) => this.userService.updateUser(new User({
-  //           ...user,
-  //           archive: isArchived ? false : true,
-  //         }))),
-  //       ).subscribe(() => {
-  //         this.reload();
-  //       });
-  //     }
-  //   });
-  // };
+  onArchive(isArchived: boolean) {
+    this.confirmationService.confirm({
+      message: isArchived
+        ? 'Voulez-vous désarchiver cet utilisateur?'
+        : 'Voulez-vous archiver cet utilisateur?',
+      icon: 'icon-warning',
+      header: 'Confirmation',
+      dismissableMask: true,
+      accept: () => {
+        const { roles, structures, ...userWithoutRolesAndStructures } = this.user();
+        const data = {
+          ...userWithoutRolesAndStructures,
+          archivedAt: isArchived ? null : new Date(),
+        };
+      
+        this.userService.update(data, this.user().id)
+          .subscribe({
+            next: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Succes',
+                detail: `L'utilisateur'est ${
+                  isArchived ? 'désarchivé' : 'archivé'
+                }`,
+              });
+            },
+          });
+      },
+    });
+  }
 }
+

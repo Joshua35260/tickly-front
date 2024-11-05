@@ -1,13 +1,15 @@
 <app-widget class="user-info">
+
   <div header class="widget-top">
   <i type="button" (click)="update()" class="icon-edit"></i>
 
   <div class="user-info-name">
+    <!-- <img src ="http://localhost:3000/uploads/84151-1730665018286-916707350.jpg" alt="Avatar"> -->
     <app-avatar class="avatar" [avatarUrl]="user().avatarUrl" [fullname]="user().firstname + ' ' + user().lastname"></app-avatar>
     <div class="names">
       <div class="fullname">
-        <span class="name">{{user().lastname}}</span>&nbsp;
-        <span class="firstname">{{user().firstname}}</span>
+        <span class="name">{{user().firstname}}</span>&nbsp;
+        <span class="firstname">{{user().lastname}}</span>
       </div>
       <div class="roles" *ngIf="user().roles.length > 0">
         <ng-container *ngFor="let role of user().roles; let last = last">
@@ -18,19 +20,18 @@
   </div>
 </div>
 
-<div body>
-@if (sectionInfoDisplayed) {
-  @if (!!user().address) {
-    <hr class="dashed-hr" />
+
+    <ng-container body *ngIf="!!user().address">
+
+
     <div class="localisation">
       <div class="small-title"><i class="icon-location"></i>Localisation</div>
   
       <div class="localisation-main">
-   
-          <div class="localisation-main-value">{{ user().address.streetL1 }}</div>
-          <div class="localisation-main-value">{{  user().address.streetL2 }}</div>
-          <div class="localisation-main-value">{{  user().address.postcode }} {{  user().address.city }}</div>
-          <app-flag class="localisation-main-value" [countryCode]=" user().address.country"></app-flag>
+          <div class="localisation-main-value">{{ user().address.streetL1?? 'Non renseigné' }}</div>
+          <div class="localisation-main-value">{{  user().address.streetL2?? 'Non renseigné' }}</div>
+          <div class="localisation-main-value">{{  user().address.postcode?? 'Non renseigné' }} {{  user().address.city?? 'Non renseigné' }}</div>
+          <app-flag class="localisation-main-value" [countryCode]=" user().address.country?? 'Non renseigné'"></app-flag>
           
           <ng-container *ngIf=" user().address.latitude &&  user().address.longitude">
             <a [href]="'https://www.openstreetmap.org/?mlat=' +  user().address.latitude + '&mlon=' +  user().address.longitude"
@@ -41,10 +42,10 @@
     
       </div>
     </div>
-  }
+
   
 
-  @if (!!user().phones.length || !!user().emails.length) {
+  @if (!!user().phone || !!user().email) {
     <div class="small-title">
       <i class="icon-information"></i>
       Informations de contact
@@ -52,20 +53,21 @@
   
     <div class="coordinates">
       <div class="contact-info">
-        @for (phone of user().phones; track phone.id) {
-          <a href="tel:{{phone.phone}}" class="coordinate">
-            <span class="icon-phone coordinate-icon"></span>{{phone.phone}}
+    
+          <a href="tel:{{user().phone}}" class="coordinate">
+            <span class="icon-phone coordinate-icon"></span>{{user().phone}}
           </a>
-        }
-        @for (email of user().emails; track email.id) {
-          <a href="mailto:{{email.email}}" class="coordinate">
-            <span class="icon-mail coordinate-icon"></span>{{email.email}}
+        
+       
+          <a href="mailto:{{user().email}}" class="coordinate">
+            <span class="icon-mail coordinate-icon"></span>{{user().email}}
           </a>
-        }
+        
       </div>
     </div>
   }
+
   
-}
-</div>
+</ng-container>
+
 </app-widget>

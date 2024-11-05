@@ -1,24 +1,39 @@
-<div class="panel-content" *ngIf="structure$ | async as structure">
+<div class="main-grid gap-medium" *ngIf="structure()">
   
 
-  <div class="main-grid gap-medium">
-
-
-    <app-structure-info class="widget height-auto" [structure]="structure" [sectionDisplayed]="sectionDisplayed()"/>
+    <app-structure-info class="widget height-auto" [structure]="structure()" [sectionDisplayed]="sectionDisplayed()" (edit)="onEdit()"/>
     @if(sectionActionsDisplayed) {
     
-      <div class="widget height-auto">
-
+      <div class="widget widget-padding height-auto">
+        <div class="flex flex-col gap-medium">
         <div class="actions">
+          <p-button
+          severity="warning"
+          icon="icon-archive"
+          [label]="structure()?.archivedAt ? 'Désarchiver' : 'Archiver'"
+          (click)="onArchive(structure()?.archivedAt ? true : false)">
+        </p-button>
           <p-button severity="danger" icon="icon-trashcan" label="!! Supprimer !!"
             (click)="showDeleteModal.set(true)"></p-button>
         </div>
       </div>
+    </div>
     }
+
+    @if(sectionStructuresDisplayed) {
+      <app-structure-users [structure]="structure()" (listUpdated)="reload()" class="widget"></app-structure-users>
+    }
+    @if(sectionHistoricalDisplayed) {
+      <app-audit-log class="widget" widgetTitleTitle="Historique de la structure" [linkedId]="structure().id" [linkedTable]="LinkedTable.STRUCTURE"></app-audit-log>
+    }
+    @if (sectionTicketsDisplayed) {
+      <app-ticket-linked-list class="widget" [entityId]="structure().id" [fromEntity]="LinkedTable.STRUCTURE"></app-ticket-linked-list>
+    }
+
   </div>
 
 
-</div>
+
 
 <app-modal-confirm-delete (delete)="onDelete()"
   title="Voulez-vous supprimer cet utilisateur de façon permanente ?" (closeDialog)="showDeleteModal.set(false)"

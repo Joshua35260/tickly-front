@@ -3,10 +3,12 @@
 .main-grid {
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr; /* Une seule colonne */
-  grid-auto-rows: auto auto auto;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
 
   .widget-action {
     min-height: 0;
   }
+
 }

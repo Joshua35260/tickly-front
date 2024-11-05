@@ -1,27 +1,49 @@
-<div class="card">
+<div [ngClass]="structure().archivedAt ? 'card archive':'card'">
+  <div #cardTop class="card-top only">
 
-  <div #cardTop class="card-top">
-    
-    @if (withMenu()) {
-      <i class="icon-menu" (click)="menu.toggle($event); onMenuOpen()">
-        <p-menu #menu [model]="menuItems()" [popup]="true" appendTo="body"></p-menu>
+
+      <app-avatar
+        class="avatar"
+        [avatarUrl]="structure().avatarUrl"
+        [fullname]="structure().name"
+        [size]="60"
+      ></app-avatar>
+
+      @if (withMenu()) {
+      <i class="icon-menu" (click)="onMenuClick($event, menu)">
+        <p-menu
+          #menu
+          [model]="menuItemsInput()"
+          [popup]="true"
+          appendTo="body"
+        ></p-menu>
       </i>
       }
-    
-    <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openStructure.emit(structure().id)">
 
-    <div class="card-title">
-      {{structure().name}}
+      <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openStructure.emit(structure().id)">
+        <div class="card-main-info">
+          <div class="card-top-title">
+            {{ structure().name }}
+          </div>
 
-    <i class="pi pi-bookmark-fill" [ngClass]="iconColor()"></i>
+          <div class="addresses">
+            <div class="address">
+              {{ structure().address?.streetL1 }}
+              {{ structure().address?.streetL2 }}
+            </div>
+            <div class="card-address">
+              {{ structure().address?.postcode }}
+              {{ structure().address?.city }} {{ structure().address?.country }}
+            </div>
+          </div>
+        </div>
+
+        @if(structure().archivedAt) {
+        <div class="archive-info">Archivée<i class="icon-archive"></i></div>
+        }
+      </div>
 
     </div>
 
-    </div>
-
-
-</div>
-
-</div>
-
+  </div>
 

@@ -1,4 +1,4 @@
-<div class="card">
+<div [ngClass]="ticket().archivedAt ? 'card archive':'card'">
 
   <div #cardTop class="card-top">
     
@@ -10,23 +10,22 @@
     
     <div [ngClass]="withMenu() ? 'card-content with-menu' : 'card-content'" (click)="openTicket.emit(ticket().id)">
 
-    <div class="card-icon">
-      <small>{{ticket().status.status}}</small>
-    <i class="pi pi-bookmark-fill" [ngClass]="iconColor()"></i>
+    <div class="card-icon"  [ngClass]="getStatusClass(ticket().status)">
+    <i [ngClass]="getStatusIcon(ticket().status)" ></i>
 
     </div>
 
       <div class="card-main-info">
         <div class="card-top-title">
-          Ticket n° {{ticket().id}}
+          Ticket n° {{ticket().id}} <span *ngIf="ticket().title">: {{ticket().title}}</span>
         </div>
         <small class="card-text">{{ticket().description}}</small>
     </div>
 
     <div class="card-trigram date-limit-or-currency">
 
-      <small><span>Priorité: </span>{{ticket().priority.priority}}</small>
-        <small><span>Catégorie: </span>{{formattedCategories}}</small>
+      <small><span>Priorité: </span>{{PriorityLabels[ticket().priority] }}</small>
+      <small><span>Catégorie{{ticket().category.length > 1 ? "s" : ""}}: </span>{{CategoryLabels}}</small>
       
     </div>
     @if(ticket().archivedAt) {
@@ -37,8 +36,11 @@
     </div>
     </div>
 
-  @if (ticket().author) {
-  <div #cardBottom class="card-bottom">
+    @if(ticket().author || ticket().structure) {
+      
+
+    <div #cardBottom class="card-bottom">
+    @if (ticket().author) {
 
     <div class="card-content">
       <i class="card-icon icon-contact"></i>
@@ -53,14 +55,33 @@
 
       <div class="card-bottom-title">
         <div class="flex flex-col">
-         {{ticket().author.firstname}} {{ticket().author.lastname}}
+          {{ticket().author.firstname}} {{ticket().author.lastname}}
         </div>
       </div>
     </div>
-
-  </div>
   }
-
+  @if(ticket().structure) {
+    <div class="card-content-2">
+      <i class="card-icon icon-organization"></i>
+      <app-avatar
+          class="avatar"
+          [avatarUrl]="ticket().structure.avatarUrl"
+          *ngIf="!!avatarBottomHeight() && !!avatarBottomWidth()"
+          [fullname]="ticket().structure.name"
+          [height]="avatarBottomHeight()"
+          [width]="avatarBottomWidth()">
+      </app-avatar>
+      <div class="card-bottom-title">
+        <div class="flex flex-col">
+          {{ticket().structure.name}}
+        
+        </div>
+      </div>
+       
+    </div>
+  }
+</div>
+}
 </div>
 
 

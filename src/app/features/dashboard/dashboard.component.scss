@@ -1,6 +1,78 @@
+@import "@assets/knacss/mixin.scss";
+
 .dashboard {
-  height: 100%;
+  padding-top: 10px;
+  max-height: calc(100% - 40px);
+  .widget {
+    min-height: 350px;
+  }
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+    ::ng-deep .card-small-icon {
+        margin-right: 0;
+    }
+    @include lg {
+      display: flex;
+      flex-direction: column;
+    }
+    @include md {
+      display: flex;
+      flex-direction: column;
+    }
+    @include sm {
+      display: flex;
+      flex-direction: column;
+    }
+    
 }
+
+
 .widget {
   min-height: 0px;
+}
+
+
+
+app-user-row {
+  width: 100%;
+}
+.grid-row {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  gap: 5px; 
+  width: 100%;
+
+  app-user-row,app-structure-row {
+    width: 100%;
+  }
+}
+.title {
+  text-align: right;
+  width: 100px;
+  min-width: 100px;
+}
+.title {
+  span {
+    font-weight: 600;
+    color: var(--primary-color)
+  }
+}
+.grid-pie {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  @include md {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+  @include sm {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
 }

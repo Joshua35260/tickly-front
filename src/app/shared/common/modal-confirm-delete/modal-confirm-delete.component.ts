@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { FormDialogComponent, FormDialogSize } from '../form-dialog/form-dialog.component';
 import { InputComponent } from '../input/input.component';
 import { PanelService } from '@app/core/services/panel.service';
+import { WidgetTitleComponent } from '../widget-title/widget-title.component';
 
 @Component({
   selector: 'app-modal-confirm-delete',
@@ -22,6 +23,7 @@ import { PanelService } from '@app/core/services/panel.service';
     DialogModule,
     ReactiveFormsModule,
     FormDialogComponent,
+    WidgetTitleComponent,
   ],
   styleUrls: [ './modal-confirm-delete.component.scss' ],
 })

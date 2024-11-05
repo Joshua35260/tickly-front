@@ -24,8 +24,8 @@ export const routes: Routes = [
       showHeader: true,
       title: 'Tableau de bord',
       header: {
-        title: 'Outil de planification',
-        description: 'Planifier les interventions',
+        title: 'Dashboard',
+        description: 'Tableau de bord de la plateforme',
       },
     },
   },
@@ -73,19 +73,54 @@ export const routes: Routes = [
   {
     path: 'user/view/:id/:section',
     outlet: 'panel',
-    loadComponent: () => import('./containers/panels/user-view-container/user-view.container.component').then(c => c.UserViewContainerComponent) // Assurez-vous que le chemin est correct
+    loadComponent: () => import('./containers/panels/user-view-container/user-view.container.component').then(c => c.UserViewContainerComponent)
   },
   {
     path: 'ticket/view/:id/:section',
     outlet: 'panel',
-    loadComponent: () => import('./containers/panels/ticket-view-container/ticket-view.container.component').then(c => c.TicketViewContainerComponent) // Assurez-vous que le chemin est correct
+    loadComponent: () => import('./containers/panels/ticket-view-container/ticket-view.container.component').then(c => c.TicketViewContainerComponent)
   },
   {
     path: 'structure/view/:id/:section',
     outlet: 'panel',
-    loadComponent: () => import('./containers/panels/structure-view-container/structure-view.container.component').then(c => c.StructureViewContainerComponent) // Assurez-vous que le chemin est correct
+    loadComponent: () => import('./containers/panels/structure-view-container/structure-view.container.component').then(c => c.StructureViewContainerComponent)
   },
   
 
   // ...ModalsRouting,
+  {
+    path: 'user/edit/:id',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/user-edit-container/user-edit.container.component').then(c => c.UserEditContainerComponent)
+  },
+  {
+    path: 'user/create',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/user-create-container/user-create-container.component').then(c => c.UserCreateContainerComponent)
+  },
+  {
+    path: 'profil/edit/:id',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/profil-edit-container/profil-edit.container.component').then(c => c.ProfilEditContainerComponent)
+  },
+  {
+    path: 'structure/edit/:id',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/structure-edit-container/structure-edit.container.component').then(c => c.StructureEditContainerComponent)
+  },
+  {
+    path: 'structure/create',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/structure-create-container/structure-create.container.component').then(c => c.StructureCreateContainerComponent)
+  },
+  {
+    path: 'ticket/edit/:id',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/ticket-edit-container/ticket-edit.container.component').then(c => c.TicketEditContainerComponent)
+  },
+  {
+    path: 'ticket/create',
+    outlet: 'modal',
+    loadComponent: () => import('./containers/modals/ticket-create-container/ticket-create.container.component').then(c => c.TicketCreateContainerComponent)
+  },
 ];

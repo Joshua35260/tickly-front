@@ -1,0 +1,46 @@
+<app-widget>
+  <app-widget-title 
+    header 
+    icon="icon-history" 
+    [title]="widgetTitleTitle()" 
+    [subtitle]="widgetTitleSubtitle()">
+  </app-widget-title>
+  
+  @if(auditlogs()?.length > 0) {
+    <div body class="scroll-list">
+      @for(auditlog of auditlogs(); track auditlog.id) {
+        <div class="historical-card">
+          <div class="main-grid">
+            <div class="user-avatar">
+              <app-avatar 
+                [avatarUrl]="auditlog.user?.avatarUrl" 
+                [fullname]="auditlog.user?.firstname + ' ' + auditlog.user?.lastname" 
+                [size]="45">
+              </app-avatar>
+            </div>
+            <div class="flex flex-col line">
+              <div class="author">{{ auditlog.user?.firstname }} {{ auditlog.user?.lastname }}</div>
+              <div class="date">le {{ auditlog.modificationDate | date:'dd MMMM yyyy à HH:mm' }}</div>
+              
+              @if(auditlog.fields?.length > 0) {
+                @for(field of auditlog.fields; track field.id) {
+                  <div class="comment">
+                    <span class="chip chip-action">{{ AuditLogLabels[auditlog.action] }} de {{ field.field }}</span> 
+                    - <span class="chip chip-old-val">{{ formatValue(field.previousValue) || 'null' }}</span> 
+                    <i class="icon-next"></i> 
+                    <span class="chip chip-new-val">{{ formatValue(field.newValue) || 'null' }}</span>
+                </div>
+                }
+              }
+            </div>
+            
+          </div>
+          
+        </div>
+      }
+    </div>
+  }
+  @else {
+    <app-empty-list body message="Aucun historique à afficher."></app-empty-list>
+  }
+</app-widget>

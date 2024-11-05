@@ -3,19 +3,67 @@
     <i type="button" (click)="update()" class="icon-edit"></i>
 
     <div class="structure-info-name">
-       <div class="fullname"> 
-       <div class="name">{{structure().name}}</div> 
-    </div>
-        </div>
+      <app-avatar class="avatar" [avatarUrl]="structure().avatarUrl" [fullname]="structure().name"></app-avatar>
+      <div class="fullname">
+        <div class="name">{{structure().name}}</div>
       </div>
-  
-  <div body>
-  
-      
-body à faire
-
-
-
-
+    </div>
+    <div class="flex flex-col">
+    @if(structure().service) {
+    <small>{{structure().service}}</small>
+    }
+    @if(structure().type) {
+    <small>{{structure().type}}</small>
+    }
   </div>
+  </div>
+
+
+  <ng-container body>
+
+    <div class="localisation" *ngIf="!!structure().address">
+      <div class="small-title"><i class="icon-location"></i>Localisation</div>
+
+      <div class="localisation-main">
+        <div class="localisation-main-value">{{ structure().address.streetL1?? 'Non renseigné' }}</div>
+        <div class="localisation-main-value">{{ structure().address.streetL2?? 'Non renseigné' }}</div>
+        <div class="localisation-main-value">{{ structure().address.postcode?? 'Non renseigné' }} {{
+          structure().address.city?? 'Non renseigné' }}</div>
+        <app-flag class="localisation-main-value"
+          [countryCode]=" structure().address.country?? 'Non renseigné'"></app-flag>
+
+        @if(structure().address.latitude && structure().address.longitude) {
+        <a [href]="'https://www.openstreetmap.org/?mlat=' +  structure().address.latitude + '&mlon=' +  structure().address.longitude"
+          target="_blank" class="color-link">
+          <span>Voir sur la carte</span> <i class="icon-maps"></i>
+        </a>
+        }
+      </div>
+    </div>
+
+    @if (!!structure().phone || !!structure().email) {
+    <div class="small-title">
+      <i class="icon-information"></i>
+      Informations de contact
+    </div>
+
+    <div class="coordinates">
+      <div class="contact-info">
+   
+        <a href="tel:{{structure().phone}}" class="coordinate">
+          <span class="icon-phone coordinate-icon"></span>{{structure().phone}}
+        </a>
+        
+       
+        <a href="mailto:{{structure().email}}" class="coordinate">
+          <span class="icon-mail coordinate-icon"></span>{{structure().email}}
+        </a>
+        
+      </div>
+    </div>
+    }
+
+
+  </ng-container>
+
 </app-widget>

@@ -1,0 +1,29 @@
+<span [ngClass]="{
+  'form-elem': true,
+  'p-float-label': true,
+  'p-input-icon-left': classIcon() !== ''
+}">
+
+  <ng-container *ngIf="classIcon() !== ''">
+    <span [class]="classIcon()"></span>
+  </ng-container>
+
+  <textarea 
+  #textareaElement
+  pInputTextarea
+  [id]="formControlName()"
+  [ngClass]="[control.value !== null && control.value !== undefined && control.value !== '' ? 'not-empty' : 'empty', classTextArea()]"
+  [autoResize]="autoResize()"
+  [formControl]="control"
+  (input)="onValueChange($event)"
+  >
+  </textarea>
+
+  <label [for]="formControlName()" [class]="classLabel()">{{ label() }}</label>
+
+  <ng-container
+    *ngIf="control?.invalid && control?.dirty && errorMessage()">
+    <small [class]="classSmall()">{{ errorMessage() }}</small>
+  </ng-container>
+  
+</span>

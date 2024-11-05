@@ -1,4 +1,4 @@
-<section class="widget-container">
+<section [ngClass]="noPadding() ? 'widget-container no-padding' : 'widget-container'">
   
   <div #header class="widget-header">
     <ng-content select="[header]"></ng-content>

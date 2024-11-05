@@ -1,28 +1,88 @@
+@import "@assets/knacss/mixin.scss";
+:host-context(.sm-display ) .card-content-2,.card-content {
+    border-top: 1px dashed rgb(50, 50, 50, 0.25);
+    display: flex;
+    justify-content: flex-start;
+    text-align: start;
+    &:before {
+      display: none;
+    }
+}
+
+:host-context(.sm-display ) .card-bottom {
+      gap: 0;
+      flex-wrap: wrap;
+      .avatar {
+        order:1;
+      }
+      .card-icon {
+        order: 2;
+      }
+}
+
 .card-icon {
   small {
     font-size: 14px;
-    color: var(--primary-text-color);
     margin-right: 10px;
   }
   i {
     font-size: 22px;
   }
 }
-.progress {
-  color: rgb(216, 216, 2);
-}
 
-.closed {
-  color: rgb(21, 147, 21);
-}
 
-.open {
-  color: rgba(255, 166, 0, 0.637);
-}
 .date-limit-or-currency {
-  
   margin-left: auto;
 }
+
 small span {
   font-weight: 400;
+}
+.card-bottom {
+  padding-right: 0;
+  @include md {
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  @include sm {
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+}
+.card-content-2 {
+  padding-right: 0;
+  @include md {
+    border-top: 1px dashed rgb(50, 50, 50, 0.25);
+    display: flex;
+    justify-content: flex-start!important;
+    text-align: start!important;
+  }
+  @include sm {
+    border-top: 1px dashed rgb(50, 50, 50, 0.25);
+    display: flex;
+    justify-content: flex-start!important;
+    text-align: start!important;
+  }
+  .avatar {
+    order:5;
+    @include md {
+      order:1;
+    }
+    @include sm {
+      order: 1;
+    }
+  }
+  .card-icon {
+    order: 1;
+    @include md {
+      order:2;
+    }
+    @include sm {
+      order: 2;
+    }
+  }
+  .card-bottom-title {
+    order: 2;
+  }
 }

@@ -1,25 +1,227 @@
-.ticket-list {
-  height: 100%;
-  overflow-x: hidden;
+@import "@assets/knacss/mixin.scss";
+
+
+:host {
+  ::ng-deep .layout .l-content .widget-container {
+    .widget-footer {
+      background-color: transparent;
+      padding-top: 0;
+    }
+  }
 }
-.list-and-map {
+
+// WIDGET COMPONENT SPECIFIC DESIGN
+.layout {
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
   height: 100%;
+
+  @include lg {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @include md {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @include sm {
+    display: flex;
+    flex-direction: column;
+  }
 }
-app-ticket-row {
-  width: 100%;
-}
-.scroll-list {
-  height: 100%;
-  padding-right: 5px;
-  overflow-y: auto;
-}
-#mapId {
-  height: 100%;
-  width: 100%;
-  border-radius: 0 10px 10px 0;
-}
-.isloading {
-  display: none;
+
+
+
+.l-content {
+  position: relative;
+  display: grid;
+  grid-template-columns: 60% 40%;
+  grid-template-rows: 1fr;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "list map";
+  transition: grid-template-columns 0.5s;
+
+  @include lg {
+    height: 100%;
+    grid-template-rows: auto;
+  }
+
+  @media screen and (max-width: 1400px) {
+    display: block;
+    height: 100%;
+    grid-template-rows: auto;
+  }
+
+
+  &.widget-no-map {
+    grid-template-columns: 100% 0;
+  }
+
+  .widget {
+    grid-area: list;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 150px);
+    box-shadow: 14px 0px 15px -14px rgba(0, 0, 0, 0.4);
+    z-index: 3;
+
+    @include lg {
+      margin-top: 20px;
+      height: calc(100vh - 120px);
+    }
+
+    @include md {
+      margin-top: 20px;
+      height: calc(100vh - 120px);
+    }
+
+    @include sm {
+      margin-top: 20px;
+      height: calc(100vh - 100px);
+    }
+
+
+    .scroll-list {
+      gap: 15px;
+    }
+
+    .paginator {
+      ::ng-deep.p-paginator {
+        padding-top: 0;
+      }
+      @include md {
+        display: none;
+      }
+
+      @include sm {
+        display: none;
+      }
+    }
+
+    .paginator-sm {
+      display: none;
+
+      @include md {
+        display: block;
+        margin-bottom: -10px;
+      }
+
+      @include sm {
+        display: block;
+        margin-bottom: -10px;
+      }
+
+      ::ng-deep.p-paginator {
+        padding: 0;
+      }
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      margin-top: -15px;
+      margin-bottom: 15px;
+
+      @include lg {
+        margin-top: -10px;
+      }
+
+      @include md {
+        margin-top: -10px;
+      }
+
+      @include sm {
+        margin-top: -10px;
+        margin-bottom: 10px;
+      }
+    }
+
+    .map-switch {
+      position: absolute;
+      left: 10px;
+      top: 20px;
+    }
+
+    .input-switch {
+      display: flex;
+      align-items: center;
+      line-height: 0;
+      padding-left: 2px;
+      font-size: 15px;
+      font-weight: 400;
+
+      @include md {
+        font-size: 14px;
+      }
+
+      @include sm {
+        display: none;
+      }
+
+      .active {
+        color: var(--primary-color);
+      }
+    }
+
+    .dropdown-sorting-list {
+      margin: 0 auto 30px auto;
+
+      @include sm {
+        margin: 0 auto 30px auto;
+      }
+    }
+  }
+
+  .scroll-loading {
+    padding: 10px;
+  }
+
+  .search-input {
+    margin-bottom: 6px;
+  }
+
+  .widget-no-map {
+    width: 100%;
+    transition: width 0.4s ease-out 0.2s;
+    /* Ajout de delay à l'aide de transition */
+  }
+
+  .widget-map {
+    width: 60%;
+    z-index: 2;
+    transition: width 0.4s ease-out 0.2s;
+    /* Ajout de delay à l'aide de transition */
+  }
+
+  .map-no-map {
+    opacity: 0;
+    transition: opacity 0.2s ease-out 0.2s;
+  }
+
+  .map-map {
+    opacity: 1;
+    transition: opacity 0.4s ease-out 0.2s;
+
+    @media screen and (max-width: 875px) {
+      display: none;
+    }
+  }
+
+  .map {
+    grid-area: map;
+    width: 100%;
+    margin: 42px 0;
+    border-radius: 0 20px 20px 0;
+    z-index: 2;
+  }
+
 }

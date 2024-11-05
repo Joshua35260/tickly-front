@@ -1,0 +1,34 @@
+@import "@assets/knacss/mixin.scss";
+
+:host {
+  height: 100%;
+}
+.empty-list {
+  color: rgb(25, 25, 25,0.2);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 30px;
+  i {
+    font-size: 6em;
+    @include md {
+      font-size: 5em;
+    }
+    @include sm {
+      font-size: 4em;
+    }
+  }
+
+  .empty-list-message {
+    font-size: 16px;
+
+    @include md {
+      font-size: 14px;
+    }
+    @include sm {
+      font-size: 13px;
+    }
+  }
+
+}

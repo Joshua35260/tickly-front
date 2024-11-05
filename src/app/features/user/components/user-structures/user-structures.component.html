@@ -1,0 +1,115 @@
+<app-widget 
+[withFooter]="true"
+dialogTitle="Rattacher une nouvelle structure"
+dialogIcon="icon-contact"
+[(open)]="subFormOpened"
+(openChange)="openChange($event)"
+size="medium" >
+  <div header >
+    <app-widget-title header title="Structures reliées à l'utilisateur" icon="icon-organization"
+    subtitle="Ajouter ou retirer une structure reliée à l'utilisateur"></app-widget-title>
+
+    <form [formGroup]="structureAttachedForm">
+      <div class="grid grid-cols-12">
+        <div class="col-span-full grid grid-cols-12 gap-small">
+          <div class="input-icon-left md:col-span-8 col-span-7">
+            <i class="icon-magnifier"></i>
+            <app-input
+              class="input-with-icon-left"
+              formControlName="structure"
+              label="Rechercher une structure"
+            ></app-input>
+          </div>
+          <div class="col-span-5 md:col-span-4 form-elem p-float-label">
+            <p-dropdown
+              class="dropdown-icon-sort"
+              [options]="sortOptions"
+              optionLabel="label"
+              (onChange)="onSortChanged($event)"
+              id="sort"
+              appendTo="body"
+            >
+              <ng-template let-selectedOption pTemplate="selectedItem">
+                <div class="selected-item">
+                  <i
+                    *ngIf="!!selectedOption?.filter"
+                    [class]="selectedOption.filter.includes('asc') ? 'icon-sort-up' : 'icon-sort-down'"></i>
+                  <span>{{ selectedOption.label }}</span>
+                </div>
+              </ng-template>
+              <ng-template let-sortOption pTemplate="item">
+                <div>{{ sortOption.label }} {{ sortOption.order }}</div>
+              </ng-template>
+              <ng-template pTemplate="dropdownicon">
+                <i class="icon-down"></i>
+              </ng-template>
+            </p-dropdown>
+          </div>
+        </div>
+        <span class="col-span-full form-elem input-switch">
+          <p-inputSwitch
+            formControlName="checked"
+            inputId="checked"
+          ></p-inputSwitch>
+          <label
+            for="checked"
+            [ngClass]="{ active: structureAttachedForm.get('checked').value }"
+            >Masquer les archives</label
+          >
+        </span>
+      </div>
+    </form>
+  </div>
+
+
+  <div body class="scroll-list">
+
+    @for (structure of filteredAndSortedStructures(); track structure.id) {
+    <app-structure-row [structure]="structure" (menuOpened)="setEntityIdFromMenu($event)" [menuItemsInput]="menuItems" [withMenu]="true" (openStructure)="displayStructureView.emit(structure.id)"></app-structure-row>
+    }
+
+  </div>
+
+  <div footer>
+    <i class="icon-add"></i>
+    Ajouter une structure
+  </div>
+
+  <form form [formGroup]="newStructureForm" *ngIf="subFormOpened">
+    <fieldset class="widget">
+      <div class="small-title-link">
+        Rechercher un structure ou<a (click)="openAddStructure()"
+          >créer un nouveau structure</a
+        >
+      </div>
+      <span class="p-float-label form-elem">
+        <p-autoComplete
+          formControlName="selectedNewStructure"
+          [suggestions]="filteredStructures()"
+          (completeMethod)="filterNewStructure($event)"
+          field="name"
+          [minLength]="2"
+          [forceSelection]="true"
+          emptyMessage="Aucune suggestion"
+          appendTo="body"
+          (keydown.enter)="onAttach()"
+          [showClear]="true"
+          [dropdown]="true"
+        >
+        </p-autoComplete>
+        <label>Rattacher une nouvelle structure</label>
+      </span>
+    </fieldset>
+    <div class="actions">
+      <p-button
+        label="Ajouter la structure"
+        severity="secondary"
+        icon="icon-add"
+        iconPos="left"
+        [disabled]="newStructureForm.invalid"
+        (click)="onAttach()"
+      ></p-button>
+      <a class="cancel" (click)="openChange(false)">Annuler</a>
+    </div>
+  </form>
+</app-widget>

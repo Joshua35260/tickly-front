@@ -18,6 +18,18 @@ b {
   font-weight: 500;
 }
 
+.in-progress {
+  color: rgba(255, 166, 0, 0.637)!important;
+}
+
+.closed {
+  color: rgb(21, 147, 21)!important;
+}
+
+.open {
+  color: rgb(200, 50, 50)!important;
+}
+
 input:-webkit-autofill + label {
   top: 1rem; /* Positionner le label au-dessus */
   font-size: 0.85rem; /* Réduire la taille du label */
@@ -56,6 +68,14 @@ input:-webkit-autofill + label {
     border-radius: 10px;
   }
 }
+
+.input-icon-left {
+
+  i {
+    color: $primaryColor;
+  }
+}
+
 a {
   cursor: pointer;
 }
@@ -213,28 +233,6 @@ i.disabled {
   filter: (grayscale(100%));
 }
 
-// Remove min-height of filedset inherit from class widget
-.grid {
-  fieldset {
-    height: fit-content;
-    .widget {
-      display: grid;
-    }
-  }
-}
-
-fieldset.grid {
-  display: grid;
-}
-
-fieldset {
-  height: fit-content;
-}
-
-fieldset.widget {
- min-height: fit-content;
-}
-
 .autocomplete-with-address {
   font-weight: 600;
   font-size: 15px;
@@ -255,30 +253,45 @@ app-scrollbar-overlay  {
   align-items: center;
   line-height: 1;
   gap: 6px;
-  font-size: 19px;
+  font-size: 22px;
   margin-bottom: 14px;
   @include md {
-    font-size: 17px;
+    font-size: 19px;
   }
   @include sm {
-    font-size: 16px;
+    font-size: 15px;
+  }
+  .pi {
+    font-size: 26px;
+    @include md {
+      font-size: 24px;
+
+    }
+    @include sm {
+      font-size: 22px;
+
+    }
   }
   i, span {
     color: $primaryColor;
     grid-column: 1;
-    width: 19px;
+    width: 26px;
+    font-size: 22px;
+  
     @include md {
-      width: 16px;
+      font-size: 19px;
+      width:23px;
     }
     @include sm {
-      width: 15px;
+      font-size: 18px;
+      width: 21px;
     }
   }
 
   small, .subtitle {
-    font-size: 13px;
+    font-size: 16px;
     @include sm {
-      font-size: 12px;
+      font-size: 14px;
     }
     font-style: italic;
     grid-column: 2;
@@ -539,72 +552,66 @@ fieldset {
     }
   }
 }
+
 .action-add {
+  position: absolute;
+  right: 20px;
+  top: -8px;
   display: flex;
+  gap: 2px;
   justify-content: center;
   align-items: center;
   color: var(--primary-color);
   font-weight: 500;
   cursor: pointer;
   text-decoration: none;
-  font-size: 15px;
-  gap: 12px;
-  @media (min-width:1400px) and (max-width: 1919px) {
-    font-size: 14px;
-  }
-
-  @include lg {
-    font-size: 14px;
-  }
+  font-size: 16px;
+@include lg {
+  top: -3px
+}
+@media (max-width: 620px) {
+  font-size: 13px;
+    top: 14px;
+    gap: 4px;
+}
 
   @include md {
-    font-size: 14px;
+    font-size: 15px;
+    top: 2px;
   }
 
   @include sm {
     font-size: 13px;
+    top: 17px;
+
   }
 
-  margin-bottom: 0px;
-  margin-top: -5px;
 
   &:after {
     content: "";
     display: block;
-    height: 80px;
-    width: 80px;
-    margin-left: -15px;
-    margin-right: -15px;
+    height: 70px;
+    width: 70px;
+    margin-left: -13px;
+    margin-right: -20px;
     background: var(--button-add) no-repeat;
     background-size: 100%;
 
-    @media (min-width:1400px) and (max-width: 1919px) {
-      height: 70px;
-      width: 70px;
-      margin-right: -15px;
-      margin-left: -20px;
-    }
 
-    @include lg {
-      height: 54px;
-      width: 54px;
-      margin-right: -15px;
-      margin-left: -14px;
-    }
 
     @include md {
-      height: 54px;
-      width: 54px;
-      margin-right: -10px;
-      margin-left: -20px;
+      height: 55px;
+      width: 55px;
+
     }
+
     @include sm {
-      height: 54px;
-      width: 54px;
-      margin-right: -10px;
-      margin-left: -20px;
+      height: 44px;
+      width: 44px;
     }
-    
+
+   
+
   }
 
   &:hover {
@@ -637,7 +644,6 @@ table {
 /* Prime flex CUSTOM */
 /*********************/
 .form-elem {
-  margin: 6px 0;
   display: inline-block;
   width: 100%;
 

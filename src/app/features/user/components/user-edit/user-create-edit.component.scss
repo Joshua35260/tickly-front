@@ -1,0 +1,21 @@
+@import "@assets/knacss/mixin.scss";
+
+.title-parent-contact {
+  margin-bottom: 0px;
+}
+
+.avatar {
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-c {
+  @include sm {
+    margin-bottom:  20px;
+  }
+  @include md {
+    margin-bottom:  20px;
+  }
+}

@@ -18,7 +18,7 @@ import { Observable} from 'rxjs';
   ],
 })
 export class AvatarComponent implements OnInit {
-  fileDownloadUrl: string = environment.fileDownloadUrl;
+  fileDownloadUrl: string = environment.baseUrl;
   fullname = input<string>();
   size = model<number>(64);
   height = input<number>(0);
@@ -29,7 +29,7 @@ export class AvatarComponent implements OnInit {
   baseSize: number;
 constructor(
   private resizeService: ResizeService,
-  private destroyRef: DestroyRef,  
+  private destroyRef: DestroyRef,
 ) {}
 
 
@@ -52,18 +52,26 @@ checkScreenSize(width: number): void {
   }
 }
 
-  get initials() {
-    if (typeof this.fullname() === 'string') {
-      // separate firstname and name
-      const names = this.fullname().split(' ');
-      if (names.length >= 2) {
-        return `${names[0].slice(0, 1)}${names[1].slice(0, 1)}`.toUpperCase();
-      } else if (names.length === 1) {
-        return `${names[0].slice(0, 2)}`.toUpperCase();
-      }
+get initials() {
+  if (typeof this.fullname() === 'string') {
+    // Supprime les caractères non alphabétiques, sépare les mots et filtre les non-vides
+    const names = this.fullname()
+      .split(/[\s-]+/)               // Sépare par espaces ou tirets
+      .filter(name => name.length)   // Filtre les mots non vides
+      .map(name => name.replace(/[^a-zA-Z]/g, '')); // Enlève les caractères non alphabétiques
+    
+    if (names.length >= 2) {
+      // Prend la première lettre de chaque des deux premiers noms pour former les initiales
+      return `${names[0].charAt(0)}${names[1].charAt(0)}`.toUpperCase();
+    } else if (names.length === 1) {
+      // Si une seule partie est présente, retourne les deux premières lettres
+      return names[0].slice(0, 2).toUpperCase();
     }
-    return '';
   }
+  return '';
+}
+
+
 
 
   get color(): string {

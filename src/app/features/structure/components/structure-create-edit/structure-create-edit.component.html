@@ -1,0 +1,2 @@
+<app-widget-title [title]="structureId() ? 'Modifier la structure' : 'Ajouter une structure'"  icon="icon-organization"></app-widget-title>
+<app-structure-form [structure]="structure()" (saved)="saved.emit()"></app-structure-form>

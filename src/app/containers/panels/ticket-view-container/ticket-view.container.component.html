@@ -1,7 +1,7 @@
-<app-sidebar [dataMenu]="dataMenu" (activePanelChange)="onPanelSelected($event)" [activePanel]="section" label="Ticket" icon="pi pi-bookmark-fill">
+<app-sidebar [dataMenu]="dataMenu()" (activePanelChange)="onPanelSelected($event)" [activePanel]="section" label="Ticket" icon="pi pi-bookmark-fill">
   <app-ticket-view
     #itemViewComponent
-    [ticketId]="ticketId"
+    [ticket]="ticket()"
     [sectionDisplayed]="section"
     (edit)="onEditTicket($event)"
     (deleted)="onTicketDeleted()"

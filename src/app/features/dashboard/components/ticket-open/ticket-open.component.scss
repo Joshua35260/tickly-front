@@ -1,0 +1,11 @@
+@import "@assets/knacss/mixin.scss";
+.small-title {
+  font-size: 18px;
+  margin-left: auto;
+  .title {
+    font-weight: 400;
+    span {
+      font-weight: 600;
+    }
+  }
+}

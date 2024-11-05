@@ -1,12 +1,12 @@
-import { Category } from './category.class';
-import { Priority } from './priority.class';
-import { Status } from './status.class';
 import { Structure } from './structure.class';
 import { User } from './user.class';
 
 export class Ticket {
   id?: number;
 
+  title: string;
+
+  authorId: number;
   author: User;
 
   description: string;
@@ -15,11 +15,17 @@ export class Ticket {
 
   updatedAt: Date;
 
-  archivedAt: Date;
+  archivedAt?: Date | null;
 
-  status: Status;
+  status: string;
 
-  priority: Priority;
+  priority: string;
 
-  category: Category[];
+  category: string[];
+
+  assignedUsers?: User[];
+
+  structureId?: number;
+  
+  structure?: Structure;
 }

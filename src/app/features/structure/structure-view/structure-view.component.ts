@@ -1,21 +1,28 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, input, output, signal } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { RightPanelSection } from '@app/core/models/enums/right-panel-section.enum';
 import { Structure } from '@app/core/models/structure.class';
 import { StructureService } from '@app/core/services/structure.service';
 import { ModalConfirmDeleteComponent } from '@app/shared/common/modal-confirm-delete/modal-confirm-delete.component';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { BehaviorSubject, distinctUntilChanged, Observable, shareReplay, switchMap } from 'rxjs';
-import { startWith, take } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { StructureInfoComponent } from '../components/structure-info/structure-info.component';
-
+import { StructureUsersComponent } from '../components/structure-users/structure-users.component';
+import { AuditLogComponent } from '@app/shared/audit-log/audit-log.component';
+import { LinkedTable } from '@app/core/models/enums/linked-table.enum';
+import { TicketLinkedListComponent } from '@app/shared/ticket-linked-list/ticket-linked-list.component';
 
 @Component({
   selector: 'app-structure-view',
   templateUrl: './structure-view.component.html',
-  styleUrls: [ './structure-view.component.scss' ],
+  styleUrls: ['./structure-view.component.scss'],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -23,83 +30,104 @@ import { StructureInfoComponent } from '../components/structure-info/structure-i
     ModalConfirmDeleteComponent,
     ButtonModule,
     StructureInfoComponent,
-  ]
+    StructureUsersComponent,
+    AuditLogComponent,
+    TicketLinkedListComponent,
+  ],
 })
-export class StructureViewComponent implements OnInit {
-
+export class StructureViewComponent {
+  LinkedTable = LinkedTable;
   sectionDisplayed = input<RightPanelSection>();
-  structureId = input<number>();
 
-  structureId$: Observable<number> = toObservable(this.structureId);
+  structure = input<Structure>();
 
   edit = output<number>();
   deleted = output<void>();
 
   structure$: Observable<Structure>;
-  private reloadStructure$: BehaviorSubject<void> = new BehaviorSubject<void>(void 0);
+  private reloadStructure$: BehaviorSubject<void> = new BehaviorSubject<void>(
+    void 0
+  );
 
   showDeleteModal = signal<boolean>(false);
 
   get sectionInfoDisplayed() {
-    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_INFO;
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_INFO
+    );
   }
 
   get sectionActionsDisplayed() {
-    return this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS;
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_ACTIONS
+    );
+  }
+  get sectionStructuresDisplayed() {
+    return (
+      this.sectionDisplayed() ===
+      RightPanelSection.RIGHT_PANEL_SECTION_STRUCTURES
+    );
+  }
+  get sectionHistoricalDisplayed() {
+    return (
+      this.sectionDisplayed() ===
+      RightPanelSection.RIGHT_PANEL_SECTION_HISTORICAL
+    );
+  }
+  get sectionTicketsDisplayed() {
+    return (
+      this.sectionDisplayed() === RightPanelSection.RIGHT_PANEL_SECTION_TICKETS
+    );
   }
 
   constructor(
-    private destroyRef: DestroyRef,
     private structureService: StructureService,
     private confirmationService: ConfirmationService,
-  ) {
-    }
-
-  ngOnInit() {
-    this.loadStructure();
-  }
-
-
-  loadStructure() {
-    this.structure$ = this.structureId$.pipe(
-      startWith(this.structureId),
-      distinctUntilChanged(),
-      switchMap(() => this.reloadStructure$),
-      takeUntilDestroyed(this.destroyRef),
-      switchMap(() => this.structureService.getStructure(this.structureId())),
-      shareReplay(),
-    );
-  }
+    private messageService: MessageService
+  ) {}
 
   reload() {
     this.reloadStructure$.next();
   }
 
   onEdit() {
-    this.edit.emit(this.structureId());
+    this.edit.emit(this.structure().id);
   }
 
   onDelete() {
-        this.structureService.deleteStructure(this.structureId()).subscribe(() => this.deleted.emit());
+    this.structureService
+      .delete(this.structure().id)
+      .subscribe(() => this.deleted.emit());
   }
 
-  // onArchive(isArchived: boolean) {
-  //   this.confirmationService.confirm({
-  //     message: isArchived ? 'Voulez-vous désarchiver ce contact?' : 'Voulez-vous archiver ce contact?',
-  //     icon: 'icon-warning',
-  //     header:'Confirmation',
-  //     dismissableMask: true,
-  //     accept: () => {
-  //       this.structure$.pipe(
-  //         take(1),
-  //         switchMap((structure: Structure) => this.structureService.updateStructure(new Structure({
-  //           ...structure,
-  //           archive: isArchived ? false : true,
-  //         }))),
-  //       ).subscribe(() => {
-  //         this.reload();
-  //       });
-  //     }
-  //   });
-  // };
+  onArchive(isArchived: boolean) {
+    this.confirmationService.confirm({
+      message: isArchived
+        ? 'Voulez-vous désarchiver cette structure?'
+        : 'Voulez-vous archiver cette structure?',
+      icon: 'icon-warning',
+      header: 'Confirmation',
+      dismissableMask: true,
+      accept: () => {
+        this.structureService
+          .update(
+            {
+              archivedAt: isArchived ? null : new Date(), // Met à jour en fonction de isArchived
+            },
+            this.structure().id
+          )
+          .subscribe({
+            next: () => {
+              this.messageService.add({
+                severity: 'success',
+                summary: 'Succes',
+                detail: `La structure est ${
+                  isArchived ? 'désarchivé' : 'archivée'
+                }`,
+              });
+            },
+          });
+      },
+    });
+  }
 }

@@ -4,8 +4,10 @@
   gap: 6px;
   line-height: 1.15;
   margin-bottom: 15px;
+  padding-top: 4px;
   
   .icon,i {
+    line-height: 1.15;
     color: var(--primary-color);
     font-size: 28px;
     min-width: 30px;

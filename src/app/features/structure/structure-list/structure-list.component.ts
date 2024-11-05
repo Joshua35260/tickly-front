@@ -3,26 +3,35 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   output,
   signal,
+  ViewChild,
 } from '@angular/core';
-
+import { Structure } from '@app/core/models/structure.class';
+import { StructureRowComponent } from '../components/structure-row/structure-row.component';
+import { StructureService } from '@app/core/services/structure.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import * as L from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { PaginatorModule } from 'primeng/paginator';
-import { Structure } from '@app/core/models/structure.class';
-import { StructureService } from '@app/core/services/structure.service';
-import { StructureRowComponent } from '@app/features/structure/components/structure-row/structure-row.component';
-
-
+import { ListAndMapSearchComponent } from '@app/shared/common/list-and-map-search/list-and-map-search.component';
+import {SearchType} from '@app/core/models/enums/search-type.enum';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { EmptyListComponent } from '@app/shared/common/layout/empty-list/empty-list.component';
+import { WidgetComponent } from '@app/shared/common/widget/widget.component';
 interface PageEvent {
   first?: number;
   rows?: number;
   page?: number;
   pageCount?: number;
 }
-
+export interface ListAndMapSortOption {
+  label: string;
+  order?: string;
+  filter: string;
+}
 @Component({
   selector: 'app-structure-list',
   templateUrl: './structure-list.component.html',
@@ -34,13 +43,26 @@ interface PageEvent {
     StructureRowComponent,
     LeafletModule,
     PaginatorModule,
+    ListAndMapSearchComponent,
+    DropdownModule,
+    InputSwitchModule,
+    EmptyListComponent,
+    WidgetComponent,
   ],
 })
 export class StructureListComponent {
+  @ViewChild('scrollList') scrollList: ElementRef;
   displayStructureView = output<number>();
-
-  structures = signal<Structure[]>([]);
-
+  searchType = SearchType.STRUCTURES
+  items = signal<Structure[]>([]);
+  hideArchive = signal<boolean>(false);
+  showMap: boolean = true;
+  showCreateButton = signal<boolean>(true);
+  sortOptions = signal<ListAndMapSortOption[]>([
+    { label: 'Nom (asc)', filter: 'name asc' },
+    { label: 'Nom (desc)', filter: 'name desc' },
+  ]);
+  selectedOptions = signal(this.sortOptions()[0]);
   mapOptions = {
     layers: [
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -58,91 +80,124 @@ export class StructureListComponent {
   itemCount: number;
   page: number = 1;
 
+  search = signal<string>('');
   constructor(
     private structureService: StructureService,
     private destroyRef: DestroyRef
-  ) {}
+  ) {
+    this.structureService.entityChanged$ //reload items automatically on crud activity on this service
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadItems();
+      });
+  }
 
+  onSearch(search: string) {
+    this.search.set(search);
+    this.loadItems();
+  }
+
+  onSortChange(value: string) {
+    const selectedOption = this.sortOptions().find(
+      (option) => option.filter === value
+    );
+    if (selectedOption) {
+      this.selectedOptions.set(selectedOption);
+      this.loadItems();
+    }
+  }
+  toggleShowArhive() {
+    this.hideArchive.set(!this.hideArchive());
+    this.loadItems();
+  }
   onMapReady(map: L.Map) {
     this.map = map; // Set the map reference
     this.itemsMarkers = L.featureGroup().addTo(this.map); // Initialize FeatureGroup and add to map
-    this.loadStructures(); // Load structures after the map is ready
+    this.loadItems(); // Load items after the map is ready
   }
   get layers(): L.Layer[] {
     return this.itemsMarkers ? this.itemsMarkers.getLayers() : [];
   }
 
+  loadItems() {
+    const filter = {
+      search: this.search(), // Utilise la recherche
+      sort: this.selectedOptions().filter, // Utilise l'option de tri sélectionnée
+      hideArchive: this.hideArchive(),
+    };
 
-  loadStructures() {
     this.structureService
-      .getPaginatedStructures(this.page, this.rows)
+      .getPaginatedWithFilter(this.page, this.rows, filter)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((data) => {
-        this.structures.set(data.items);
+        this.items.set(data.items);
         this.itemCount = data.total; // Mettre à jour le nombre total d'items
         this.addMarkers(data.items); // Ajouter des marqueurs
-        
       });
   }
-  addMarkers(structures: Structure[]) {
+  addMarkers(items: Structure[]) {
     setTimeout(() => {
-    
-    // Clear existing markers first
-    this.itemsMarkers.clearLayers(); 
+      // Clear existing markers first
+      this.itemsMarkers.clearLayers();
 
-    if (structures.length === 0) {
-      // Optionally, if there are no structures, you can set a default position for the map
-      this.map.setView(L.latLng(48.864716, 2.349014), 5); // Default view
-      return; // Exit early if there are no structures
-    }
-
-    structures.forEach(structure => {
-      if (!!structure.address) {
-    
-          const latitude = parseFloat(structure.address.latitude.toString());
-          const longitude = parseFloat(structure.address.longitude.toString());
-
-          // Create custom icon
-          const customIcon = L.icon({
-            iconUrl: 'images/images/marker-icon.png', 
-            shadowUrl: 'images/images/marker-shadow.png',
-            iconSize: [25, 41],
-            shadowSize: [41, 41],
-            iconAnchor: [12, 41],
-            shadowAnchor: [12, 41],
-            popupAnchor: [1, -34],
-          });
-
-          const marker = L.marker([latitude, longitude], { icon: customIcon }).bindPopup(`
-            <strong>${structure.name}</strong><br>
-            ${structure.address.streetL1 || ''}<br>
-            ${structure.address.city}, ${structure.address.postcode}
-          `);
-            
-          this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
-        
+      if (items?.length === 0) {
+        // Set a default position for the map
+        this.map?.setView(L.latLng(48.864716, 2.349014), 5);
+        return;
       }
-    });
 
-    // Center the map only if markers are present
-    if (this.itemsMarkers.getLayers().length > 0) {
-      this.centerMap(); // Call centerMap after all markers are added
-    }
-  }, 100);
-}
-  
+      items.forEach((item) => {
+        if (item.address && item.address.latitude && item.address.longitude) {
+          const latitude = parseFloat(item.address.latitude.toString());
+          const longitude = parseFloat(item.address.longitude.toString());
 
-centerMap() {
-  const bounds = this.itemsMarkers.getBounds();
-  console.log(bounds);
-  this.map.fitBounds(bounds); // Fit map to bounds of markers
-  this.map.invalidateSize(); // Invalidate size to ensure correct rendering
-}
+          // Vérifiez si latitude et longitude sont valides
+          if (!isNaN(latitude) && !isNaN(longitude)) {
+            // Create custom icon
+            const customIcon = L.icon({
+              iconUrl: 'images/images/marker-icon.png',
+              shadowUrl: 'images/images/marker-shadow.png',
+              iconSize: [25, 41],
+              shadowSize: [41, 41],
+              iconAnchor: [12, 41],
+              shadowAnchor: [12, 41],
+              popupAnchor: [1, -34],
+            });
+
+            const marker = L.marker([latitude, longitude], { icon: customIcon })
+              .bindPopup(`
+                        <strong>${item.name}</strong><br>
+                        ${item.address.streetL1 || ''}<br>
+                        ${item.address.city}, ${item.address.postcode}
+                    `);
+
+            this.itemsMarkers.addLayer(marker); // Add marker to the existing FeatureGroup
+          } else {
+            console.warn(
+              `Invalid coordinates for item: ${item.name}`
+            );
+          }
+        }
+      });
+
+      // Center the map only if markers are present
+      if (this.itemsMarkers?.getLayers().length > 0) {
+        this.centerMap(); // Call centerMap after all markers are added
+      }
+    }, 100);
+  }
+
+  centerMap() {
+    const bounds = this.itemsMarkers?.getBounds();
+    this.map?.fitBounds(bounds); // Fit map to bounds of markers
+    this.map?.invalidateSize(); // Invalidate size to ensure correct rendering
+  }
 
   onPageChange(event: PageEvent) {
     this.first = event.first;
     this.rows = event.rows;
     this.page = event.page + 1; // +1 parce que la pagination commence à 0
-    this.loadStructures(); // Recharger les utilisateurs lors du changement de page
+    this.loadItems(); // Recharger les utilisateurs lors du changement de page
+    this.scrollList.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 }

@@ -1,152 +1,54 @@
-<div class="dashboard grid grid-cols-12 lg:gap-large gap-small">
-    <div class="col-span-full grid grid-cols-1 md:grid-cols-3 lg:gap-large gap-small">
-      <div class="widget">
-        <i class="pi pi-home"></i>
+<p-tabMenu [model]="items" [activeItem]="items[activeGrid()]" />
+
+@switch (activeGrid()) { @case (0) {
+<div class="dashboard lg:gap-large gap-small">
+  <app-ticket-open class="widget open"> </app-ticket-open>
+
+  <app-widget class="widget user">
+
+    <app-widget-title header title="Top 5 utilisateurs" icon="icon-profile"
+      subtitle="Liste des utilisateurs avec le plus de tickets"></app-widget-title>
+
+    <div body class="scroll-list">
+      @for (top5Users of top5Users(); track top5Users.user.id) {
+      <div class="grid-row">
+        <app-user-row [user]="top5Users.user" (openUserView)="displayUserView(top5Users.user.id)"></app-user-row>
+
+        <div class="title">
+          Tickets : <span>{{ top5Users.numberOfTickets }}</span>
+        </div>
       </div>
-      <div class="widget">
-        <i class="pi pi-hashtag"></i>
+      }
+    </div>
+
+  </app-widget>
+
+  <app-widget class="widget structure">
+    <app-widget-title header title="Top 5 structures" icon="icon-profile"
+      subtitle="Liste des structures avec le plus de tickets"></app-widget-title>
+    <div body class="scroll-list">
+      @for (top5Structure of top5Structures(); track top5Structure.structure) {
+      <div class="grid-row">
+        <app-structure-row [structure]="top5Structure.structure"
+          (openStructureView)="displayStructureView(top5Structure.structure.id)"></app-structure-row>
+
+        <div class="title">
+          Tickets : <span>{{ top5Structure.numberOfTickets }}</span>
+        </div>
       </div>
-      <div class="widget">
-        <i class="pi pi-bell"></i>
-      </div>
-    </div> 
-    
-    <div class="widget col-span-full md:col-span-6 second-section">
-     
-  
-        <ul>
-          <li>
-            <div>Aenean euismod elementum</div>
-            <div>Vitae turpis massa sed elementum tempus egestas
-              sed
-              sed risus.
-              In metus vulputate eu scelerisque felis imperdiet proin.</div>
-          </li>
-          <li>
-            <div>In iaculis nunc sed augue lacus</div>
-            <div>Viverra vitae congue. Nisi scelerisque eu
-              ultrices
-              vitae auctor eu augue ut lectus.
-              Elementum eu facilisis sed odio morbi.</div>
-          </li>
-          <li>
-            <div>Proin sagittis nisl rhoncus</div>
-            <div>In pellentesque massa placerat duis ultricies
-              lacus.
-              Ac feugiat sed lectus vestibulum mattis ullamcorper.</div>
-          </li>
-        </ul>
-  
+      }
     </div>
-  
-    <div class="widget col-span-full md:col-span-6">
-     
-  
-        <ul>
-          <li>
-            <div>Aenean euismod elementum</div>
-            <div>Vitae turpis massa sed elementum tempus egestas
-              sed
-              sed risus.
-              In metus vulputate eu scelerisque felis imperdiet proin.</div>
-          </li>
-          <li>
-            <div>In iaculis nunc sed augue lacus</div>
-            <div>Viverra vitae congue. Nisi scelerisque eu
-              ultrices
-              vitae auctor eu augue ut lectus.
-              Elementum eu facilisis sed odio morbi.</div>
-          </li>
-          <li>
-            <div>Proin sagittis nisl rhoncus</div>
-            <div>In pellentesque massa placerat duis ultricies
-              lacus.
-              Ac feugiat sed lectus vestibulum mattis ullamcorper.</div>
-          </li>
-        </ul>
-  
-    </div>
-  
-  
-    <div class="widget col-span-full lg:col-span-4">
-     
-  
-      <ul>
-        <li>
-          <div>Aenean euismod elementum</div>
-          <div>Vitae turpis massa sed elementum tempus egestas
-            sed
-            sed risus.
-            In metus vulputate eu scelerisque felis imperdiet proin.</div>
-        </li>
-        <li>
-          <div>In iaculis nunc sed augue lacus</div>
-          <div>Viverra vitae congue. Nisi scelerisque eu
-            ultrices
-            vitae auctor eu augue ut lectus.
-            Elementum eu facilisis sed odio morbi.</div>
-        </li>
-        <li>
-          <div>Proin sagittis nisl rhoncus</div>
-          <div>In pellentesque massa placerat duis ultricies
-            lacus.
-            Ac feugiat sed lectus vestibulum mattis ullamcorper.</div>
-        </li>
-      </ul>
-    </div>
-  
-    <div class="widget col-span-full lg:col-span-4">
-     
-  
-      <ul>
-        <li>
-          <div>Aenean euismod elementum</div>
-          <div>Vitae turpis massa sed elementum tempus egestas
-            sed
-            sed risus.
-            In metus vulputate eu scelerisque felis imperdiet proin.</div>
-        </li>
-        <li>
-          <div>In iaculis nunc sed augue lacus</div>
-          <div>Viverra vitae congue. Nisi scelerisque eu
-            ultrices
-            vitae auctor eu augue ut lectus.
-            Elementum eu facilisis sed odio morbi.</div>
-        </li>
-        <li>
-          <div>Proin sagittis nisl rhoncus</div>
-          <div>In pellentesque massa placerat duis ultricies
-            lacus.
-            Ac feugiat sed lectus vestibulum mattis ullamcorper.</div>
-        </li>
-      </ul>
-    </div>
-  
-    <div class="widget col-span-full lg:col-span-4">
-     
-  
-      <ul>
-        <li>
-          <div>Aenean euismod elementum</div>
-          <div>Vitae turpis massa sed elementum tempus egestas
-            sed
-            sed risus.
-            In metus vulputate eu scelerisque felis imperdiet proin.</div>
-        </li>
-        <li>
-          <div>In iaculis nunc sed augue lacus</div>
-          <div>Viverra vitae congue. Nisi scelerisque eu
-            ultrices
-            vitae auctor eu augue ut lectus.
-            Elementum eu facilisis sed odio morbi.</div>
-        </li>
-        <li>
-          <div>Proin sagittis nisl rhoncus</div>
-          <div>In pellentesque massa placerat duis ultricies
-            lacus.
-            Ac feugiat sed lectus vestibulum mattis ullamcorper.</div>
-        </li>
-      </ul>
-    </div>
-  
-  </div>
+  </app-widget>
+</div>
+} @case (1) {
+
+<app-chart-average-ticket #chart class="other"
+  [averageTicketsCreated]="averageTicketsCreated()"></app-chart-average-ticket>
+
+} @case (2) {
+  <div class="grid-pie">
+<app-chart-category #chart class="other" [ticketCountByCategory]="ticketCountByCategory()"></app-chart-category>
+<app-chart-priority #chart class="other" [ticketCountByPriority]="ticketCountByPriority()"></app-chart-priority>
+</div>
+}
+}
