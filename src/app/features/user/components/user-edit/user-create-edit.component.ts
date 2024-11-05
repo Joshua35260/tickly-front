@@ -10,6 +10,8 @@ import {
   FormControl,
   Validators,
   ReactiveFormsModule,
+  AbstractControl,
+  ValidatorFn,
 } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -79,7 +81,8 @@ export class UserCreateEditComponent {
       firstname: new FormControl('', [Validators.required]),
       lastname: new FormControl('', [Validators.required]),
       login: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.minLength(4)]),
+      password: new FormControl(''),
+      confirmPassword: new FormControl(''),
       phone: new FormControl(''),
       email: new FormControl('', [Validators.required]),
       address: new FormGroup({
@@ -89,7 +92,8 @@ export class UserCreateEditComponent {
         city: new FormControl('', [Validators.required]),
         country: new FormControl('', [Validators.required]),
       }),
-    });
+    }, { validators: this.passwordMatchValidator() }); // Ajoutez la validation
+    
     this.userId$
       .pipe(takeUntilDestroyed(this.destroyRef), startWith(this.userId()))
       .subscribe((id: number) => {
@@ -105,11 +109,32 @@ export class UserCreateEditComponent {
         }
       });
   }
-
+  passwordMatchValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      const password = control.get('password')?.value;
+      const confirmPassword = control.get('confirmPassword')?.value;
+  
+      if (password && !confirmPassword) {
+        return { passwordsMismatch: true }; // Montre une erreur si le champ de confirmation est vide
+      }
+  
+      return password && confirmPassword && password !== confirmPassword
+        ? { passwordsMismatch: true }
+        : null;
+    };
+  }
+  
   onSubmit() {
     if (this.userForm.valid) {
       const userData: User = { ...this.userForm.value };
-
+  
+      // Supprimer le mot de passe de confirmation avant l'envoi
+      if (userData.password === '') {
+        delete userData.password; // Si le mot de passe est vide, on ne l'envoie pas
+      }
+  
+      delete userData.confirmPassword; // Ne pas envoyer le champ de confirmation
+  
       if (this.userId()) {
         // UPDATE
         this.userService

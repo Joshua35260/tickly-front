@@ -10,7 +10,10 @@
   justify-content: center;
   align-items: center;
 }
-
+.error {
+  color: red;
+  text-wrap: nowrap;
+}
 .avatar-c {
   @include sm {
     margin-bottom:  20px;
