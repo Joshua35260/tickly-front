@@ -16,7 +16,7 @@ export class User {
   avatarUrl?: string;
   archivedAt?: Date;
   structures?: Structure[];
-
+  confirmPassword?: string;
   get fullName(): string {
     return `${this.firstname} ${this.lastname}`;
   }

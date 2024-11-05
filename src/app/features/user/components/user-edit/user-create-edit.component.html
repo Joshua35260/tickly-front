@@ -19,11 +19,21 @@
     <app-input class="col-span-10" formControlName="firstname" label="Prénom *"></app-input>
     <app-input class="col-span-10" formControlName="lastname" label="Nom *"></app-input>
     <div class="grid col-span-10 grid-cols-12 gap-small">
-    <app-input class="col-span-6" formControlName="login" label="Login *"></app-input>
-    <p-floatLabel class="col-span-6 form-elem">
-      <p-password formControlName="password" type="password" autocomplete="current-password"></p-password>
-      <label>Mot de passe</label>
-    </p-floatLabel>
+    <app-input class="col-span-10" formControlName="login" label="Login *"></app-input>
+    <div class="grid col-span-12 grid-cols-12 gap-small">
+      <p-floatLabel class="col-span-6 form-elem">
+        <p-password formControlName="password" type="password" autocomplete="current-password" [toggleMask]="true"></p-password>
+        <label>Mot de passe</label>
+      </p-floatLabel>
+    
+      <p-floatLabel class="col-span-6 form-elem">
+        <p-password formControlName="confirmPassword" type="password" autocomplete="current-password" [toggleMask]="true"></p-password>
+        <label>Confirmer le mot de passe</label>
+      </p-floatLabel>
+    </div>
+    <small class="error col-span-full" *ngIf="userForm.errors?.['passwordsMismatch']" class="error">
+      Les mots de passe ne correspondent pas.
+    </small>
   </div>
 
   </fieldset>
